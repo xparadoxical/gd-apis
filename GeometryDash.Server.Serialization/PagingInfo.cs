@@ -1,8 +1,11 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 namespace GeometryDash.Server.Serialization;
 public record struct PagingInfo(uint Results, uint PageIndex, uint PageSize) : ISpanParsable<PagingInfo>
 {
+    public const NumberStyles NumberStyle = NumberStyles.None;
+
     /// <summary>Returns the string representation of the <see cref="PagingInfo"/>.</summary>
     public override string ToString() => $"{Results}:{PageIndex}:{PageSize}";
 
@@ -16,13 +19,13 @@ public record struct PagingInfo(uint Results, uint PageIndex, uint PageSize) : I
             ThrowFormatProviderNotSupported();
 
         var colonIndex = s.IndexOf(":");
-        var results = uint.Parse(s.Slice(0, colonIndex));
+        var results = uint.Parse(s.Slice(0, colonIndex), NumberStyle);
 
         s = s.Slice(colonIndex + 1);
         colonIndex = s.IndexOf(":");
-        var pageIndex = uint.Parse(s.Slice(0, colonIndex));
+        var pageIndex = uint.Parse(s.Slice(0, colonIndex), NumberStyle);
 
-        var pageSize = uint.Parse(s.Slice(colonIndex + 1));
+        var pageSize = uint.Parse(s.Slice(colonIndex + 1), NumberStyle);
 
         return new(results, pageIndex, pageSize);
     }
@@ -47,13 +50,13 @@ public record struct PagingInfo(uint Results, uint PageIndex, uint PageSize) : I
             ThrowFormatProviderNotSupported();
 
         var colonIndex = s.IndexOf(":");
-        if (uint.TryParse(s.Slice(0, colonIndex), null, out uint results) is false)
+        if (uint.TryParse(s.Slice(0, colonIndex), NumberStyle, null, out uint results) is false)
             goto failure;
 
         s = s.Slice(colonIndex + 1);
         colonIndex = s.IndexOf(":");
-        if (uint.TryParse(s.Slice(0, colonIndex), null, out var pageIndex) is false
-            || uint.TryParse(s.Slice(colonIndex + 1), null, out var pageSize) is false)
+        if (uint.TryParse(s.Slice(0, colonIndex), NumberStyle, null, out var pageIndex) is false
+            || uint.TryParse(s.Slice(colonIndex + 1), NumberStyle, null, out var pageSize) is false)
             goto failure;
 
         result = new(results, pageIndex, pageSize);
