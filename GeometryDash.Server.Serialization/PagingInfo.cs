@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Runtime.InteropServices;
 
 namespace GeometryDash.Server.Serialization;
 public record struct PagingInfo(uint Results, uint PageIndex, uint PageSize) : ISpanParsable<PagingInfo>
@@ -11,12 +12,10 @@ public record struct PagingInfo(uint Results, uint PageIndex, uint PageSize) : I
 
     /// <summary>Parses a span of characters into a <see cref="PagingInfo"/>.</summary>
     /// <param name="s">The span of characters to parse.</param>
-    /// <param name="provider">Not supported. Pass <see langword="null"/>.</param>
-    /// <exception cref="NotSupportedException"><see cref="IFormatProvider"/> is not supported.</exception>
+    /// <param name="provider">Ignored. Pass <see langword="null"/>.</param>
     public static PagingInfo Parse(ReadOnlySpan<char> s, IFormatProvider? provider = null)
     {
-        if (provider is not null)
-            ThrowFormatProviderNotSupported();
+        ValidationHelpers.ThrowIfSpanNullOrEmpty(s);
 
         var colonIndex = s.IndexOf(":");
         var results = uint.Parse(s.Slice(0, colonIndex), NumberStyle);
@@ -32,22 +31,20 @@ public record struct PagingInfo(uint Results, uint PageIndex, uint PageSize) : I
 
     /// <summary>Parses a string into a <see cref="PagingInfo"/>.</summary>
     /// <param name="s">The string to parse.</param>
-    /// <param name="provider">Not supported. Pass <see langword="null"/>.</param>
-    /// <exception cref="NotSupportedException"><see cref="IFormatProvider"/> is not supported.</exception>
+    /// <param name="provider">Ignored. Pass <see langword="null"/>.</param>
     public static PagingInfo Parse(string s, IFormatProvider? provider = null)
         => Parse((ReadOnlySpan<char>)s, provider);
 
     /// <summary>Tries to parse a span of characters into a <see cref="PagingInfo"/>.</summary>
     /// <param name="s">The span of characters to parse.</param>
-    /// <param name="provider">Not supported. Pass <see langword="null"/>.</param>
+    /// <param name="provider">Ignored. Pass <see langword="null"/>.</param>
     /// <param name="result">When this method returns, contains the result of successfully parsing <paramref name="s"/>,
     /// or an undefined value on failure.</param>
     /// <returns><see langword="true"/> if <paramref name="s"/> was successfully parsed; otherwise, <see langword="false"/>.</returns>
-    /// <exception cref="NotSupportedException"><see cref="IFormatProvider"/> is not supported.</exception>
-    public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider? provider, [MaybeNullWhen(false)] out PagingInfo result)
+    public static bool TryParse(ReadOnlySpan<char> s, [Optional, DefaultParameterValue(null)] IFormatProvider? provider, [MaybeNullWhen(false)] out PagingInfo result)
     {
-        if (provider is not null)
-            ThrowFormatProviderNotSupported();
+        if (ValidationHelpers.IsSpanNullOrEmpty(s))
+            goto failure;
 
         var colonIndex = s.IndexOf(":");
         if (uint.TryParse(s.Slice(0, colonIndex), NumberStyle, null, out uint results) is false)
@@ -69,14 +66,10 @@ public record struct PagingInfo(uint Results, uint PageIndex, uint PageSize) : I
 
     /// <summary>Tries to parse a string into a <see cref="PagingInfo"/>.</summary>
     /// <param name="s">The span of characters to parse.</param>
-    /// <param name="provider">Not supported. Pass <see langword="null"/>.</param>
+    /// <param name="provider">Ignored. Pass <see langword="null"/>.</param>
     /// <param name="result">When this method returns, contains the result of successfully parsing <paramref name="s"/>,
     /// or an undefined value on failure.</param>
     /// <returns><see langword="true"/> if <paramref name="s"/> was successfully parsed; otherwise, <see langword="false"/>.</returns>
-    /// <exception cref="NotSupportedException"><see cref="IFormatProvider"/> is not supported.</exception>
-    public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out PagingInfo result)
+    public static bool TryParse([NotNullWhen(true)] string? s, [Optional, DefaultParameterValue(null)] IFormatProvider? provider, [MaybeNullWhen(false)] out PagingInfo result)
         => TryParse((ReadOnlySpan<char>)s, provider, out result);
-
-    private static void ThrowFormatProviderNotSupported()
-        => throw new NotSupportedException("IFormatProvider is not supported");
 }
