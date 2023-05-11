@@ -1,7 +1,7 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace GeometryDash.Server.Serialization;
+namespace GeometryDash.Server;
 internal static class ValidationHelpers
 {
     //BENCH move throw statements to a helper?

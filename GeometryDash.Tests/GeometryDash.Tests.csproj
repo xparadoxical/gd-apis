@@ -9,6 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GeometryDash.Server\GeometryDash.Server.csproj" />
+    <Using Include="GeometryDash.Server" />
     <ProjectReference Include="..\GeometryDash.Server.Serialization\GeometryDash.Server.Serialization.csproj" />
     <Using Include="GeometryDash.Server.Serialization" />
   </ItemGroup>

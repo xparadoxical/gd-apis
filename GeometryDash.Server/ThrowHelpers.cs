@@ -1,4 +1,4 @@
-﻿namespace GeometryDash.Server.Serialization;
+namespace GeometryDash.Server;
 internal static class ThrowHelpers
 {
     internal static void ThrowFormatProviderNotSupported()

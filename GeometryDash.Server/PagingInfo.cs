@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-namespace GeometryDash.Server.Serialization;
+namespace GeometryDash.Server;
 public record struct PagingInfo(uint Results, uint PageIndex, uint PageSize) : ISpanParsable<PagingInfo>
 {
     public const NumberStyles NumberStyle = NumberStyles.None;
