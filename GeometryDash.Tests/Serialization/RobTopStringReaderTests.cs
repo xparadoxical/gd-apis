@@ -5,18 +5,18 @@ using CommunityToolkit.HighPerformance.Buffers;
 using Xunit.Abstractions;
 
 namespace GeometryDash.Tests.Serialization;
-public class RobTopStringParserTests
+public class RobTopStringReaderTests
 {
     private readonly ITestOutputHelper _output;
 
-    public RobTopStringParserTests(ITestOutputHelper output) => _output = output;
+    public RobTopStringReaderTests(ITestOutputHelper output) => _output = output;
 
-    public List<(uint, string)> Parse(string input, bool keyed)
+    public List<(uint, string)> Read(string input, bool keyed)
     {
         _output.WriteLine("'{0}'{1}", input, keyed ? " keyed" : "");
 
         var fields = new List<(uint, string)>();
-        foreach (var (k, v) in new RobTopStringParser(new MemoryStream(Encoding.UTF8.GetBytes(input)), new ArrayPoolBufferWriter<byte>(), keyed))
+        foreach (var (k, v) in new RobTopStringReader(new MemoryStream(Encoding.UTF8.GetBytes(input)), new ArrayPoolBufferWriter<byte>(), keyed))
         {
             string s = Encoding.UTF8.GetString(v);
             _output.WriteLine($"{k}: '{s}'");
@@ -27,7 +27,7 @@ public class RobTopStringParserTests
 
     internal void TestOutputs(string input, bool keyed, object[] outputs)
     {
-        var results = Parse(input, keyed);
+        var results = Read(input, keyed);
 
         Assert.Equal(outputs.Length / 2, results.Count);
         for (int i = 0; i < results.Count; i++)
@@ -52,5 +52,5 @@ public class RobTopStringParserTests
     [InlineData(":")]
     [InlineData("a:")]
     [InlineData("1:::")]
-    public void Keyed_Fails(string input) => Assert.ThrowsAny<Exception>(() => Parse(input, true));
+    public void Keyed_Fails(string input) => Assert.ThrowsAny<Exception>(() => Read(input, true));
 }

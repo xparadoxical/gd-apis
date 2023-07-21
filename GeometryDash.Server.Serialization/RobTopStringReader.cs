@@ -4,7 +4,7 @@ using CommunityToolkit.HighPerformance;
 using CommunityToolkit.HighPerformance.Buffers;
 
 namespace GeometryDash.Server.Serialization;
-public ref struct RobTopStringParser
+public ref struct RobTopStringReader
 {
     private readonly Stream _stream;
     private readonly IBuffer<byte> _buffer;
@@ -13,9 +13,9 @@ public ref struct RobTopStringParser
     private bool _currentHasValue = false;
     private bool _expectingMore = false;
 
-    public RobTopStringParser(Stream input, IBuffer<byte> buffer, bool keyed = true)
+    public RobTopStringReader(Stream input, IBuffer<byte> buffer, bool keyed = true)
     {
-        _stream = Stream.Synchronized(input);
+        _stream = Stream.Synchronized(input); //TODO is there any point in making the stream synchronized?
         _buffer = buffer;
         _keyed = keyed;
     }
@@ -23,7 +23,7 @@ public ref struct RobTopStringParser
     public byte FieldSeparator { get; init; } = (byte)':';
     public Field Current { get; private set; }
 
-    public readonly RobTopStringParser GetEnumerator() => this; //no way for >1 enumerator to be at different positions in one stream
+    public readonly RobTopStringReader GetEnumerator() => this; //no way for >1 enumerator to be at different positions in one stream
 
     public bool MoveNext()
     {
