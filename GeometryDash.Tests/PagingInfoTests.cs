@@ -43,7 +43,7 @@ public class PagingInfoTests
     [InlineData(":")]
     [InlineData("::")]
     [InlineData("0:0:+1")]
-    public void Parse_WithInvalidInputs_Fails(string input)
+    public void Parse_Fails(string input)
     {
         Assert.ThrowsAny<Exception>(() => PagingInfo.Parse(input));
         Assert.False(PagingInfo.TryParse(input, null, out var _));
