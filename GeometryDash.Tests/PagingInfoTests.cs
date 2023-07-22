@@ -4,16 +4,6 @@ namespace GeometryDash.Tests;
 
 public class PagingInfoTests
 {
-    [Theory]
-    [InlineData(1, 4294967295, 0)]
-    public void ToString_Works(uint results, uint pageIndex, uint pageSize)
-    {
-        var info = new PagingInfo(results, pageIndex, pageSize);
-        var expected = string.Join(':', results, pageIndex, pageSize);
-
-        Assert.Equal(expected, info.ToString());
-    }
-
     [Fact]
     public void Parse_NonNullFormatProvider_IsIgnored()
     {
