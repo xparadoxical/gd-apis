@@ -21,25 +21,28 @@ public ref struct RobTopStringReader
     }
 
     public byte FieldSeparator { get; init; } = (byte)':';
+
+    /// <summary>Duck-typed IEnumerator implementation.</summary>
     public Field Current { get; private set; }
 
+    /// <summary>Duck-typed IEnumerable implementation.</summary>
     public readonly RobTopStringReader GetEnumerator() => this; //no way for >1 enumerator to be at different positions in one stream
 
+    /// <summary>Duck-typed IEnumerator implementation.</summary>
     public bool MoveNext()
     {
         _buffer.Clear();
 
         uint? key = null;
 
-        bool end = default, onSeparator = default;
+        bool end, onSeparator;
     readLoop: //PERF fill _buffer, use its .WrittenSpan, grow it with .GetSpan(newCapacity)
         while (true)
         {
-            int _b = _stream.ReadByte();
-            end = _b == -1;
+            byte b = default;
+            end = _stream.Read(new(ref b)) == 0;
 
-            byte b = (byte)_b;
-            onSeparator = _b == FieldSeparator;
+            onSeparator = b == FieldSeparator;
 
             if (end || onSeparator)
                 break;
