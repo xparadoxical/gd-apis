@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace GeometryDash.Tests;
+namespace GeometryDash.Tests.Server;
 
 public class PagingInfoTests
 {

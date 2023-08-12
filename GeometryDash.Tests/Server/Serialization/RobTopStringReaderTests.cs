@@ -4,7 +4,7 @@ using CommunityToolkit.HighPerformance.Buffers;
 
 using Xunit.Abstractions;
 
-namespace GeometryDash.Tests.Serialization;
+namespace GeometryDash.Tests.Server.Serialization;
 public class RobTopStringReaderTests
 {
     private readonly ITestOutputHelper _output;
