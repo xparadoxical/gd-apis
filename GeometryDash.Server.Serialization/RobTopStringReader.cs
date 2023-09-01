@@ -15,7 +15,7 @@ public ref struct RobTopStringReader
 
     public RobTopStringReader(Stream input, IBuffer<byte> buffer, bool keyed = true)
     {
-        _stream = Stream.Synchronized(input); //TODO is there any point in making the stream synchronized?
+        _stream = input;
         _buffer = buffer;
         _keyed = keyed;
     }
