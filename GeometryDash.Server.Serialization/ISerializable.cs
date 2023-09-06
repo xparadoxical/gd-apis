@@ -1,7 +1,7 @@
 namespace GeometryDash.Server.Serialization;
 
 /// <summary>
-/// A provider of reflection-less logic for serializing itself.
+/// Provides reflection-less logic for serializing.
 /// </summary>
 public interface ISerializable<TSelf> where TSelf : ISerializable<TSelf>
 {
