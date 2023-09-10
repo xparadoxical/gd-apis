@@ -1,5 +1,6 @@
 namespace GeometryDash.Server.Serialization;
 
+//TODO replace with a source generator
 /// <summary>
 /// Provides reflection-less logic for serializing.
 /// </summary>

@@ -30,20 +30,26 @@ public sealed class ServerSerializer
             ThrowHelpers.OperationStatusUnsuccessful(status);
         }
 
-        var ret = Deserialize<T>(new MemoryStream(buf, 0, bytesWritten));
+        var inst = Deserialize<T>(buf.AsSpan(..bytesWritten));
 
         ArrayPool<byte>.Shared.Return(buf);
-        return ret;
+        return inst;
     }
 
-    public static unsafe T Deserialize<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>
+    public static T Deserialize<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>
         (ReadOnlySpan<byte> input)
         where T : ISerializable<T>
     {
-        fixed (byte* b = input)
-        {
-            return Deserialize<T>(new UnmanagedMemoryStream(b, input.Length));
-        }
+        var type = typeof(T);
+        //TODO add hashing
+
+        var (keyed, fieldSeparator, _) = T.Options;
+        var (deserializers, _) = T.SerializationLogic;
+
+        var t = Activator.CreateInstance<T>()!;
+        //TODO RobTopStringReader - sync, span-based
+        throw new NotImplementedException();
+        return t;
     }
 
     public static T Deserialize<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>
@@ -51,7 +57,7 @@ public sealed class ServerSerializer
         where T : ISerializable<T>
     {
         var type = typeof(T);
-        //TODO utilize hashing - ServerResponseStream
+        //TODO add hashing - ServerResponseStream
 
         var (keyed, fieldSeparator, _) = T.Options;
         var (deserializers, _) = T.SerializationLogic;
@@ -59,7 +65,7 @@ public sealed class ServerSerializer
         var buf = buffer ?? Buffers.Rent();
 
         var t = Activator.CreateInstance<T>()!;
-        foreach (var field in new RobTopStringReader(s, buf, keyed) { FieldSeparator = fieldSeparator })
+        foreach (var field in new RobTopStringStreamReader(s, buf, keyed) { FieldSeparator = fieldSeparator })
             deserializers[field.Key](field.Value, new(ref t));
 
         if (buffer is null)

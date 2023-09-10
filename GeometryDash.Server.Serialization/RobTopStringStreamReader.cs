@@ -4,7 +4,7 @@ using CommunityToolkit.HighPerformance;
 using CommunityToolkit.HighPerformance.Buffers;
 
 namespace GeometryDash.Server.Serialization;
-public ref struct RobTopStringReader
+public ref struct RobTopStringStreamReader
 {
     private readonly Stream _stream;
     private readonly IBuffer<byte> _buffer;
@@ -13,7 +13,7 @@ public ref struct RobTopStringReader
     private bool _currentHasValue = false;
     private bool _expectingMore = false;
 
-    public RobTopStringReader(Stream input, IBuffer<byte> buffer, bool keyed = true)
+    public RobTopStringStreamReader(Stream input, IBuffer<byte> buffer, bool keyed = true)
     {
         _stream = input;
         _buffer = buffer;
@@ -26,7 +26,7 @@ public ref struct RobTopStringReader
     public Field Current { get; private set; }
 
     /// <summary>Duck-typed IEnumerable implementation.</summary>
-    public readonly RobTopStringReader GetEnumerator() => this; //no way for >1 enumerator to be at different positions in one stream
+    public readonly RobTopStringStreamReader GetEnumerator() => this; //no way for >1 enumerator to be at different positions in one stream
 
     /// <summary>Duck-typed IEnumerator implementation.</summary>
     public bool MoveNext()
