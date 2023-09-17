@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Unicode;
 
+using CommunityToolkit.HighPerformance;
 using CommunityToolkit.HighPerformance.Buffers;
 
 using static System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes;
@@ -47,8 +48,18 @@ public sealed class ServerSerializer
         var (deserializers, _) = T.SerializationLogic;
 
         var t = Activator.CreateInstance<T>()!;
-        //TODO RobTopStringReader - sync, span-based
-        throw new NotImplementedException();
+        if (keyed)
+        {
+            foreach (var field in new RobTopStringReader(input) { FieldSeparator = fieldSeparator })
+                deserializers[field.Key](field.Value, new(ref t));
+        }
+        else
+        {
+            uint key = 0;
+            foreach (var value in input.Tokenize(fieldSeparator))
+                deserializers[key++](value, new(ref t));
+        }
+
         return t;
     }
 
