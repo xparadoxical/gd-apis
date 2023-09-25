@@ -1,7 +1,5 @@
 using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
-using System.Text.Unicode;
 
 using CommunityToolkit.HighPerformance;
 using CommunityToolkit.HighPerformance.Buffers;
@@ -18,24 +16,10 @@ public sealed class ServerSerializer
 
     internal const bool InheritAttributes = false;
 
-    public static T Deserialize<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>
-        (string s)
+    public static unsafe T Deserialize<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>
+        (string input)
         where T : ISerializable<T>
-    {
-        var buf = ArrayPool<byte>.Shared.Rent(Encoding.UTF8.GetMaxByteCount(s.Length));
-
-        var status = Utf8.FromUtf16(s, buf, out _, out var bytesWritten, false);
-        if (status is not OperationStatus.Done)
-        {
-            ArrayPool<byte>.Shared.Return(buf);
-            ThrowHelpers.OperationStatusUnsuccessful(status);
-        }
-
-        var inst = Deserialize<T>(buf.AsSpan(..bytesWritten));
-
-        ArrayPool<byte>.Shared.Return(buf);
-        return inst;
-    }
+        => input.ToUtf8(&Deserialize<T>);
 
     public static T Deserialize<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>
         (ReadOnlySpan<byte> input)

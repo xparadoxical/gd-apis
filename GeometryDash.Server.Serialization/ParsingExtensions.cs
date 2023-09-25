@@ -32,6 +32,42 @@ public static class ParsingExtensions
         writer.Write(value.Format(buf));
     }
 
+    public delegate R ReadOnlySpanFunc<E, R>(ReadOnlySpan<E> span);
+
+    public static T ToUtf8<T>(this string s, ReadOnlySpanFunc<byte, T> consumer)
+    {
+        var buf = ArrayPool<byte>.Shared.Rent(Encoding.UTF8.GetMaxByteCount(s.Length));
+
+        var status = Utf8.FromUtf16(s, buf, out _, out var bytesWritten, false);
+        if (status is not OperationStatus.Done)
+        {
+            ArrayPool<byte>.Shared.Return(buf);
+            ThrowHelpers.OperationStatusUnsuccessful(status);
+        }
+
+        var inst = consumer(buf.AsSpan(..bytesWritten));
+
+        ArrayPool<byte>.Shared.Return(buf);
+        return inst;
+    }
+
+    public static unsafe T ToUtf8<T>(this string s, delegate*<ReadOnlySpan<byte>, T> consumer)
+    {
+        var buf = ArrayPool<byte>.Shared.Rent(Encoding.UTF8.GetMaxByteCount(s.Length));
+
+        var status = Utf8.FromUtf16(s, buf, out _, out var bytesWritten, false);
+        if (status is not OperationStatus.Done)
+        {
+            ArrayPool<byte>.Shared.Return(buf);
+            ThrowHelpers.OperationStatusUnsuccessful(status);
+        }
+
+        var inst = consumer(buf.AsSpan(..bytesWritten));
+
+        ArrayPool<byte>.Shared.Return(buf);
+        return inst;
+    }
+
     #region .NET 8 IUtf8SpanParsable, IUtf8SpanFormattable polyfills
     //TODO net8 remove this
     //https://github.com/dotnet/runtime/blob/9ab160404032b5220900e94c044ff7323e7c31a9/src/libraries/System.Private.CoreLib/src/System/Numerics/INumberBase.cs#L418-L512
