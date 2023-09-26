@@ -1,4 +1,3 @@
-using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 
 using CommunityToolkit.HighPerformance;
@@ -45,6 +44,24 @@ public sealed class ServerSerializer
         }
 
         return t;
+    }
+
+    public static T[] DeserializeArray<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>(string input, byte itemSeparator)
+        where T : ISerializable<T>
+        => input.ToUtf8(span => DeserializeArray<T>(span, itemSeparator));
+
+    public static T[] DeserializeArray<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>(ReadOnlySpan<byte> input, byte itemSeparator)
+        where T : ISerializable<T>
+    {
+        var ret = new T[input.Count(itemSeparator) + 1];
+
+        int i = 0;
+        foreach (var value in input.Tokenize(itemSeparator))
+        {
+            ret[i++] = Deserialize<T>(value);
+        }
+
+        return ret;
     }
 
     public static T Deserialize<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>
