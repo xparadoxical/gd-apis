@@ -29,7 +29,7 @@ public sealed class ServerSerializer
         //TODO add hashing
 
         var (keyed, fieldSeparator, _) = T.Options;
-        var (deserializers, _) = T.SerializationLogic;
+        var deserializers = T.SerializationLogic.Deserializers;
 
         var t = Activator.CreateInstance<T>()!;
         if (keyed)
@@ -55,7 +55,7 @@ public sealed class ServerSerializer
         //TODO add hashing - ServerResponseStream
 
         var (keyed, fieldSeparator, _) = T.Options;
-        var (deserializers, _) = T.SerializationLogic;
+        var deserializers = T.SerializationLogic.Deserializers;
 
         var buf = buffer ?? Buffers.Rent();
 
