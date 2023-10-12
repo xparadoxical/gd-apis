@@ -18,6 +18,20 @@ public class ServerSerializerTests
         Assert.Throws<DirectoryNotFoundException>(() => ServerSerializer.Deserialize<NotSerializable>("1:2"));
     }
 
+    [Fact]
+    public void Deserialize_List_ParsesCorrectly()
+    {
+        Assert.True(ServerSerializer.Deserialize<int[]>("3|4") is [3, 4]);
+        Assert.True(ServerSerializer.Deserialize<Unkeyed[]>("3:asd|4:qwe") is [{ I: 3, S: "asd" }, { I: 4, S: "qwe" }]);
+    }
+
+    [Fact]
+    public void Deserialize_WithUnsupportedType_Throws()
+    {
+        Assert.Throws<ArgumentException>(() => ServerSerializer.Deserialize<object>(""));
+        Assert.Throws<ArgumentException>(() => ServerSerializer.Deserialize<object[]>(""));
+    }
+
     private class NotSerializable : ISerializable<NotSerializable>
     {
         public static SerializationOptions Options { get; } = new(false);

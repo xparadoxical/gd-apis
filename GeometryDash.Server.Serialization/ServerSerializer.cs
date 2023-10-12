@@ -6,7 +6,7 @@ using CommunityToolkit.HighPerformance.Buffers;
 using static System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes;
 
 namespace GeometryDash.Server.Serialization;
-public sealed class ServerSerializer
+public sealed partial class ServerSerializer
 {
     [ThreadStatic]
     private static Pool<IBuffer<byte>>? _buffers;
@@ -17,10 +17,14 @@ public sealed class ServerSerializer
 
     public static unsafe T Deserialize<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>
         (string input)
-        where T : ISerializable<T>
         => input.ToUtf8(&Deserialize<T>);
 
-    public static T Deserialize<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>
+    public static unsafe T DeserializeSerializable<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>
+        (string input)
+        where T : ISerializable<T>
+        => input.ToUtf8(&DeserializeSerializable<T>);
+
+    public static T DeserializeSerializable<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>
         (ReadOnlySpan<byte> input)
         where T : ISerializable<T>
     {
@@ -46,12 +50,10 @@ public sealed class ServerSerializer
         return t;
     }
 
-    public static T[] DeserializeArray<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>(string input, byte itemSeparator)
-        where T : ISerializable<T>
+    public static T[] DeserializeArray<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>(string input, byte itemSeparator = (byte)'|')
         => input.ToUtf8(span => DeserializeArray<T>(span, itemSeparator));
 
-    public static T[] DeserializeArray<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>(ReadOnlySpan<byte> input, byte itemSeparator)
-        where T : ISerializable<T>
+    public static T[] DeserializeArray<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>(ReadOnlySpan<byte> input, byte itemSeparator = (byte)'|')
     {
         var ret = new T[input.Count(itemSeparator) + 1];
 
