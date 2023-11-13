@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GeometryDash.Server.Serialization\GeometryDash.Server.Serialization.csproj" />
+  </ItemGroup>
+
 </Project>

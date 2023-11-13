@@ -170,4 +170,44 @@ public static class ParsingExtensions
         return false;
     }
     #endregion
+
+    public static bool ParseBool(this ReadOnlySpan<byte> input, char trueValue, char falseValue)
+    {
+        if (input.Length is not 1)
+            throw new ArgumentException("Length of the span was not 1.", nameof(input));
+
+        var c = (char)input[0];
+
+        if (c != trueValue && c != falseValue)
+            throw new ArgumentOutOfRangeException(nameof(input), c, $"Expected '{trueValue}' or '{falseValue}'");
+
+        return c == trueValue;
+    }
+
+    /// <summary>Parses a span of bytes to a <see langword="bool"/>. The <see langword="false"/> value is an empty span.</summary>
+    public static bool ParseBool(this ReadOnlySpan<byte> input, char trueValue)
+    {
+        if (input.Length is 0)
+            return false;
+        else if (input.Length is > 1)
+            throw new ArgumentException("Length of the span was greater than 1.", nameof(input));
+
+        var c = (char)input[0];
+
+        if (c != trueValue)
+            throw new ArgumentOutOfRangeException(nameof(input), c, $"Expected '{trueValue}' or an empty span");
+
+        return true;
+    }
+
+    public static T ParseEnum<T>(this ReadOnlySpan<byte> input) where T : struct, Enum
+    {
+        var value = input.Parse<int>();
+
+        var t = typeof(T);
+        if (!Enum.IsDefined(t, value)) //also does a range check
+            throw new ArgumentException($"Undefined enum value: {value}");
+
+        return (T)Enum.ToObject(t, value);
+    }
 }
