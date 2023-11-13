@@ -55,10 +55,12 @@ public sealed class SerializationLogicBuilder<T> where T : ISerializable<T>
 
     public SerializationLogic<T> Build()
     {
+#if !DEBUG
         if (_deserializers.Count != _fieldCount)
             ThrowDeserializersCount();
         if (_serializers.Count != _fieldCount)
             ThrowSerializersCount();
+#endif
 
         return new(_deserializers.ToImmutableDictionary(), _serializers.ToImmutableDictionary());
     }
