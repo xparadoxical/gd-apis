@@ -1,7 +1,9 @@
 using System.Buffers;
+using System.Buffers.Binary;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Unicode;
 
@@ -202,12 +204,39 @@ public static class ParsingExtensions
 
     public static T ParseEnum<T>(this ReadOnlySpan<byte> input) where T : struct, Enum
     {
-        var value = input.Parse<int>();
+        ulong value = EnumRangeCheck<T>(input.Parse<long>());
 
-        var t = typeof(T);
-        if (!Enum.IsDefined(t, value)) //also does a range check
-            throw new ArgumentException($"Undefined enum value: {value}");
+        T enumValue = BitConverter.IsLittleEndian switch
+        {
+            true => Unsafe.As<ulong, T>(ref value),
+            false => Unsafe.As<ulong, T>(ref Unsafe.AsRef(BinaryPrimitives.ReverseEndianness(value)))
+        };
 
-        return (T)Enum.ToObject(t, value);
+        if (!Enum.IsDefined(enumValue))
+            ThrowUndefinedEnumValue(enumValue);
+
+        return enumValue;
     }
+
+    private static ulong EnumRangeCheck<T>(long toConvert) where T : struct, Enum
+    {
+        return EnumTypeInfo<T>.TypeCode switch
+        {
+            TypeCode.Int32 => (ulong)checked((int)toConvert),
+            TypeCode.UInt32 => checked((uint)toConvert),
+            TypeCode.UInt64 => checked((ulong)toConvert),
+            TypeCode.Int64 => (ulong)toConvert,
+            TypeCode.SByte => (ulong)checked((sbyte)toConvert),
+            TypeCode.Byte => checked((byte)toConvert),
+            TypeCode.Int16 => (ulong)checked((short)toConvert),
+            TypeCode.UInt16 => checked((ushort)toConvert),
+            var typeCode => ThrowEnumNotSupported(typeCode)
+        };
+    }
+
+    private static void ThrowUndefinedEnumValue<T>(T value) where T : struct, Enum
+        => throw new ArgumentException($"Undefined enum value: {value}");
+
+    private static ulong ThrowEnumNotSupported(TypeCode tc)
+        => throw new NotSupportedException($"Enums with underlying type {tc} are not supported.");
 }
