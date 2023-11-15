@@ -14,7 +14,7 @@ public static class ParsingExtensions
 {
     public static T Parse<T>(this ReadOnlySpan<byte> input) where T : INumberBase<T>
     {
-        if (TryParse(input, NumberStyles.None, null, out T result))
+        if (TryParse(input, NumberStyles.AllowLeadingSign, null, out T result))
             return result;
 
         throw new FormatException("The span was not in a correct format.");
