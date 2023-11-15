@@ -15,7 +15,8 @@ public class ServerSerializerTests
     [Fact]
     public void Deserialize_WithInvalidInput_PassesToCoreDeserializerWhichThrows()
     {
-        Assert.Throws<DirectoryNotFoundException>(() => ServerSerializer.Deserialize<NotSerializable>("1:2"));
+        var e = Assert.Throws<SerializationException>(() => ServerSerializer.Deserialize<NotSerializable>("1:2"));
+        Assert.IsType<DirectoryNotFoundException>(e.InnerException);
     }
 
     [Fact]

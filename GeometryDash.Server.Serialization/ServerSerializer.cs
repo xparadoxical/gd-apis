@@ -38,13 +38,31 @@ public sealed partial class ServerSerializer
         if (keyed)
         {
             foreach (var field in new RobTopStringReader(input) { FieldSeparator = fieldSeparator })
-                deserializers[field.Key](field.Value, new(ref t));
+            {
+                try
+                {
+                    deserializers[field.Key](field.Value, new(ref t));
+                }
+                catch (Exception e)
+                {
+                    throw new SerializationException(field.Key, field.Value, e);
+                }
+            }
         }
         else
         {
             uint key = 0;
             foreach (var value in input.Tokenize(fieldSeparator))
-                deserializers[key++](value, new(ref t));
+            {
+                try
+                {
+                    deserializers[key++](value, new(ref t));
+                }
+                catch (Exception e)
+                {
+                    throw new SerializationException(key, value, e);
+                }
+            }
         }
 
         return t;
