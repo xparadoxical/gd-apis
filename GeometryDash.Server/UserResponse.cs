@@ -81,7 +81,7 @@ public class UserResponse : ISerializable<UserResponse>
         .Deserializer(17, (input, inst) => inst.Value.UserCoins = input.Parse<uint>())
         .Deserializer(18, (input, inst) => inst.Value.AllowMessagesFrom = input.ParseEnum<PrivacyGroup>())
         .Deserializer(19, (input, inst) => inst.Value.AllowFriendRequests = input.ParseBool('0', '1'))
-        .Deserializer(20, (input, inst) => inst.Value.YouTube = LinkedServiceProfile.Create(youtubeUri, Encoding.UTF8.GetString(input)))
+        .Deserializer(20, (input, inst) => inst.Value.YouTube = new(YouTubeUrl, Encoding.UTF8.GetString(input)))
         .Deserializer(21, (input, inst) => inst.Value.CubeId = input.Parse<ushort>())
         .Deserializer(22, (input, inst) => inst.Value.ShipId = input.Parse<ushort>())
         .Deserializer(23, (input, inst) => inst.Value.BallId = input.Parse<ushort>())
@@ -101,8 +101,8 @@ public class UserResponse : ISerializable<UserResponse>
         .Deserializer(41, (input, inst) => inst.Value.IsNewFriendOrRequest = input.ParseBool('1'))
         .Deserializer(42, (input, inst) => inst.Value.ScoreAge = TimeSpan.Zero) //TODO parse timespans
         .Deserializer(43, (input, inst) => inst.Value.SpiderId = input.Parse<ushort>())
-        .Deserializer(44, (input, inst) => inst.Value.Twitter = LinkedServiceProfile.Create(twitterUri, Encoding.UTF8.GetString(input)))
-        .Deserializer(45, (input, inst) => inst.Value.Twitch = LinkedServiceProfile.Create(twitchUri, Encoding.UTF8.GetString(input)))
+        .Deserializer(44, (input, inst) => inst.Value.Twitter = new(TwitterUrl, Encoding.UTF8.GetString(input)))
+        .Deserializer(45, (input, inst) => inst.Value.Twitch = new(TwitchUrl, Encoding.UTF8.GetString(input)))
         .Deserializer(46, (input, inst) => inst.Value.Diamonds = input.Parse<uint>())
         .Deserializer(48, (input, inst) => inst.Value.ExplosionId = input.Parse<byte>())
         .Deserializer(49, (input, inst) => inst.Value.ModeratorStatus = input.ParseEnum<ModeratorStatus>())
@@ -136,10 +136,10 @@ public enum FriendState : byte
     RequestReceived = 4
 }
 
-public record struct LinkedServiceProfile(string UserName, Uri Url)
+public readonly struct LinkedServiceProfile(Uri url, string userName) //TODO IEquatable<>
 {
-    public static LinkedServiceProfile Create(Uri urlPrefix, string userName)
-        => new(userName, new Uri(urlPrefix, userName));
+    public readonly Uri Url = new(url, userName);
+    public readonly string UserName = userName;
 }
 
 public enum ModeratorStatus : byte
