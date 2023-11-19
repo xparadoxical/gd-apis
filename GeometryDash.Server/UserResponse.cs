@@ -58,10 +58,6 @@ public class UserResponse : ISerializable<UserResponse>
     public ModeratorStatus? ModeratorStatus { get; set; }
     public PrivacyGroup? CommentHistoryPublicTo { get; set; }
 
-    private static readonly Uri youtubeUri = new("https://www.youtube.com/channel/");
-    private static readonly Uri twitchUri = new("https://twitter.com/");
-    private static readonly Uri twitterUri = new("https://www.twitch.tv/");
-
     public static SerializationOptions Options { get; } = new(true);
     public static SerializationLogic<UserResponse> SerializationLogic { get; } = new SerializationLogicBuilder<UserResponse>(43)
         .Deserializer(1, (input, inst) => inst.Value.UserName = Encoding.UTF8.GetString(input))
@@ -81,7 +77,7 @@ public class UserResponse : ISerializable<UserResponse>
         .Deserializer(17, (input, inst) => inst.Value.UserCoins = input.Parse<uint>())
         .Deserializer(18, (input, inst) => inst.Value.AllowMessagesFrom = input.ParseEnum<PrivacyGroup>())
         .Deserializer(19, (input, inst) => inst.Value.AllowFriendRequests = input.ParseBool('0', '1'))
-        .Deserializer(20, (input, inst) => inst.Value.YouTube = new(YouTubeUrl, Encoding.UTF8.GetString(input)))
+        .Deserializer(20, (input, inst) => inst.Value.YouTube = new(LinkedServiceProfile.YouTube, Encoding.UTF8.GetString(input)))
         .Deserializer(21, (input, inst) => inst.Value.CubeId = input.Parse<ushort>())
         .Deserializer(22, (input, inst) => inst.Value.ShipId = input.Parse<ushort>())
         .Deserializer(23, (input, inst) => inst.Value.BallId = input.Parse<ushort>())
@@ -101,8 +97,8 @@ public class UserResponse : ISerializable<UserResponse>
         .Deserializer(41, (input, inst) => inst.Value.IsNewFriendOrRequest = input.ParseBool('1'))
         .Deserializer(42, (input, inst) => inst.Value.ScoreAge = TimeSpan.Zero) //TODO parse timespans
         .Deserializer(43, (input, inst) => inst.Value.SpiderId = input.Parse<ushort>())
-        .Deserializer(44, (input, inst) => inst.Value.Twitter = new(TwitterUrl, Encoding.UTF8.GetString(input)))
-        .Deserializer(45, (input, inst) => inst.Value.Twitch = new(TwitchUrl, Encoding.UTF8.GetString(input)))
+        .Deserializer(44, (input, inst) => inst.Value.Twitter = new(LinkedServiceProfile.Twitter, Encoding.UTF8.GetString(input)))
+        .Deserializer(45, (input, inst) => inst.Value.Twitch = new(LinkedServiceProfile.Twitch, Encoding.UTF8.GetString(input)))
         .Deserializer(46, (input, inst) => inst.Value.Diamonds = input.Parse<uint>())
         .Deserializer(48, (input, inst) => inst.Value.ExplosionId = input.Parse<byte>())
         .Deserializer(49, (input, inst) => inst.Value.ModeratorStatus = input.ParseEnum<ModeratorStatus>())
@@ -140,6 +136,10 @@ public readonly struct LinkedServiceProfile(Uri url, string userName) //TODO IEq
 {
     public readonly Uri Url = new(url, userName);
     public readonly string UserName = userName;
+
+    public static readonly Uri YouTube = new("https://www.youtube.com/channel/");
+    public static readonly Uri Twitch = new("https://twitter.com/");
+    public static readonly Uri Twitter = new("https://www.twitch.tv/");
 }
 
 public enum ModeratorStatus : byte
