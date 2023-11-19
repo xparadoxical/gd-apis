@@ -73,7 +73,7 @@ public sealed partial class ServerSerializer
 
     public static T[] DeserializeArray<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>(ReadOnlySpan<byte> input, byte itemSeparator = (byte)'|')
     {
-        var ret = new T[input.Count(itemSeparator) + 1];
+        var ret = new T[System.MemoryExtensions.Count(input, itemSeparator) + 1];
 
         int i = 0;
         foreach (var value in input.Tokenize(itemSeparator))
