@@ -6,7 +6,7 @@ namespace GeometryDash.Server;
 public class UserResponse : ISerializable<UserResponse>
 {
     public required string UserName { get; set; }
-    public required uint PlayerId { get; set; }
+    public uint? PlayerId { get; set; }
     public uint? Stars { get; set; }
     public ushort? Demons { get; set; }
     //5 missing
