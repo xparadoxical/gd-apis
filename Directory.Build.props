@@ -1,0 +1,7 @@
+<Project>
+    <PropertyGroup>
+        <NoWarn>
+            CS9193 <!-- no one cares, it's implicit in -->
+        </NoWarn>
+    </PropertyGroup>
+</Project>
