@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.2.2" />
+    <PackageReference Include="gfoidl.Base64" Version="2.0.0" />
   </ItemGroup>
 
 </Project>
