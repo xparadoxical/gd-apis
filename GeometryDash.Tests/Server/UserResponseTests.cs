@@ -163,7 +163,7 @@ public class UserResponseTests
             HasGlow = true,
             AccountId = 5116312,
             FriendRequestId = 60220714,
-            FriendRequestMessage = "dGVzdA==", //TODO unbase64
+            FriendRequestMessage = "test",
             FriendRequestAge = TimeSpan.Zero, //TODO timespan parsing
             IsNewFriendOrRequest = false
         }, deserialized, true);

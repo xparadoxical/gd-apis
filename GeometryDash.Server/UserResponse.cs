@@ -89,7 +89,7 @@ public class UserResponse : ISerializable<UserResponse>
         .Deserializer(30, (input, inst) => inst.Value.GlobalLeaderboardPosition = input.Parse<uint>())
         .Deserializer(31, (input, inst) => inst.Value.FriendState = input.Length is 0 ? Server.FriendState.None : input.ParseEnum<FriendState>())
         .Deserializer(32, (input, inst) => inst.Value.FriendRequestId = input.Parse<uint>())
-        .Deserializer(35, (input, inst) => inst.Value.FriendRequestMessage = Encoding.UTF8.GetString(input)) //TODO un-base64
+        .Deserializer(35, (input, inst) => inst.Value.FriendRequestMessage = Base64.Decode(input))
         .Deserializer(37, (input, inst) => inst.Value.FriendRequestAge = TimeSpan.Zero) //TODO parse timespans
         .Deserializer(38, (input, inst) => inst.Value.IncomingMessageCount = input.Parse<byte>())
         .Deserializer(39, (input, inst) => inst.Value.IncomingFriendRequestCount = input.Parse<byte>())
