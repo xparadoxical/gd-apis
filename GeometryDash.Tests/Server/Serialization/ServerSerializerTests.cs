@@ -7,30 +7,39 @@ public class ServerSerializerTests
     [Fact]
     public void Deserialize_ParsesCorrectly()
     {
-        Assert.True(ServerSerializer.Deserialize<Unkeyed>("3:asd") is { I: 3, S: "asd" });
-        Assert.True(ServerSerializer.Deserialize<Keyed>("4:3:5:asd") is { I: 3, S: "asd" });
-        Assert.True(ServerSerializer.Deserialize<Nested<Keyed>>("5~4:3:5:asd") is { I: 5, Inner: { I: 3, S: "asd" } });
+        Assert.Multiple(
+            () => Assert.True(ServerSerializer.Deserialize<Unkeyed>("3:asd") is { I: 3, S: "asd" }),
+            () => Assert.True(ServerSerializer.Deserialize<Keyed>("4:3:5:asd") is { I: 3, S: "asd" }),
+            () => Assert.True(ServerSerializer.Deserialize<Nested<Keyed>>("5~4:3:5:asd") is { I: 5, Inner: { I: 3, S: "asd" } })
+        );
     }
 
     [Fact]
     public void Deserialize_WithInvalidInput_PassesToCoreDeserializerWhichThrows()
     {
-        var e = Assert.Throws<SerializationException>(() => ServerSerializer.Deserialize<NotSerializable>("1:2"));
-        Assert.IsType<DirectoryNotFoundException>(e.InnerException);
+        Exception? thrown = null;
+        Assert.Multiple(
+            () => thrown = Assert.Throws<SerializationException>(() => ServerSerializer.Deserialize<NotSerializable>("1:2")),
+            () => Assert.IsType<DirectoryNotFoundException>(thrown?.InnerException)
+        );
     }
 
     [Fact]
     public void Deserialize_List_ParsesCorrectly()
     {
-        Assert.True(ServerSerializer.Deserialize<int[]>("3|4") is [3, 4]);
-        Assert.True(ServerSerializer.Deserialize<Unkeyed[]>("3:asd|4:qwe") is [{ I: 3, S: "asd" }, { I: 4, S: "qwe" }]);
+        Assert.Multiple(
+            () => Assert.True(ServerSerializer.Deserialize<int[]>("3|4") is [3, 4]),
+            () => Assert.True(ServerSerializer.Deserialize<Unkeyed[]>("3:asd|4:qwe") is [{ I: 3, S: "asd" }, { I: 4, S: "qwe" }])
+        );
     }
 
     [Fact]
     public void Deserialize_WithUnsupportedType_Throws()
     {
-        Assert.Throws<ArgumentException>(() => ServerSerializer.Deserialize<object>(""));
-        Assert.Throws<ArgumentException>(() => ServerSerializer.Deserialize<object[]>(""));
+        Assert.Multiple(
+            () => Assert.Throws<ArgumentException>(() => ServerSerializer.Deserialize<object>("")),
+            () => Assert.Throws<ArgumentException>(() => ServerSerializer.Deserialize<object[]>(""))
+        );
     }
 
     private class NotSerializable : ISerializable<NotSerializable>

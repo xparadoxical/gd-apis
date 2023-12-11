@@ -21,10 +21,13 @@ public class PagingInfoTests
         var input = string.Join(':', results, pageIndex, pageSize);
         var expected = new PagingInfo(results, pageIndex, pageSize);
 
-        Assert.Equal(expected, PagingInfo.Parse(input));
+        PagingInfo output = default;
+        Assert.Multiple(
+            () => Assert.Equal(expected, PagingInfo.Parse(input)),
 
-        Assert.True(PagingInfo.TryParse(input, null, out var output));
-        Assert.Equal(expected, output);
+            () => Assert.True(PagingInfo.TryParse(input, null, out output)),
+            () => Assert.Equal(expected, output)
+        );
     }
 
     [Theory]
@@ -35,7 +38,9 @@ public class PagingInfoTests
     [InlineData("0:0:+1")]
     public void Parse_Fails(string input)
     {
-        Assert.ThrowsAny<Exception>(() => PagingInfo.Parse(input));
-        Assert.False(PagingInfo.TryParse(input, null, out var _));
+        Assert.Multiple(
+            () => Assert.ThrowsAny<Exception>(() => PagingInfo.Parse(input)),
+            () => Assert.False(PagingInfo.TryParse(input, null, out var _))
+        );
     }
 }

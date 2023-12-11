@@ -27,11 +27,16 @@ public class RobTopStringReaderTests
     {
         var results = Read(input, keyed);
 
-        Assert.Equal(outputs.Length / 2, results.Count);
+        var assertions = new List<Action>(results.Count + 1);
+
+        assertions.Add(() => Assert.Equal(outputs.Length / 2, results.Count));
         for (int i = 0; i < results.Count; i++)
         {
-            Assert.Equal((Convert.ToUInt32(outputs[2 * i]), (string)outputs[2 * i + 1]), results[i]);
+            var j = i; //the place of variable declaration is where the closure is instantiated. _i is in the outer scope, so it needs to be copied for the lambda to get the current value of _i every iteration
+            assertions.Add(() => Assert.Equal((Convert.ToUInt32(outputs[2 * j]), (string)outputs[2 * j + 1]), results[j]));
         }
+
+        Assert.Multiple(assertions.ToArray());
     }
 
     [Theory]
