@@ -1,5 +1,3 @@
-using System.Text;
-
 namespace GeometryDash.Tests.Server.Serialization;
 public class ParsingExtensionsTests
 {
@@ -48,8 +46,6 @@ public class ParsingExtensionsTests
     {
         Assert.Throws<ArgumentException>(() => Utf8(toParse).ParseEnum<UShortEnum>());
     }
-
-    private static ReadOnlySpan<byte> Utf8(string s) => Encoding.UTF8.GetBytes(s).AsSpan();
 
     private enum ShortEnum : short { A = -1 }
     private enum UShortEnum : ushort { A }
