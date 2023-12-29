@@ -20,20 +20,12 @@ public sealed record class SerializationLogic<T>(
     ImmutableDictionary<uint, Deserializer<T>> Deserializers, //TODO net8 use FrozenDictionary
     ImmutableDictionary<uint, Serializer<T>> Serializers);
 
-public sealed class SerializationLogicBuilder<T> where T : ISerializable<T>
+public sealed class SerializationLogicBuilder<T>(uint fieldCount) where T : ISerializable<T>
 {
-    private readonly uint _fieldCount;
-    private readonly Dictionary<uint, Deserializer<T>> _deserializers;
+    private readonly Dictionary<uint, Deserializer<T>> _deserializers = new((int)fieldCount);
     private uint _deserializerIndex = 0;
-    private readonly Dictionary<uint, Serializer<T>> _serializers;
+    private readonly Dictionary<uint, Serializer<T>> _serializers = new((int)fieldCount);
     private uint _serializerIndex = 0;
-
-    public SerializationLogicBuilder(uint fieldCount)
-    {
-        _fieldCount = fieldCount;
-        _deserializers = new((int)fieldCount);
-        _serializers = new((int)fieldCount);
-    }
 
     public SerializationLogicBuilder<T> Deserializer(uint index, Deserializer<T> de)
     {
@@ -56,9 +48,9 @@ public sealed class SerializationLogicBuilder<T> where T : ISerializable<T>
     public SerializationLogic<T> Build()
     {
 #if !DEBUG
-        if (_deserializers.Count != _fieldCount)
+        if (_deserializers.Count != fieldCount)
             ThrowDeserializersCount();
-        if (_serializers.Count != _fieldCount)
+        if (_serializers.Count != fieldCount)
             ThrowSerializersCount();
 #endif
 

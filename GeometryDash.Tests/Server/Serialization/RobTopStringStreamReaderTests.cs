@@ -5,21 +5,17 @@ using CommunityToolkit.HighPerformance.Buffers;
 using Xunit.Abstractions;
 
 namespace GeometryDash.Tests.Server.Serialization;
-public class RobTopStringStreamReaderTests
+public class RobTopStringStreamReaderTests(ITestOutputHelper output)
 {
-    private readonly ITestOutputHelper _output;
-
-    public RobTopStringStreamReaderTests(ITestOutputHelper output) => _output = output;
-
     public List<(uint, string)> Read(string input, bool keyed)
     {
-        _output.WriteLine("'{0}'{1}", input, keyed ? " keyed" : "");
+        output.WriteLine("'{0}'{1}", input, keyed ? " keyed" : "");
 
         var fields = new List<(uint, string)>();
         foreach (var (k, v) in new RobTopStringStreamReader(new MemoryStream(Encoding.UTF8.GetBytes(input)), new ArrayPoolBufferWriter<byte>(), keyed))
         {
             string s = Encoding.UTF8.GetString(v);
-            _output.WriteLine($"{k}: '{s}'");
+            output.WriteLine($"{k}: '{s}'");
             fields.Add((k, s));
         }
         return fields;
