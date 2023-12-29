@@ -9,14 +9,16 @@ namespace GeometryDash.Server.Serialization;
 public partial class ServerSerializer
 {
     /// <summary>Dictionary&lt;type handle, delegate*&gt;</summary>
-    private static Dictionary<nint, nuint> _serializationFunctionCache = new(/*TODO runtime count of cached types*/);
+    private static readonly Dictionary<nint, nuint> _serializationFunctionCache = new(/*TODO runtime count of cached types*/);
 
     private static readonly MethodInfo _deserializeSerializable = typeof(ServerSerializer)
-        .GetMethod(nameof(DeserializeSerializable), Public | Static, new[] { typeof(ReadOnlySpan<byte>) })! ?? throw null!;
-    private static readonly MethodInfo _deserializeNumber = typeof(ServerSerializer) //TODO net8 use IUtf8SpanParsable instead
-        .GetMethod(nameof(DeserializeNumber), NonPublic | Static)! ?? throw null!;
+        .GetMethod(nameof(DeserializeSerializable), Public | Static, new[] { typeof(ReadOnlySpan<byte>) }) ?? throw null!;
+    private static readonly MethodInfo _deserializeNumber = typeof(ServerSerializer)
+        .GetMethod(nameof(DeserializeNumber), NonPublic | Static) ?? throw null!;
+    private static readonly MethodInfo _deserializeSpanParsable = typeof(ServerSerializer)
+        .GetMethod(nameof(DeserializeSpanParsable), NonPublic | Static) ?? throw null!;
     private static readonly MethodInfo _deserializeArrayWithDefaultSeparator = typeof(ServerSerializer)
-        .GetMethod(nameof(DeserializeArrayWithDefaultSeparator), NonPublic | Static)! ?? throw null!;
+        .GetMethod(nameof(DeserializeArrayWithDefaultSeparator), NonPublic | Static) ?? throw null!;
 
     public static unsafe T Deserialize<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>(ReadOnlySpan<byte> input)
     {
@@ -45,6 +47,8 @@ public partial class ServerSerializer
         //else if (T is INumber<T>)
         else if (typeof(INumber<>).TryMakeGenericType(out _, t)) //TODO net8 use IUtf8SpanParsable instead
             method = _deserializeNumber;
+        else if (typeof(IUtf8SpanParsable<>).TryMakeGenericType(out _, t))
+            method = _deserializeSpanParsable;
         //else if (T is (new El)[])
         else if (t.IsArray && t.GetElementType() is Type el)
         {
@@ -59,6 +63,9 @@ public partial class ServerSerializer
 
     private static T DeserializeNumber<T>(ReadOnlySpan<byte> input) where T : INumber<T> //TODO net8 use IUtf8SpanParsable instead
         => input.Parse<T>();
+
+    private static T DeserializeSpanParsable<T>(ReadOnlySpan<byte> input) where T : IUtf8SpanParsable<T>
+        => T.Parse(input, null);
 
     private static T[] DeserializeArrayWithDefaultSeparator<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>(ReadOnlySpan<byte> input)
         => DeserializeArray<T>(input);
