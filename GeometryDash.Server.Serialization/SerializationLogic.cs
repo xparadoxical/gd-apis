@@ -1,5 +1,5 @@
 using System.Buffers;
-using System.Collections.Immutable;
+using System.Collections.Frozen;
 
 using CommunityToolkit.HighPerformance;
 
@@ -17,8 +17,8 @@ public delegate void Serializer<T>(IBufferWriter<byte> output, Ref<T> instance);
 /// <summary>A collection of serializing functions for every serializable field.</summary>
 /// <typeparam name="T">The type to serialize.</typeparam>
 public sealed record class SerializationLogic<T>(
-    ImmutableDictionary<uint, Deserializer<T>> Deserializers, //TODO net8 use FrozenDictionary
-    ImmutableDictionary<uint, Serializer<T>> Serializers);
+    FrozenDictionary<uint, Deserializer<T>> Deserializers,
+    FrozenDictionary<uint, Serializer<T>> Serializers);
 
 public sealed class SerializationLogicBuilder<T>(uint fieldCount) where T : ISerializable<T>
 {
@@ -54,7 +54,7 @@ public sealed class SerializationLogicBuilder<T>(uint fieldCount) where T : ISer
             ThrowSerializersCount();
 #endif
 
-        return new(_deserializers.ToImmutableDictionary(), _serializers.ToImmutableDictionary());
+        return new(_deserializers.ToFrozenDictionary(), _serializers.ToFrozenDictionary());
     }
 
     private static void ThrowDeserializersCount()
