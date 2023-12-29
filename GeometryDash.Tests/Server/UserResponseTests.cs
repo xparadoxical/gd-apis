@@ -77,7 +77,7 @@ public class UserResponseTests
             RobotId = 16,
             HasGlow = true,
             IsRegistered = true,
-            GlobalLeaderboardPosition = 0,//TODO keep null, 0 is nonsense
+            GlobalLeaderboardPosition = null,
             FriendState = FriendState.None,
             SpiderId = 11,
             Twitter = new(LinkedServiceProfile.Twitter, "vipringd"),

@@ -86,7 +86,7 @@ public class UserResponse : ISerializable<UserResponse>
         .Deserializer(26, (input, inst) => inst.Value.RobotId = input.Parse<ushort>())
         .Deserializer(28, (input, inst) => inst.Value.HasGlow = input.ParseBool('1', '0'))
         .Deserializer(29, (input, inst) => inst.Value.IsRegistered = input.ParseBool('1', '0'))
-        .Deserializer(30, (input, inst) => inst.Value.GlobalLeaderboardPosition = input.Parse<uint>())
+        .Deserializer(30, (input, inst) => inst.Value.GlobalLeaderboardPosition = input.Parse<uint>() is var i && i == 0 ? null : i)
         .Deserializer(31, (input, inst) => inst.Value.FriendState = input.Length is 0 ? Server.FriendState.None : input.ParseEnum<FriendState>())
         .Deserializer(32, (input, inst) => inst.Value.FriendRequestId = input.Parse<uint>())
         .Deserializer(35, (input, inst) => inst.Value.FriendRequestMessage = Base64.Decode(input))
