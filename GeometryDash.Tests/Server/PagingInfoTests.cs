@@ -7,7 +7,7 @@ public class PagingInfoTests
     [Fact]
     public void Parse_NonNullFormatProvider_IsIgnored()
     {
-        var input = "1:1:1";
+        var input = Utf8("1:1:1");
         IFormatProvider provider = CultureInfo.InvariantCulture;
 
         PagingInfo.Parse(input, provider);
@@ -23,15 +23,14 @@ public class PagingInfoTests
 
         PagingInfo output = default;
         Assert.Multiple(
-            () => Assert.Equal(expected, PagingInfo.Parse(input)),
+            () => Assert.Equal(expected, PagingInfo.Parse(Utf8(input))),
 
-            () => Assert.True(PagingInfo.TryParse(input, null, out output)),
+            () => Assert.True(PagingInfo.TryParse(Utf8(input), null, out output)),
             () => Assert.Equal(expected, output)
         );
     }
 
     [Theory]
-    [InlineData((string?)null)]
     [InlineData("")]
     [InlineData(":")]
     [InlineData("::")]
@@ -39,8 +38,8 @@ public class PagingInfoTests
     public void Parse_Fails(string input)
     {
         Assert.Multiple(
-            () => Assert.ThrowsAny<Exception>(() => PagingInfo.Parse(input)),
-            () => Assert.False(PagingInfo.TryParse(input, null, out var _))
+            () => Assert.ThrowsAny<Exception>(() => PagingInfo.Parse(Utf8(input))),
+            () => Assert.False(PagingInfo.TryParse(Utf8(input), null, out var _))
         );
     }
 }
