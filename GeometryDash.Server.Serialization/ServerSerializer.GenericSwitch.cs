@@ -45,7 +45,7 @@ public partial class ServerSerializer
         if (typeof(ISerializable<>).TryMakeGenericType(out _, t))
             method = _deserializeSerializable;
         //else if (T is INumber<T>)
-        else if (typeof(INumber<>).TryMakeGenericType(out _, t)) //TODO net8 use IUtf8SpanParsable instead
+        else if (typeof(INumber<>).TryMakeGenericType(out _, t))
             method = _deserializeNumber;
         else if (typeof(IUtf8SpanParsable<>).TryMakeGenericType(out _, t))
             method = _deserializeSpanParsable;
@@ -61,7 +61,7 @@ public partial class ServerSerializer
         return (delegate*<ReadOnlySpan<byte>, T>)method.MakeGenericMethod(t).MethodHandle.GetFunctionPointer();
     }
 
-    private static T DeserializeNumber<T>(ReadOnlySpan<byte> input) where T : INumber<T> //TODO net8 use IUtf8SpanParsable instead
+    private static T DeserializeNumber<T>(ReadOnlySpan<byte> input) where T : INumber<T>
         => input.Parse<T>();
 
     private static T DeserializeSpanParsable<T>(ReadOnlySpan<byte> input) where T : IUtf8SpanParsable<T>
