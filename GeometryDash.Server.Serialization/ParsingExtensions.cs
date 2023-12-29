@@ -132,4 +132,40 @@ public static class ParsingExtensions
 
     private static ulong ThrowEnumNotSupported(TypeCode tc)
         => throw new NotSupportedException($"Enums with underlying type {tc} are not supported.");
+
+    public static TimeSpan ParseTimeSpan(this ReadOnlySpan<byte> input)
+    {
+        var space = input.IndexOf((byte)' ');
+        if (space is not 1 or 2)
+            throw new FormatException("");
+
+        var count = input[..space].Parse<byte>();
+        var plural = input[^1] == (byte)'s';
+        //valid if (>1) == (has -s)
+        if (count > 1 ^ plural)
+            throw new FormatException("Mismatched grammatical number.");
+
+        var unit = input[(space + 1)..^(plural ? 1 : 0)];
+
+        //PERF bench how bad all of this is
+        if (unit[0] is (byte)'m')
+        {
+            if (unit.SequenceEqual("minute"u8))
+                return TimeSpan.FromMinutes(count);
+            else if (unit.SequenceEqual("month"u8))
+                return TimeSpan.FromDays(count * 31 /*30.5?*/);
+        }
+        else if (unit.SequenceEqual("second"u8))
+            return TimeSpan.FromSeconds(count);
+        else if (unit.SequenceEqual("hour"u8))
+            return TimeSpan.FromHours(count);
+        else if (unit.SequenceEqual("day"u8))
+            return TimeSpan.FromDays(count);
+        else if (unit.SequenceEqual("week"u8))
+            return TimeSpan.FromDays(count * 7);
+        else if (unit.SequenceEqual("year"u8))
+            return TimeSpan.FromDays(count * 365 /*365.25?*/);
+
+        throw new FormatException("Unknown time unit.");
+    }
 }

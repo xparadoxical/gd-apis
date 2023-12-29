@@ -164,7 +164,7 @@ public class UserResponseTests
             AccountId = 5116312,
             FriendRequestId = 60220714,
             FriendRequestMessage = "test",
-            FriendRequestAge = TimeSpan.Zero, //TODO timespan parsing
+            FriendRequestAge = TimeSpan.FromMinutes(7),
             IsNewFriendOrRequest = false
         }, deserialized, true);
     }

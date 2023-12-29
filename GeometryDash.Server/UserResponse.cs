@@ -90,12 +90,12 @@ public class UserResponse : ISerializable<UserResponse>
         .Deserializer(31, (input, inst) => inst.Value.FriendState = input.Length is 0 ? Server.FriendState.None : input.ParseEnum<FriendState>())
         .Deserializer(32, (input, inst) => inst.Value.FriendRequestId = input.Parse<uint>())
         .Deserializer(35, (input, inst) => inst.Value.FriendRequestMessage = Base64.Decode(input))
-        .Deserializer(37, (input, inst) => inst.Value.FriendRequestAge = TimeSpan.Zero) //TODO parse timespans
+        .Deserializer(37, (input, inst) => inst.Value.FriendRequestAge = input.ParseTimeSpan())
         .Deserializer(38, (input, inst) => inst.Value.IncomingMessageCount = input.Parse<byte>())
         .Deserializer(39, (input, inst) => inst.Value.IncomingFriendRequestCount = input.Parse<byte>())
         .Deserializer(40, (input, inst) => inst.Value.NewFriendsCount = input.Parse<byte>())
         .Deserializer(41, (input, inst) => inst.Value.IsNewFriendOrRequest = input.ParseBool('1'))
-        .Deserializer(42, (input, inst) => inst.Value.ScoreAge = TimeSpan.Zero) //TODO parse timespans
+        .Deserializer(42, (input, inst) => inst.Value.ScoreAge = input.ParseTimeSpan())
         .Deserializer(43, (input, inst) => inst.Value.SpiderId = input.Parse<ushort>())
         .Deserializer(44, (input, inst) => inst.Value.Twitter = new(LinkedServiceProfile.Twitter, Encoding.UTF8.GetString(input)))
         .Deserializer(45, (input, inst) => inst.Value.Twitch = new(LinkedServiceProfile.Twitch, Encoding.UTF8.GetString(input)))

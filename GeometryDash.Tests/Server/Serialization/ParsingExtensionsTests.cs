@@ -47,6 +47,22 @@ public class ParsingExtensionsTests
         Assert.Throws<ArgumentException>(() => Utf8(toParse).ParseEnum<UShortEnum>());
     }
 
+    [Theory]
+    [InlineData("1 days")]
+    [InlineData("2 month")]
+    public void ParseTimeSpan_WithIncorrectUnit_Throws(string input)
+    {
+        Assert.Throws<FormatException>(() => Utf8(input).ParseTimeSpan());
+    }
+
+    [Theory]
+    [InlineData("1 day", TimeSpan.TicksPerDay)]
+    [InlineData("2 months", TimeSpan.TicksPerDay * 31 * 2)]
+    public void ParseTimeSpan_Works(string input, long resultTicks)
+    {
+        Assert.Equal(TimeSpan.FromTicks(resultTicks), Utf8(input).ParseTimeSpan());
+    }
+
     private enum ShortEnum : short { A = -1 }
     private enum UShortEnum : ushort { A }
 }
