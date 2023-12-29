@@ -132,7 +132,7 @@ public enum FriendState : byte
     RequestReceived = 4
 }
 
-public readonly struct LinkedServiceProfile(Uri url, string userName) //TODO IEquatable<>
+public readonly struct LinkedServiceProfile(Uri url, string userName) : IEquatable<LinkedServiceProfile>
 {
     public readonly Uri Url = new(url, userName);
     public readonly string UserName = userName;
@@ -140,6 +140,15 @@ public readonly struct LinkedServiceProfile(Uri url, string userName) //TODO IEq
     public static readonly Uri YouTube = new("https://www.youtube.com/channel/");
     public static readonly Uri Twitch = new("https://twitter.com/");
     public static readonly Uri Twitter = new("https://www.twitch.tv/");
+
+    public bool Equals(LinkedServiceProfile other) => Url == other.Url && UserName == other.UserName;
+
+    public override bool Equals(object? obj) => obj is LinkedServiceProfile other && Equals(other);
+    public override int GetHashCode() => HashCode.Combine(Url, UserName);
+
+    public static bool operator ==(LinkedServiceProfile left, LinkedServiceProfile right) => left.Equals(right);
+
+    public static bool operator !=(LinkedServiceProfile left, LinkedServiceProfile right) => !(left == right);
 }
 
 public enum ModeratorStatus : byte
