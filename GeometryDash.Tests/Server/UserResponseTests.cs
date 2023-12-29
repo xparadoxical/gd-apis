@@ -149,23 +149,26 @@ public class UserResponseTests
     [InlineData("1:EndorphinexPL:2:17208997:9:6:10:12:11:3:14:5:15:2:16:5116312:32:60220714:35:dGVzdA==:41::37:7 minutes#0:0:20")]
     public void SerializationLogic_getGJFriendRequests_Works(string input)
     {
-        var trimmedPaging = input[..input.IndexOf('#')]; //TODO paged data object
-        var deserialized = ServerSerializer.Deserialize<UserResponse>(trimmedPaging);
+        var deserialized = ServerSerializer.Deserialize<PagedData<UserResponse>>(input);
 
-        Assert.Equivalent(new UserResponse()
+        Assert.Equivalent(new PagedData<UserResponse>()
         {
-            UserName = "EndorphinexPL",
-            PlayerId = 17208997,
-            ShowcaseIconId = 6,
-            PlayerColor1 = 12,
-            PlayerColor2 = 3,
-            ShowcaseIconType = GameMode.Robot,
-            HasGlow = true,
-            AccountId = 5116312,
-            FriendRequestId = 60220714,
-            FriendRequestMessage = "test",
-            FriendRequestAge = TimeSpan.FromMinutes(7),
-            IsNewFriendOrRequest = false
+            Data = new()
+            {
+                UserName = "EndorphinexPL",
+                PlayerId = 17208997,
+                ShowcaseIconId = 6,
+                PlayerColor1 = 12,
+                PlayerColor2 = 3,
+                ShowcaseIconType = GameMode.Robot,
+                HasGlow = true,
+                AccountId = 5116312,
+                FriendRequestId = 60220714,
+                FriendRequestMessage = "test",
+                FriendRequestAge = TimeSpan.FromMinutes(7),
+                IsNewFriendOrRequest = false
+            },
+            Paging = new(0, 0, 20)
         }, deserialized, true);
     }
 }
