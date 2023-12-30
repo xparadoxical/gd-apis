@@ -3,14 +3,12 @@ using System.Collections.Specialized;
 using System.Runtime.CompilerServices;
 
 namespace GeometryDash.Server.Serialization;
-public sealed class Pool<T> where T : class
+public sealed class Pool<T>(Func<T> defaultFactory) where T : class
 {
-    private readonly Func<T>? _factory;
+    private readonly Func<T>? _factory = defaultFactory;
 
     /// <summary>Value true means free to rent.</summary>
     private readonly OrderedDictionary _instances = new();
-
-    public Pool(Func<T> defaultFactory) => _factory = defaultFactory;
 
     public T Rent() => Rent(_factory!);
 

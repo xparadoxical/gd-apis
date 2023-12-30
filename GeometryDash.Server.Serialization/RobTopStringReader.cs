@@ -3,16 +3,14 @@ using System.Text;
 using CommunityToolkit.HighPerformance;
 
 namespace GeometryDash.Server.Serialization;
-public ref struct RobTopStringReader
+public ref struct RobTopStringReader(ReadOnlySpan<byte> input)
 {
-    private readonly ReadOnlySpan<byte> _span;
+    private readonly ReadOnlySpan<byte> _span = input;
 
     private int _keyStart = 0;
     private int _keyEnd = 0;
     private int _valueStart = 0;
     private int _valueEnd = -1;
-
-    public RobTopStringReader(ReadOnlySpan<byte> input) => _span = input;
 
     public byte FieldSeparator { get; init; } = (byte)':';
 
