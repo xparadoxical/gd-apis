@@ -57,6 +57,10 @@ public class UserResponse : ISerializable<UserResponse>
     public byte? ExplosionId { get; set; }
     public ModeratorStatus? ModeratorStatus { get; set; }
     public PrivacyGroup? CommentHistoryPublicTo { get; set; }
+    public byte? GlowColor { get; set; }
+    public uint? Moons { get; set; }
+    public ushort? SwingId { get; set; }
+    public ushort? JetpackId { get; set; }
 
     public static SerializationOptions Options { get; } = new(true);
     public static SerializationLogic<UserResponse> SerializationLogic { get; } = new SerializationLogicBuilder<UserResponse>(43)
@@ -103,6 +107,10 @@ public class UserResponse : ISerializable<UserResponse>
         .Deserializer(48, (input, inst) => inst.Value.ExplosionId = input.Parse<byte>())
         .Deserializer(49, (input, inst) => inst.Value.ModeratorStatus = input.ParseEnum<ModeratorStatus>())
         .Deserializer(50, (input, inst) => inst.Value.CommentHistoryPublicTo = input.ParseEnum<PrivacyGroup>())
+        .Deserializer(51, (input, inst) => inst.Value.GlowColor = input.Parse<byte>())
+        .Deserializer(52, (input, inst) => inst.Value.Moons = input.Parse<uint>())
+        .Deserializer(53, (input, inst) => inst.Value.SwingId = input.Parse<ushort>())
+        .Deserializer(54, (input, inst) => inst.Value.JetpackId = input.Parse<ushort>())
         .Build();
 }
 
