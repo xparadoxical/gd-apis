@@ -1,3 +1,5 @@
+using GeometryDash.Server.Users;
+
 namespace GeometryDash.Tests.Server;
 public class PagedDataTests
 {

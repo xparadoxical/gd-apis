@@ -1,4 +1,6 @@
-namespace GeometryDash.Tests.Server;
+using GeometryDash.Server.Users;
+
+namespace GeometryDash.Tests.Server.Users;
 public class UserResponseTests
 {
     [Theory]
