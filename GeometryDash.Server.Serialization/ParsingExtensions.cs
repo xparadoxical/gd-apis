@@ -26,7 +26,7 @@ public static class ParsingExtensions
 
     public static void WriteUtf8<T>(this IBufferWriter<byte> writer, T value) where T : INumberBase<T>
     {
-        Span<byte> buf = stackalloc byte[48]; //TODO stackalloc could be smaller
+        Span<byte> buf = stackalloc byte[20]; //max ulong/long length
         writer.Write(value.Format(buf));
     }
 
@@ -147,7 +147,7 @@ public static class ParsingExtensions
 
         var unit = input[(space + 1)..^(plural ? 1 : 0)];
 
-        //PERF bench how bad all of this is
+        //PERF bench how bad all of this is //mapperTable.IndexOf(input)?
         if (unit[0] is (byte)'m')
         {
             if (unit.SequenceEqual("minute"u8))
