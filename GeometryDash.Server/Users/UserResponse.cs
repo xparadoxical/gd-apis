@@ -163,5 +163,6 @@ public enum ModeratorStatus : byte
 {
     None,
     Moderator,
-    ElderModerator
+    ElderModerator,
+    LeaderboardModerator
 }
