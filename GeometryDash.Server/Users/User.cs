@@ -19,5 +19,5 @@ public class User
     public required byte PlayerColor1 { get; set; }
     public required byte PlayerColor2 { get; set; }
     public required bool HasGlow { get; set; }
-    public required uint AccountId { get; set; }
+    public required uint? AccountId { get; set; }
 }

@@ -22,7 +22,7 @@ public class UserResponse : ISerializable<UserResponse>
     public ushort? SecretCoins { get; set; }
     public GameMode? ShowcaseIconType { get; set; }
     public bool? HasGlow { get; set; }
-    public required uint AccountId { get; set; }
+    public required uint? AccountId { get; set; }
     public uint? UserCoins { get; set; }
     public PrivacyGroup? AllowMessagesFrom { get; set; }
     public bool? AllowFriendRequests { get; set; }
@@ -77,7 +77,7 @@ public class UserResponse : ISerializable<UserResponse>
         .Deserializer(13, (input, inst) => inst.Value.SecretCoins = input.Parse<ushort>())
         .Deserializer(14, (input, inst) => inst.Value.ShowcaseIconType = input.ParseEnum<GameMode>())
         .Deserializer(15, (input, inst) => inst.Value.HasGlow = input.ParseBool('2', '0'))
-        .Deserializer(16, (input, inst) => inst.Value.AccountId = input.Parse<uint>())
+        .Deserializer(16, (input, inst) => inst.Value.AccountId = input.Parse<uint>() is var i && i == 0 ? null : i)
         .Deserializer(17, (input, inst) => inst.Value.UserCoins = input.Parse<uint>())
         .Deserializer(18, (input, inst) => inst.Value.AllowMessagesFrom = input.ParseEnum<PrivacyGroup>())
         .Deserializer(19, (input, inst) => inst.Value.AllowFriendRequests = input.ParseBool('0', '1'))
