@@ -35,8 +35,7 @@ public class UserResponse : ISerializable<UserResponse>
     public ushort? RobotId { get; set; }
     //public ushort? TrailId { get; set; } //27 never sent
     //28 == 15
-    /// <summary>Probably equivalent to <c><see cref="AccountId"/> != 0</c></summary>
-    public bool? IsRegistered { get; set; }
+    public bool IsRegistered => AccountId is not null;
     public uint? GlobalLeaderboardPosition { get; set; }
     public FriendState? FriendState { get; set; }
     public uint? FriendRequestId { get; set; }
@@ -89,7 +88,6 @@ public class UserResponse : ISerializable<UserResponse>
         .Deserializer(25, (input, inst) => inst.Value.WaveId = input.Parse<ushort>())
         .Deserializer(26, (input, inst) => inst.Value.RobotId = input.Parse<ushort>())
         .Deserializer(28, (input, inst) => inst.Value.HasGlow = input.ParseBool('1', '0'))
-        .Deserializer(29, (input, inst) => inst.Value.IsRegistered = input.ParseBool('1', '0'))
         .Deserializer(30, (input, inst) => inst.Value.GlobalLeaderboardPosition = input.Parse<uint>() is var i && i == 0 ? null : i)
         .Deserializer(31, (input, inst) => inst.Value.FriendState = input.Length is 0 ? Users.FriendState.None : input.ParseEnum<FriendState>())
         .Deserializer(32, (input, inst) => inst.Value.FriendRequestId = input.Parse<uint>())

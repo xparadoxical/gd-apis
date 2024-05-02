@@ -78,7 +78,6 @@ public class UserResponseTests
             WaveId = 30,
             RobotId = 16,
             HasGlow = true,
-            IsRegistered = true,
             GlobalLeaderboardPosition = null,
             FriendState = FriendState.None,
             SpiderId = 11,

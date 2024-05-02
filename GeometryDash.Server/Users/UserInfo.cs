@@ -20,7 +20,6 @@ public class UserInfo : User
         UfoId = response.UfoId!.Value;
         WaveId = response.WaveId!.Value;
         RobotId = response.RobotId!.Value;
-        IsRegistered = response.IsRegistered!.Value;
         GlobalLeaderboardPosition = response.GlobalLeaderboardPosition;
         SpiderId = response.SpiderId!.Value;
         Twitter = response.Twitter!.Value;
