@@ -138,6 +138,7 @@ public enum FriendState : byte
     RequestReceived = 4
 }
 
+//TODO this really could be (string, string) + Url => new Uri()...
 public readonly struct LinkedServiceProfile(Uri url, string userName) : IEquatable<LinkedServiceProfile>
 {
     public readonly Uri Url = new(url, userName);
@@ -162,5 +163,6 @@ public enum ModeratorStatus : byte
     None,
     Moderator,
     ElderModerator,
+    /// <summary>Visible only in <see cref="UserInfo"/>.</summary>
     LeaderboardModerator
 }
