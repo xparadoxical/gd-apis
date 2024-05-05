@@ -8,6 +8,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeometryDash.Server.Seriali
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeometryDash.Tests", "GeometryDash.Tests\GeometryDash.Tests.csproj", "{264E2CE8-E4E5-4872-9996-F9F5B7C2ABB6}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeometryDash.Server.Serialization.Generator", "GeometryDash.Server.Serialization.Generator\GeometryDash.Server.Serialization.Generator.csproj", "{8F83AC02-BA84-4FF6-BB12-BC091871EAF0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BC11E0EE-9DFE-42DC-A65A-185C630FA604}"
+	ProjectSection(SolutionItems) = preProject
+		AutoUpdateAssemblyName.txt = AutoUpdateAssemblyName.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +33,8 @@ Global
 		{264E2CE8-E4E5-4872-9996-F9F5B7C2ABB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{264E2CE8-E4E5-4872-9996-F9F5B7C2ABB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{264E2CE8-E4E5-4872-9996-F9F5B7C2ABB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F83AC02-BA84-4FF6-BB12-BC091871EAF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F83AC02-BA84-4FF6-BB12-BC091871EAF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

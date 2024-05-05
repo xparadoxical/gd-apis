@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Server.Serialization.Generator": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\GeometryDash.Server\\GeometryDash.Server.csproj"
+    }
+  }
+}
