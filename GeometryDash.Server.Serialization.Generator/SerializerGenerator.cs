@@ -63,13 +63,10 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
         var keyed = ctx.TargetSymbol.GetAttributes()
             .SingleOrDefault(a => a.AttributeClass!.ToDisplayString() == KeyedAttributeType) is not null;
 
-        var partialDeclaration = decl.AddModifiers(SyntaxFactory.ParseToken("partial"));
-        var partialDeclarator = $"{partialDeclaration.ConstraintClauses}";
-
         return new(
             decl.Parent!.Cast<BaseNamespaceDeclarationSyntax>().Name.ToString(),
             decl.Identifier.ToString(),
-            $"partial {partialDeclaration.Keyword} {partialDeclaration.Identifier}{partialDeclaration.TypeParameterList}",
+            $"{decl.Keyword} {decl.Identifier}{decl.TypeParameterList}",
             fieldSeparator, listSeparator, keyed);
     }
 
