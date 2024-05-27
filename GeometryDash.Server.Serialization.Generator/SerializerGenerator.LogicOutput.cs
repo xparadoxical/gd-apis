@@ -13,16 +13,17 @@ public sealed partial class SerializerGenerator
         var c = info.Class;
 
         using var writer = new IndentedTextWriter();
-        writer.WriteLine(
+        writer.Write( //TODO >>>>>USE A DIFFERENT INDENTED STRING WRITER<<<<<
             $$"""
             using GeometryDash.Server.Serialization;
             using CommunityToolkit.HighPerformance;
 
             namespace {{c.Namespace}};
 
-            partial {{c.Declarator}} : ISerializable<{{c.Name}}>
-            """, true);
+            partial {{c.Declarator}} : ISerializable<{{c.Name}}>;
 
+            """, true);
+#if false
         using (writer.WriteBlock())
         {
             //main method
@@ -35,7 +36,7 @@ public sealed partial class SerializerGenerator
                     WriteKeylessBody(writer, info);
             }
         }
-
+#endif
         ctx.AddSource($"{c.Namespace}.{c.Name}.g.cs", SourceText.From(writer.ToString(), Encoding.UTF8));
     }
 
