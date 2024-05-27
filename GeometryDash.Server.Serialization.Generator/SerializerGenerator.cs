@@ -1,42 +1,34 @@
 using System.Reflection;
-using System.Text;
 
 using GeometryDash.Server.Serialization.Generator.Helpers;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Text;
 
 namespace GeometryDash.Server.Serialization.Generator;
 
 [Generator(LanguageNames.CSharp)]
 public sealed partial class SerializerGenerator : IIncrementalGenerator
 {
-    public static readonly string SeparatorAttributeType = typeof(SeparatorAttribute).FullName;
-    public static readonly string KeyedAttributeType = typeof(KeyedAttribute).FullName;
+    public const string SeparatorAttributeType = "GeometryDash.Server.Serialization.SeparatorAttribute";
+    public const string KeyedAttributeType = "GeometryDash.Server.Serialization.KeyedAttribute";
 
-    public static readonly string FieldAttributeType = typeof(FieldAttribute).FullName;
-    public static readonly string BoolAttributeType = typeof(BoolAttribute).FullName;
+    public const string FieldAttributeType = "GeometryDash.Server.Serialization.FieldAttribute";
+    public const string BoolAttributeType = "GeometryDash.Server.Serialization.BoolAttribute";
 
-    public static readonly string CoalesceToNullAttributeType = typeof(CoalesceToNullAttribute).FullName;
-    public static readonly string EmptyDefaultsToAttributeType = typeof(EmptyDefaultsToAttribute).FullName;
+    public const string CoalesceToNullAttributeType = "GeometryDash.Server.Serialization.CoalesceToNullAttribute";
+    public const string EmptyDefaultsToAttributeType = "GeometryDash.Server.Serialization.EmptyDefaultsToAttribute";
 
-    public static readonly string Base64EncodedAttributeType = typeof(Base64EncodedAttribute).FullName;
-    public static readonly string XorAttributeType = typeof(XorAttribute).FullName;
-    public static readonly string GzipAttributeType = typeof(GzipAttribute).FullName;
+    public const string Base64EncodedAttributeType = "GeometryDash.Server.Serialization.Base64EncodedAttribute";
+    public const string XorAttributeType = "GeometryDash.Server.Serialization.XorAttribute";
+    public const string GzipAttributeType = "GeometryDash.Server.Serialization.GzipAttribute";
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
 #if DEBUG
         //System.Diagnostics.Debugger.Launch();
 #endif
-
-        context.RegisterPostInitializationOutput(ctx =>
-        {
-            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(typeof(SerializerGenerator), "Attributes.cs");
-            ctx.AddSource("Attributes.g.cs", SourceText.From(stream, Encoding.UTF8));
-        });
 
         var serializableTypes = context.SyntaxProvider.ForAttributeWithMetadataName(
             SeparatorAttributeType,
@@ -126,7 +118,7 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
 
                     var falseArg = attr.ArgumentList.Arguments.ElementAtOrDefault(1);
                     if (falseArg is not null
-                        and not { NameEquals.Name.Identifier.Text: nameof(BoolAttribute.False) })
+                        and not { NameEquals.Name.Identifier.Text: "False" })
                         continue;
 
                     boolSpec = new(trueExpr.ToString(), falseArg?.Expression.ToString());
