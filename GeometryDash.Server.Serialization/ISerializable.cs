@@ -8,9 +8,9 @@ namespace GeometryDash.Server.Serialization;
 /// </summary>
 public interface ISerializable<TSelf> where TSelf : ISerializable<TSelf>
 {
-    static abstract SerializationOptions Options { get; }
+    public static virtual SerializationOptions Options { get; } //TODO remove
 
-    static abstract SerializationLogic<TSelf> SerializationLogic { get; }
+    public static virtual SerializationLogic<TSelf> SerializationLogic { get; } //TODO remove
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static virtual TSelf Deserialize(ReadOnlySpan<byte> input) => throw new NotImplementedException(); //TODO remove body when SG will be usable
