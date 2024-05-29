@@ -226,8 +226,6 @@ public sealed class IndentedTextWriter : IDisposable
     /// Writes a line to the underlying buffer.
     /// </summary>
     /// <param name="skipIfPresent">Indicates whether to skip adding the line if there already is one.</param>
-    [Obsolete(@"Only writes \n.")]
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public void WriteLine(bool skipIfPresent = false)
     {
         if (skipIfPresent && this.builder.WrittenSpan is [.., '\n', '\n'])
@@ -243,8 +241,6 @@ public sealed class IndentedTextWriter : IDisposable
     /// </summary>
     /// <param name="content">The content to write.</param>
     /// <param name="isMultiline">Whether the input content is multiline.</param>
-    [Obsolete(@"Only writes \n.")]
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public void WriteLine(string content, bool isMultiline = false)
     {
         WriteLine(content.AsSpan(), isMultiline);
@@ -255,8 +251,6 @@ public sealed class IndentedTextWriter : IDisposable
     /// </summary>
     /// <param name="content">The content to write.</param>
     /// <param name="isMultiline">Whether the input content is multiline.</param>
-    [Obsolete(@"Only writes \n.")]
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public void WriteLine(ReadOnlySpan<char> content, bool isMultiline = false)
     {
         Write(content, isMultiline);
@@ -267,8 +261,6 @@ public sealed class IndentedTextWriter : IDisposable
     /// Writes content to the underlying buffer and appends a trailing new line.
     /// </summary>
     /// <param name="handler">The interpolated string handler with content to write.</param>
-    [Obsolete(@"Only writes \n.")]
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public void WriteLine([InterpolatedStringHandlerArgument("")] ref WriteInterpolatedStringHandler handler)
     {
         WriteLine();
@@ -279,8 +271,6 @@ public sealed class IndentedTextWriter : IDisposable
     /// </summary>
     /// <param name="condition">The condition to use to decide whether or not to write content.</param>
     /// <param name="skipIfPresent">Indicates whether to skip adding the line if there already is one.</param>
-    [Obsolete(@"Only writes \n.")]
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public void WriteLineIf(bool condition, bool skipIfPresent = false)
     {
         if (condition)
@@ -295,8 +285,6 @@ public sealed class IndentedTextWriter : IDisposable
     /// <param name="condition">The condition to use to decide whether or not to write content.</param>
     /// <param name="content">The content to write.</param>
     /// <param name="isMultiline">Whether the input content is multiline.</param>
-    [Obsolete(@"Only writes \n.")]
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public void WriteLineIf(bool condition, string content, bool isMultiline = false)
     {
         if (condition)
@@ -311,8 +299,6 @@ public sealed class IndentedTextWriter : IDisposable
     /// <param name="condition">The condition to use to decide whether or not to write content.</param>
     /// <param name="content">The content to write.</param>
     /// <param name="isMultiline">Whether the input content is multiline.</param>
-    [Obsolete(@"Only writes \n.")]
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public void WriteLineIf(bool condition, ReadOnlySpan<char> content, bool isMultiline = false)
     {
         if (condition)
@@ -327,8 +313,6 @@ public sealed class IndentedTextWriter : IDisposable
     /// </summary>
     /// <param name="condition">The condition to use to decide whether or not to write content.</param>
     /// <param name="handler">The interpolated string handler with content to write.</param>
-    [Obsolete(@"Only writes \n.")]
-    [EditorBrowsable(EditorBrowsableState.Never)]
     public void WriteLineIf(bool condition, [InterpolatedStringHandlerArgument("", nameof(condition))] ref WriteIfInterpolatedStringHandler handler)
     {
         if (condition)

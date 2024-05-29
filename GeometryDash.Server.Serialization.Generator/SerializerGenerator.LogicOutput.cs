@@ -13,7 +13,7 @@ public sealed partial class SerializerGenerator
         var c = info.Class;
 
         using var writer = new IndentedTextWriter();
-        writer.Write( //TODO >>>>>USE A DIFFERENT INDENTED STRING WRITER<<<<<
+        writer.WriteLine(
             $$"""
             using GeometryDash.Server.Serialization;
             using CommunityToolkit.HighPerformance;
@@ -21,7 +21,6 @@ public sealed partial class SerializerGenerator
             namespace {{c.Namespace}};
 
             partial {{c.Declarator}} : ISerializable<{{c.Name}}>;
-
             """, true);
 #if false
         using (writer.WriteBlock())
