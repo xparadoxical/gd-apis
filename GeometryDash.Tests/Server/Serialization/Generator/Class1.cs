@@ -1,11 +1,15 @@
-using Ver = GeometryDash.Tests.Server.Serialization.Generator.SerializerGeneratorVerifier;
-
 namespace GeometryDash.Tests.Server.Serialization.Generator;
+
 public class Class1
 {
     [Fact]
-    public async void M()
+    public async Task Test()
     {
-        await Ver.Verify(["Test.cs"], ["N.C.g.cs"]);
+        var driver = GeneratorTestHelper.CreateDriverForTest();
+
+        var result = driver.GetRunResult();
+
+        Assert.Empty(result.Diagnostics);
+        await Verify(result);
     }
 }

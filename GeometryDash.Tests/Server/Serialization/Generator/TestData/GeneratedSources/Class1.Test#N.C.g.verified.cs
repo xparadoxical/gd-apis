@@ -1,3 +1,4 @@
+//HintName: N.C.g.cs
 using GeometryDash.Server.Serialization;
 using CommunityToolkit.HighPerformance;
 
