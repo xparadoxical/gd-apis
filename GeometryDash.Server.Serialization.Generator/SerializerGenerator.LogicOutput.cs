@@ -20,7 +20,7 @@ public sealed partial class SerializerGenerator
 
             namespace {{c.Namespace}};
 
-            partial {{c.Declarator}} : ISerializable<{{c.Name}}>;
+            partial {{c.Declarator}} : {{KnownTypes.ISerializable}}<{{c.Name}}>;
             """, true);
 #if false
         using (writer.WriteBlock())

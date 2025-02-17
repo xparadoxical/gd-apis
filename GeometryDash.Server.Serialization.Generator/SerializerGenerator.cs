@@ -11,19 +11,6 @@ namespace GeometryDash.Server.Serialization.Generator;
 [Generator(LanguageNames.CSharp)]
 public sealed partial class SerializerGenerator : IIncrementalGenerator
 {
-    public const string SeparatorAttributeType = "GeometryDash.Server.Serialization.SeparatorAttribute";
-    public const string KeyedAttributeType = "GeometryDash.Server.Serialization.KeyedAttribute";
-
-    public const string FieldAttributeType = "GeometryDash.Server.Serialization.FieldAttribute";
-    public const string BoolAttributeType = "GeometryDash.Server.Serialization.BoolAttribute";
-
-    public const string CoalesceToNullAttributeType = "GeometryDash.Server.Serialization.CoalesceToNullAttribute";
-    public const string EmptyDefaultsToAttributeType = "GeometryDash.Server.Serialization.EmptyDefaultsToAttribute";
-
-    public const string Base64EncodedAttributeType = "GeometryDash.Server.Serialization.Base64EncodedAttribute";
-    public const string XorAttributeType = "GeometryDash.Server.Serialization.XorAttribute";
-    public const string GzipAttributeType = "GeometryDash.Server.Serialization.GzipAttribute";
-
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
 #if DEBUG
@@ -31,7 +18,7 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
 #endif
 
         var serializableTypes = context.SyntaxProvider.ForAttributeWithMetadataName(
-            SeparatorAttributeType,
+            KnownTypes.SeparatorAttribute,
             (syntax, ct) => syntax is ClassDeclarationSyntax,
             (ctx, ct) =>
             {
@@ -51,7 +38,7 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
 
     public static Class? GetClassInfo(GeneratorAttributeSyntaxContext ctx, ClassDeclarationSyntax decl, CancellationToken ct)
     {
-        var separatorAttr = ctx.Attributes.Single(a => a.AttributeClass!.ToDisplayString() == SeparatorAttributeType);
+        var separatorAttr = ctx.Attributes.Single(a => a.AttributeClass!.ToDisplayString() == KnownTypes.SeparatorAttribute);
         //TODO SingleOrDefault
         var fieldSeparator = SymbolDisplay.FormatPrimitive(
             separatorAttr.NamedArguments.Single(arg => arg.Key is "Field").Value.Value!,
@@ -61,7 +48,7 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
             true, false);
 
         var keyed = ctx.TargetSymbol.GetAttributes()
-            .SingleOrDefault(a => a.AttributeClass!.ToDisplayString() == KeyedAttributeType) is not null;
+            .SingleOrDefault(a => a.AttributeClass!.ToDisplayString() == KnownTypes.KeyedAttribute) is not null;
 
         return new(
             decl.Parent!.Cast<BaseNamespaceDeclarationSyntax>().Name.ToString(),
@@ -88,7 +75,7 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
                     continue;
 
                 var attrFullName = type.ToDisplayString();
-                if (attrFullName == FieldAttributeType)
+                if (attrFullName == KnownTypes.FieldAttribute)
                 {
                     var arglist = attr.ArgumentList;
                     if (arglist is null)
@@ -104,7 +91,7 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
                         && ctx.SemanticModel.GetConstantValue(identifier, ct) is { Value: uint constValue })
                         index = constValue;
                 }
-                else if (attrFullName == BoolAttributeType)
+                else if (attrFullName == KnownTypes.BoolAttribute)
                 {
                     if (attr.ArgumentList is not
                         {
@@ -120,23 +107,23 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
 
                     boolSpec = new(trueExpr.ToString(), falseArg?.Expression.ToString());
                 }
-                else if (attrFullName == CoalesceToNullAttributeType)
+                else if (attrFullName == KnownTypes.CoalesceToNullAttribute)
                 {
                     if (attr.ArgumentList is not { Arguments: [{ Expression: var expr }] })
                         continue;
 
                     toNull.Add(expr.ToString());
                 }
-                else if (attrFullName == EmptyDefaultsToAttributeType)
+                else if (attrFullName == KnownTypes.EmptyDefaultsToAttribute)
                 {
                     if (attr.ArgumentList is not { Arguments: [{ Expression: var expr }] })
                         continue;
 
                     fromEmpty = expr.ToString();
                 }
-                else if (attrFullName == Base64EncodedAttributeType)
+                else if (attrFullName == KnownTypes.Base64EncodedAttribute)
                     transforms.Add(new Transform.Base64());
-                else if (attrFullName == XorAttributeType)
+                else if (attrFullName == KnownTypes.XorAttribute)
                 {
                     if (attr.ArgumentList is not { Arguments: [{ Expression: var expr }] })
                         continue;
@@ -146,7 +133,7 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
 
                     transforms.Add(new Transform.Xor(expr.ToString(), typeSymbol.Name));
                 }
-                else if (attrFullName == GzipAttributeType)
+                else if (attrFullName == KnownTypes.GzipAttribute)
                     transforms.Add(new Transform.Gzip());
             }
 
