@@ -2,7 +2,7 @@ namespace GeometryDash.Server.Serialization;
 
 file static class SupportedTargets
 {
-    internal const AttributeTargets Types = AttributeTargets.Class | AttributeTargets.Struct;
+    internal const AttributeTargets Types = AttributeTargets.Class/* | AttributeTargets.Struct*/;
     internal const AttributeTargets Members = AttributeTargets.Property;
 }
 
