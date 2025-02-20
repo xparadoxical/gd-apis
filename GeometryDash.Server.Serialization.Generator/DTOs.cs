@@ -30,15 +30,14 @@ public sealed record FieldTypeInfo(bool Nullable, string Type, SpecialType Speci
         }
 
         if (sm.GetTypeInfo(typeSyntax) is not { Type: { } typeSymbol })
-            goto fail;
+        {
+            result = default;
+            return false;
+        }
 
         //useful: typeSymbol.Is*, typeSymbol.ToDisplayParts()
         result = new(nullable, typeSyntax.ToString(), typeSymbol.SpecialType, (typeSymbol as INamedTypeSymbol)?.ConstructedFrom.Name);
         return true;
-
-    fail:
-        result = default;
-        return false;
     }
 }
 
