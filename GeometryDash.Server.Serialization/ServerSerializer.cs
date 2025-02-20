@@ -37,15 +37,15 @@ public sealed partial class ServerSerializer
         var t = Activator.CreateInstance<T>()!;
         if (keyed)
         {
-            foreach (var field in new RobTopStringReader(input) { FieldSeparator = fieldSeparator })
+            foreach (var prop in new RobTopStringReader(input) { Separator = fieldSeparator })
             {
                 try
                 {
-                    deserializers[field.Key](field.Value, new(ref t));
+                    deserializers[prop.Key](prop.Value, new(ref t));
                 }
                 catch (Exception e)
                 {
-                    throw new SerializationException(field.Key, field.Value, e);
+                    throw new SerializationException(prop.Key, prop.Value, e);
                 }
             }
         }
@@ -97,7 +97,7 @@ public sealed partial class ServerSerializer
         var buf = buffer ?? Buffers.Rent();
 
         var t = Activator.CreateInstance<T>()!;
-        foreach (var field in new RobTopStringStreamReader(s, buf, keyed) { FieldSeparator = fieldSeparator })
+        foreach (var field in new RobTopStringStreamReader(s, buf, keyed) { Separator = fieldSeparator })
             deserializers[field.Key](field.Value, new(ref t));
 
         if (buffer is null)

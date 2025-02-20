@@ -52,7 +52,7 @@ public sealed partial class SerializerGenerator
     {
         writer.WriteLine($"var ret = new {info.Class.Name}();"); //TODO recheck if possible to support type args
 
-        writer.WriteLine($"foreach (var (k, v) in new RobTopStringReader(input) {{ FieldSeparator = (byte)'{info.Class.FieldSeparator}' }})");
+        writer.WriteLine($"foreach (var (k, v) in new RobTopStringReader(input) {{ Separator = (byte)'{info.Class.PropSeparator}' }})");
         using (writer.WriteBlock())
         {
             WriteThrowingLogic(writer, info);
@@ -66,7 +66,7 @@ public sealed partial class SerializerGenerator
         writer.WriteLine($"var ret = new {info.Class.Name}();"); //TODO recheck if possible to support type args
 
         writer.WriteLine("uint k = 0;");
-        writer.WriteLine($"foreach (var v in input.Tokenize('{info.Class.FieldSeparator}'))");
+        writer.WriteLine($"foreach (var v in input.Tokenize('{info.Class.PropSeparator}'))");
         using (writer.WriteBlock())
         {
             WriteThrowingLogic(writer, info);

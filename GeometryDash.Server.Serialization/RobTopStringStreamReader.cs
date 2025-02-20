@@ -9,10 +9,10 @@ public ref struct RobTopStringStreamReader(Stream input, IBuffer<byte> buffer, b
     private bool _currentHasValue = false;
     private bool _expectingMore = false;
 
-    public byte FieldSeparator { get; init; } = (byte)':';
+    public byte Separator { get; init; } = (byte)':';
 
     /// <summary>Duck-typed IEnumerator implementation.</summary>
-    public Field Current { get; private set; }
+    public Prop Current { get; private set; }
 
     /// <summary>Duck-typed IEnumerable implementation.</summary>
     public readonly RobTopStringStreamReader GetEnumerator() => this; //no way for >1 enumerator to be at different positions in one stream
@@ -31,7 +31,7 @@ public ref struct RobTopStringStreamReader(Stream input, IBuffer<byte> buffer, b
             byte b = default;
             end = input.Read(new(ref b)) == 0;
 
-            onSeparator = b == FieldSeparator;
+            onSeparator = b == Separator;
 
             if (end || onSeparator)
                 break;
@@ -56,7 +56,7 @@ public ref struct RobTopStringStreamReader(Stream input, IBuffer<byte> buffer, b
             key = _currentHasValue ? Current.Key + 1 : 0;
         }
 
-        Current = new Field(key!.Value, buffer.WrittenSpan);
+        Current = new Prop(key!.Value, buffer.WrittenSpan);
         _currentHasValue = true;
         if (end)
             _expectingMore = false;

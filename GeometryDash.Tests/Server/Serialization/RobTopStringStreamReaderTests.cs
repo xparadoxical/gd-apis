@@ -11,14 +11,14 @@ public class RobTopStringStreamReaderTests(ITestOutputHelper output)
     {
         output.WriteLine("'{0}'{1}", input, keyed ? " keyed" : "");
 
-        var fields = new List<(uint, string)>();
+        var props = new List<(uint, string)>();
         foreach (var (k, v) in new RobTopStringStreamReader(new MemoryStream(Encoding.UTF8.GetBytes(input)), new ArrayPoolBufferWriter<byte>(), keyed))
         {
             string s = Encoding.UTF8.GetString(v);
             output.WriteLine($"{k}: '{s}'");
-            fields.Add((k, s));
+            props.Add((k, s));
         }
-        return fields;
+        return props;
     }
 
     internal void TestOutputs(string input, bool keyed, object[] outputs)

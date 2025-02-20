@@ -8,19 +8,19 @@ file static class SupportedTargets
 
 //#pragma warning disable CS9113
 
-/// <summary>The type is serialized with field indexes as keys.</summary>
+/// <summary>The type is serialized with prop indexes as keys.</summary>
 [AttributeUsage(SupportedTargets.Types, Inherited = false)]
 public sealed class KeyedAttribute : Attribute;
 
 [AttributeUsage(SupportedTargets.Types, Inherited = false)]
 public sealed class SeparatorAttribute : Attribute
 {
-    public required string Field { get; init; }
+    public required string Prop { get; init; }
     public required string ListItem { get; init; }
 }
 
 [AttributeUsage(SupportedTargets.Members, Inherited = false)]
-public sealed class FieldAttribute(uint index) : Attribute;
+public sealed class IndexAttribute(uint index) : Attribute;
 
 /// <summary>
 /// Specifies what value indicates <see langword="true"/>.

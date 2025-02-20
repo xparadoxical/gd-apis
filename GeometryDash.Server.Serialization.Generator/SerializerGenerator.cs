@@ -24,10 +24,10 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
             {
                 var decl = ctx.TargetNode.Cast<ClassDeclarationSyntax>();
                 return (c: GetClassInfo(ctx, decl, ct),
-                        f: GetPropertyInfos(ctx, decl.Members, ct));
+                        p: GetPropertyInfos(ctx, decl.Members, ct));
             })
             .Where(info => info.c is not null)
-            .Select((info, ct) => new SerializableClassInfo(info.c!, info.f));
+            .Select((info, ct) => new SerializableClassInfo(info.c!, info.p));
 
         context.RegisterSourceOutput(serializableTypes, GenerateType);
 
@@ -40,8 +40,8 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
     {
         var separatorAttr = ctx.Attributes.Single(a => a.AttributeClass!.ToDisplayString() == KnownTypes.SeparatorAttribute);
         //TODO SingleOrDefault
-        var fieldSeparator = SymbolDisplay.FormatPrimitive(
-            separatorAttr.NamedArguments.Single(arg => arg.Key is "Field").Value.Value!,
+        var propSeparator = SymbolDisplay.FormatPrimitive(
+            separatorAttr.NamedArguments.Single(arg => arg.Key is "Prop").Value.Value!,
             true, false);
         var listSeparator = SymbolDisplay.FormatPrimitive(
             separatorAttr.NamedArguments.Single(arg => arg.Key is "ListItem").Value.Value!,
@@ -54,12 +54,12 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
             decl.Parent!.Cast<BaseNamespaceDeclarationSyntax>().Name.ToString(),
             decl.Identifier.ToString(),
             $"{decl.Keyword} {decl.Identifier}{decl.TypeParameterList}",
-            fieldSeparator, listSeparator, keyed);
+            propSeparator, listSeparator, keyed);
     }
 
-    public static EquatableArray<Field> GetPropertyInfos(GeneratorAttributeSyntaxContext ctx, SyntaxList<MemberDeclarationSyntax> members, CancellationToken ct)
+    public static EquatableArray<Prop> GetPropertyInfos(GeneratorAttributeSyntaxContext ctx, SyntaxList<MemberDeclarationSyntax> members, CancellationToken ct)
     {
-        var infos = new List<Field>();
+        var infos = new List<Prop>();
 
         foreach (var prop in members.OfType<PropertyDeclarationSyntax>())
         {
@@ -75,7 +75,7 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
                     continue;
 
                 var attrFullName = type.ToDisplayString();
-                if (attrFullName == KnownTypes.FieldAttribute)
+                if (attrFullName == KnownTypes.IndexAttribute)
                 {
                     var arglist = attr.ArgumentList;
                     if (arglist is null)
@@ -142,8 +142,8 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
                 var propName = prop.Identifier.ToString();
                 var required = prop.Modifiers.Any(m => m.Kind() is SyntaxKind.RequiredKeyword);
 
-                if (FieldTypeInfo.TryCreate(prop, ctx.SemanticModel, out var fieldTypeInfo))
-                    infos.Add(new(fieldTypeInfo, required, propName, index.Value, boolSpec,
+                if (PropTypeInfo.TryCreate(prop, ctx.SemanticModel, out var propTypeInfo))
+                    infos.Add(new(propTypeInfo, required, propName, index.Value, boolSpec,
                         transforms.ToEquatableArray(), toNull.ToEquatableArray(), fromEmpty));
             }
         }
