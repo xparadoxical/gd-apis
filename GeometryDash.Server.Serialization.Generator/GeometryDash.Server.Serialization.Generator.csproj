@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -7,8 +7,6 @@
     <ImplicitUsings>true</ImplicitUsings>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     <IsRoslynComponent>true</IsRoslynComponent>
-    <!--AutoUpdateAssemblyName-->
-    <AssemblyName>$(AssemblyName).1</AssemblyName>
   </PropertyGroup>
   
   <ItemGroup>
