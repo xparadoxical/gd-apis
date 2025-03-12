@@ -6,10 +6,6 @@
     <Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
-    <RestoreAdditionalProjectSources>
-      <!-- ms.ca.testing latest version -->
-      https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-tools/nuget/v3/index.json
-    </RestoreAdditionalProjectSources>
   </PropertyGroup>
 
   <ItemGroup>
