@@ -11,9 +11,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeometryDash.Server.Serialization.Generator", "GeometryDash.Server.Serialization.Generator\GeometryDash.Server.Serialization.Generator.csproj", "{8F83AC02-BA84-4FF6-BB12-BC091871EAF0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BC11E0EE-9DFE-42DC-A65A-185C630FA604}"
-	ProjectSection(SolutionItems) = preProject
-		AutoUpdateAssemblyName.txt = AutoUpdateAssemblyName.txt
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

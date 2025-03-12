@@ -1,2 +1,0 @@
-# consumers of GeometryDash.Server.Serialization.Generator
-GeometryDash.Server
