@@ -9,7 +9,7 @@ namespace GeometryDash.Server.Serialization.Generator;
 
 public record struct SerializableClassInfo(Class Class, EquatableArray<Prop> Props);
 public sealed record Class(string Namespace, string Name, string Declarator, string PropSeparator, string ListSeparator, bool Keyed);
-public sealed record Prop(PropTypeInfo Type, bool Required, string Name, uint Index, BoolSpec? BoolSpec, EquatableArray<Transform> Transforms,
+public sealed record Prop(string Type, PropTypeInfo ParsedType, bool Required, string Name, uint Index, BoolSpec? BoolSpec, EquatableArray<Transform> Transforms,
     EquatableArray<string> ToNull, string? FromEmpty);
 
 /// <param name="ConstructedFrom">
@@ -41,11 +41,11 @@ public sealed record PropTypeInfo(bool Nullable, string Type, SpecialType Specia
     }
 }
 
-public record struct BoolSpec(string True, string? False);
+public record struct BoolSpec(string TrueExpr, string? FalseExpr);
 
 public abstract record Transform
 {
     public sealed record Base64 : Transform;
     public sealed record Gzip : Transform;
-    public sealed record Xor(string Key, string ExpressionType /*TODO check if needed*/) : Transform;
+    public sealed record Xor(string KeyExpr) : Transform;
 }

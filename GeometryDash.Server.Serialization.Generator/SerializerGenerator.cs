@@ -30,10 +30,6 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
             .Select((info, ct) => new SerializableClassInfo(info.c!, info.p));
 
         context.RegisterSourceOutput(serializableTypes, GenerateType);
-
-        //context.RegisterSourceOutput(serializableTypes,
-        //    (spc, names) => spc.AddSource("Test.g.cs",
-        //        SourceText.From(string.Join(", ", names), Encoding.UTF8)));
     }
 
     public static Class? GetClassInfo(GeneratorAttributeSyntaxContext ctx, ClassDeclarationSyntax decl, CancellationToken ct)
@@ -57,6 +53,7 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
             propSeparator, listSeparator, keyed);
     }
 
+    /// <summary>Collects info about properties marked with <see cref="KnownTypes.IndexAttribute"/>.</summary>
     public static EquatableArray<Prop> GetPropertyInfos(GeneratorAttributeSyntaxContext ctx, SyntaxList<MemberDeclarationSyntax> members, CancellationToken ct)
     {
         var infos = new List<Prop>();
@@ -131,7 +128,7 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
                     if (ctx.SemanticModel.GetTypeInfo(expr, ct).Type is not { } typeSymbol)
                         continue;
 
-                    transforms.Add(new Transform.Xor(expr.ToString(), typeSymbol.Name));
+                    transforms.Add(new Transform.Xor(expr.ToString()));
                 }
                 else if (attrFullName == KnownTypes.GzipAttribute)
                     transforms.Add(new Transform.Gzip());
@@ -142,8 +139,10 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
                 var propName = prop.Identifier.ToString();
                 var required = prop.Modifiers.Any(m => m.Kind() is SyntaxKind.RequiredKeyword);
 
-                if (PropTypeInfo.TryCreate(prop, ctx.SemanticModel, out var propTypeInfo))
-                    infos.Add(new(propTypeInfo, required, propName, index.Value, boolSpec,
+                if (PropTypeInfo.TryCreate(prop, ctx.SemanticModel, out var propTypeInfo)
+                    && ctx.SemanticModel.GetTypeInfo(prop.Type).Type is { } typeSymbol)
+                    infos.Add(new(typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+                        propTypeInfo, required, propName, index.Value, boolSpec,
                         transforms.ToEquatableArray(), toNull.ToEquatableArray(), fromEmpty));
             }
         }

@@ -55,6 +55,8 @@ public readonly struct EquatableArray<T> : IEquatable<EquatableArray<T>>, IEnume
         this.array = Unsafe.As<ImmutableArray<T>, T[]?>(ref array);
     }
 
+    public int Length => array!.Length;
+
     /// <summary>
     /// Gets a reference to an item at a specified position within the array.
     /// </summary>

@@ -5,11 +5,9 @@ public class Class1
     [Fact]
     public async Task Test()
     {
-        var driver = GeneratorTestHelper.CreateDriverForTest();
+        var data = GeneratorTestHelper.CreateDriverForTest();
+        var result = data.Driver.GetRunResult();
 
-        var result = driver.GetRunResult();
-
-        Assert.Empty(result.Diagnostics);
-        await Verify(result);
+        await GeneratorTestHelper.Verify(result, data);
     }
 }

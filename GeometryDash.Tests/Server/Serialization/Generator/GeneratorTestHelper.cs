@@ -17,7 +17,8 @@ public static class GeneratorTestHelper
             [CSharpSyntaxTree.ParseText(source)],
             [
                 .. Basic.Reference.Assemblies.Net80.References.All,
-                MetadataReference.CreateFromFile(typeof(ServerSerializer).Assembly.Location)
+                MetadataReference.CreateFromFile(typeof(ServerSerializer).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(CommunityToolkit.HighPerformance.ArrayExtensions).Assembly.Location)
             ],
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true)
         );
@@ -40,5 +41,13 @@ public static class GeneratorTestHelper
     {
         var callingType = Path.GetFileNameWithoutExtension(callerFilePath);
         return CreateDriverFromFile($"{callingType}.{callerMemberName}.cs");
+    }
+
+    public static async Task Verify(GeneratorDriverRunResult result, GeneratorData sgData, [CallerFilePath] string sourceFile = "")
+    {
+        Assert.NotEmpty(result.GeneratedTrees);
+        await Verifier.Verify(result, sourceFile: sourceFile);
+        await Verifier.Verify(sgData.Output.GetDiagnostics(), sourceFile: sourceFile)
+            .UseTextForParameters("diagnostics");
     }
 }
