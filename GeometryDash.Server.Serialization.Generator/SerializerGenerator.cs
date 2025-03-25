@@ -1,6 +1,6 @@
 using System.Reflection;
 
-using GeometryDash.Server.Serialization.Generator.Helpers;
+using CommunityToolkit.Mvvm.SourceGenerators.Helpers;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;

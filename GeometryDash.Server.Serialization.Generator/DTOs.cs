@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-using GeometryDash.Server.Serialization.Generator.Helpers;
+using CommunityToolkit.Mvvm.SourceGenerators.Helpers;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;

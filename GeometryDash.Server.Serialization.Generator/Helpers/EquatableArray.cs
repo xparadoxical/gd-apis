@@ -9,8 +9,7 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
-//namespace CommunityToolkit.Mvvm.SourceGenerators.Helpers;
-namespace GeometryDash.Server.Serialization.Generator.Helpers;
+namespace CommunityToolkit.Mvvm.SourceGenerators.Helpers;
 
 /// <summary>
 /// Extensions for <see cref="EquatableArray{T}"/>.
@@ -93,13 +92,11 @@ public readonly struct EquatableArray<T> : IEquatable<EquatableArray<T>>, IEnume
     public override int GetHashCode()
     {
         if (this.array is not T[] array)
-        {
             return 0;
-        }
 
         HashCode hashCode = default;
 
-        foreach (T item in array)
+        foreach (var item in array)
         {
             hashCode.Add(item);
         }
@@ -114,7 +111,7 @@ public readonly struct EquatableArray<T> : IEquatable<EquatableArray<T>>, IEnume
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ImmutableArray<T> AsImmutableArray()
     {
-        return Unsafe.As<T[]?, ImmutableArray<T>>(ref Unsafe.AsRef(in this.array));
+        return Unsafe.As<T[]?, ImmutableArray<T>>(ref Unsafe.AsRef(in array));
     }
 
     /// <summary>
