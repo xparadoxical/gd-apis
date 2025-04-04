@@ -8,14 +8,14 @@ public static class Base64
 {
     internal const int StackallocTreshold = 512;
 
-    public static string Decode(ReadOnlySpan<byte> base64Bytes)
+    public static string Decode(ReadOnlySpan<byte> input)
     {
-        base64Bytes = base64Bytes.TrimEnd((byte)'=');
+        input = input.TrimEnd((byte)'=');
 
         byte[]? decodedArray = null;
         scoped Span<byte> decoded;
 
-        var decodedLength = Base64Lib.Url.GetMaxDecodedLength(base64Bytes.Length);
+        var decodedLength = Base64Lib.Url.GetMaxDecodedLength(input.Length);
         if (decodedLength > StackallocTreshold)
         {
             decodedArray = ArrayPool<byte>.Shared.Rent(decodedLength);
@@ -24,7 +24,7 @@ public static class Base64
         else
             decoded = stackalloc byte[StackallocTreshold];
 
-        var status = Base64Lib.Url.Decode(base64Bytes, decoded, out _, out var written);
+        var status = Base64Lib.Url.Decode(input, decoded, out _, out var written);
 
         if (status != OperationStatus.Done)
         {
