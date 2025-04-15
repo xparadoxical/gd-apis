@@ -25,7 +25,8 @@ public static class GeneratorTestHelper
 
         var driver = CSharpGeneratorDriver.Create([new SerializerGenerator().AsSourceGenerator()],
             parseOptions: new CSharpParseOptions())
-            .RunGeneratorsAndUpdateCompilation(inputCompilation, out var outputCompilation, out _);
+            .RunGeneratorsAndUpdateCompilation(inputCompilation, out var outputCompilation, out var generatorDiagnostics /*most likely*/);
+        Assert.Empty(generatorDiagnostics);
         return new(driver, inputCompilation, outputCompilation);
     }
 
