@@ -13,10 +13,6 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-#if DEBUG
-        //System.Diagnostics.Debugger.Launch();
-#endif
-
         var serializableTypes = context.SyntaxProvider.ForAttributeWithMetadataName(
             KnownTypes.SeparatorAttribute,
             (syntax, ct) => syntax is ClassDeclarationSyntax,
