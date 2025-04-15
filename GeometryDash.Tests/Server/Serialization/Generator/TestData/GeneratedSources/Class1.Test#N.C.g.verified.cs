@@ -7,7 +7,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
     {
         var ret = new C();
         uint key = 1;
-        foreach (var value in global::CommunityToolkit.HighPerformance.ReadOnlySpanExtensions.Tokenize(input, '"a"'))
+        foreach (var value in global::CommunityToolkit.HighPerformance.ReadOnlySpanExtensions.Tokenize(input, '":"'))
         {
             switch (key)
             {
@@ -25,6 +25,8 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
         //Base64 { }
         OnSDeserialized();
     }
+
     partial void OnSDeserializing(global::System.ReadOnlySpan<byte> input);
+
     partial void OnSDeserialized(string value);
 }

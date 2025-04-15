@@ -94,9 +94,16 @@ public sealed partial class SerializerGenerator
         {
             writer.WriteLine($"On{prop.Name}Deserializing(input);");
             //read attributes from end, since they're in serialization order, not deserialization order
-            for (int step = prop.Transforms.Length - 1; step >= 0; step--)
+            for (int i = prop.Transforms.Length - 1; i >= 0; i--)
             {
-                var transform = prop.Transforms[step];
+                var transform = prop.Transforms[i];
+                switch (transform)
+                {
+                    //case Transform.Xor:
+                    //    break;
+                    //case Transform.Base64:
+                }
+
                 writer.WriteLine($"//{transform.ToString()}");
             }
 
@@ -105,7 +112,9 @@ public sealed partial class SerializerGenerator
             writer.WriteLine($"On{prop.Name}Deserialized();");
         }
 
+        writer.WriteLine();
         writer.WriteLine($"partial void On{prop.Name}Deserializing(global::System.ReadOnlySpan<byte> input);");
+        writer.WriteLine();
         writer.WriteLine($"partial void On{prop.Name}Deserialized({prop.Type} value);");
     }
 

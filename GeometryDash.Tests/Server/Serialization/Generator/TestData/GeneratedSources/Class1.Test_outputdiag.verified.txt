@@ -2,7 +2,7 @@
   {
     Location: /*
         uint key = 1;
-        foreach (var value in global::CommunityToolkit.HighPerformance.ReadOnlySpanExtensions.Tokenize(input, '"a"'))
+        foreach (var value in global::CommunityToolkit.HighPerformance.ReadOnlySpanExtensions.Tokenize(input, '":"'))
                                                                                                               
         {
 */

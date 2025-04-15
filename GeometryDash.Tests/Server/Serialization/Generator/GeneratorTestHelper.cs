@@ -48,7 +48,9 @@ public static class GeneratorTestHelper
     {
         Assert.NotEmpty(result.GeneratedTrees);
         await Verifier.Verify(result, sourceFile: sourceFile);
+        await Verifier.Verify(sgData.Input.GetDiagnostics(), sourceFile: sourceFile)
+            .UseTextForParameters("inputdiag");
         await Verifier.Verify(sgData.Output.GetDiagnostics(), sourceFile: sourceFile)
-            .UseTextForParameters("diagnostics");
+            .UseTextForParameters("outputdiag");
     }
 }
