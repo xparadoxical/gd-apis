@@ -46,6 +46,8 @@ public static class Base64
     /// <returns>Number of bytes written to <paramref name="output"/>.</returns>
     public static int Decode(ReadOnlySpan<byte> input, Span<byte> output)
     {
+        input = input.TrimEnd((byte)'=');
+
         var status = Base64Lib.Url.Decode(input, output, out _, out var written);
         if (status != OperationStatus.Done)
             ThrowHelpers.OperationStatusUnsuccessful(status);
