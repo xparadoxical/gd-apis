@@ -10,11 +10,11 @@ public static class GeneratorTestHelper
 {
     public sealed record GeneratorData(GeneratorDriver Driver, Compilation Input, Compilation Output);
 
-    public static GeneratorData CreateDriverForSource(string source)
+    public static GeneratorData CreateDriverForSource(string source, string path = "")
     {
         var inputCompilation = CSharpCompilation.Create(
             "Tests",
-            [CSharpSyntaxTree.ParseText(source)],
+            [CSharpSyntaxTree.ParseText(source, path: path)],
             [
                 .. Basic.Reference.Assemblies.Net80.References.All,
                 MetadataReference.CreateFromFile(typeof(ServerSerializer).Assembly.Location),
@@ -33,7 +33,7 @@ public static class GeneratorTestHelper
     public static GeneratorData CreateDriverFromFile(string fileName)
     {
         var source = File.ReadAllText(Path.Combine(Constants.SourceFolderFullPath, fileName));
-        return CreateDriverForSource(source);
+        return CreateDriverForSource(source, fileName);
     }
 
     public static GeneratorData CreateDriverForTest(
