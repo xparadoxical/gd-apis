@@ -7,6 +7,6 @@ internal partial class C
 {
     public int I { get; set; }
     [Index(2)]
-    [Base64Encoded, Xor("12345"u8)]
+    [Base64Encoded, Xor("12345")]
     public string S { get; set; }
 }

@@ -6,7 +6,7 @@
                                                                                                               
         {
 */
- GeometryDash.Server.Serialization.Generator\GeometryDash.Server.Serialization.Generator.SerializerGenerator\N.C.g.cs: (8,110)-(8,110),
+ GeometryDash.Server.Serialization.Generator\GeometryDash.Server.Serialization.Generator.SerializerGenerator\N.C.g.cs: (9,110)-(9,110),
     Message: Too many characters in character literal,
     Severity: Error,
     Descriptor: {
@@ -26,37 +26,12 @@
   },
   {
     Location: /*
-    [Index(2)]
-    [Base64Encoded, Xor("12345"u8)]
-                    ^^^
-    public string S { get; set; }
-*/
- : (9,20)-(9,23),
-    Message: Attribute constructor parameter 'key' has type 'ReadOnlySpan<byte>', which is not a valid attribute parameter type,
-    Severity: Error,
-    Descriptor: {
-      Id: CS0181,
-      Title: ,
-      HelpLink: https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS0181),
-      MessageFormat: Attribute constructor parameter '{0}' has type '{1}', which is not a valid attribute parameter type,
-      Category: Compiler,
-      DefaultSeverity: Error,
-      IsEnabledByDefault: true,
-      CustomTags: [
-        Compiler,
-        Telemetry,
-        NotConfigurable
-      ]
-    }
-  },
-  {
-    Location: /*
             {
                 case 2: DeserializeS(value); break;
                                      ^^^^^
             }
 */
- GeometryDash.Server.Serialization.Generator\GeometryDash.Server.Serialization.Generator.SerializerGenerator\N.C.g.cs: (12,37)-(12,42),
+ GeometryDash.Server.Serialization.Generator\GeometryDash.Server.Serialization.Generator.SerializerGenerator\N.C.g.cs: (13,37)-(13,42),
     Message: Argument 1: cannot convert from 'System.ReadOnlySpan<T>' to 'System.ReadOnlySpan<byte>',
     Severity: Error,
     Descriptor: {
@@ -76,19 +51,44 @@
   },
   {
     Location: /*
-        //Base64 { }
+        
+        var t0_maxLength = global::GeometryDash.Server.Serialization.Base64.GetMaxDecodedLength(input);
+                                                                                                ^^^^^
+        if (t0_maxLength > 512)
+*/
+ GeometryDash.Server.Serialization.Generator\GeometryDash.Server.Serialization.Generator.SerializerGenerator\N.C.g.cs: (28,96)-(28,101),
+    Message: Argument 1: cannot convert from 'System.ReadOnlySpan<byte>' to 'int',
+    Severity: Error,
+    Descriptor: {
+      Id: CS1503,
+      Title: ,
+      HelpLink: https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS1503),
+      MessageFormat: Argument {0}: cannot convert from '{1}' to '{2}',
+      Category: Compiler,
+      DefaultSeverity: Error,
+      IsEnabledByDefault: true,
+      CustomTags: [
+        Compiler,
+        Telemetry,
+        NotConfigurable
+      ]
+    }
+  },
+  {
+    Location: /*
+    global::System.Buffers.ArrayPool<byte>.Shared.Return(t0_decodedArray);
         OnSDeserialized();
         ^^^^^^^^^^^^^^^
     }
 */
- GeometryDash.Server.Serialization.Generator\GeometryDash.Server.Serialization.Generator.SerializerGenerator\N.C.g.cs: (24,8)-(24,23),
-    Message: There is no argument given that corresponds to the required parameter 'value' of 'C.OnSDeserialized(string)',
+ GeometryDash.Server.Serialization.Generator\GeometryDash.Server.Serialization.Generator.SerializerGenerator\N.C.g.cs: (50,8)-(50,23),
+    Message: No overload for method 'OnSDeserialized' takes 0 arguments,
     Severity: Error,
     Descriptor: {
-      Id: CS7036,
+      Id: CS1501,
       Title: ,
-      HelpLink: https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS7036),
-      MessageFormat: There is no argument given that corresponds to the required parameter '{0}' of '{1}',
+      HelpLink: https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS1501),
+      MessageFormat: No overload for method '{0}' takes {1} arguments,
       Category: Compiler,
       DefaultSeverity: Error,
       IsEnabledByDefault: true,
