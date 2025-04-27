@@ -123,9 +123,9 @@ public sealed partial class SerializerGenerator
         }
 
         writer.WriteLine();
-        writer.WriteLine($"partial void On{prop.Name}Deserializing(global::System.ReadOnlySpan<byte> input);");
+        writer.WriteLine($"partial void On{prop.Name}Deserializing(scoped global::System.ReadOnlySpan<byte> input);");
         writer.WriteLine();
-        writer.WriteLine($"partial void On{prop.Name}Deserialized(global::System.ReadOnlySpan<byte> output);");
+        writer.WriteLine($"partial void On{prop.Name}Deserialized(scoped global::System.ReadOnlySpan<byte> output);");
         writer.WriteLine();
         writer.WriteLine($"partial void On{prop.Name}Deserialized({prop.Type} value);");
     }
