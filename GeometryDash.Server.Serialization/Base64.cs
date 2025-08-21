@@ -56,5 +56,5 @@ public static class Base64
     }
 
     public static OperationStatus DecodeCore(ReadOnlySpan<byte> input, Span<byte> output, out int consumed, out int written, bool isFinalBlock = true)
-        => Base64Lib.Default.Decode(input, output, out consumed, out written, isFinalBlock);
+        => Base64Lib.Url.Decode(input, output, out consumed, out written, isFinalBlock);
 }
