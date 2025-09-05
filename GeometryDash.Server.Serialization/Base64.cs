@@ -41,6 +41,19 @@ public static class Base64
         return str;
     }
 
+    /// <summary>Decodes base64 input in-place.</summary>
+    /// <returns>Number of bytes written to <paramref name="input"/>.</returns>
+    public static int Decode(Span<byte> input)
+    {
+        input = input.TrimEnd((byte)'=');
+
+        var status = Base64Lib.Url.Decode(input, input, out _, out var written);
+        if (status != OperationStatus.Done)
+            ThrowHelpers.OperationStatusUnsuccessful(status);
+
+        return written;
+    }
+
     public static int GetMaxDecodedLength(int encodedLength) => Base64Lib.Url.GetMaxDecodedLength(encodedLength);
 
     /// <returns>Number of bytes written to <paramref name="output"/>.</returns>
