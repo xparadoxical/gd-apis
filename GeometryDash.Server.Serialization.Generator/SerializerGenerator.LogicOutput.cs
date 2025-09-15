@@ -39,7 +39,7 @@ public sealed partial class SerializerGenerator
             foreach (var prop in info.Props)
             {
                 writer.WriteLine();
-                WriteDeserialization(writer, prop);
+                WriteDeserializationMethods(writer, prop);
             }
         }
 
@@ -51,7 +51,7 @@ public sealed partial class SerializerGenerator
         writer.WriteLine($"foreach (var (key, value) in new global::GeometryDash.Server.Serialization.RobTopStringReader(input) {{ Separator = (byte)'{info.Class.PropSeparator}' }})");
         using (writer.WriteBlock())
         {
-            WriteThrowingLogic(writer, info);
+            WritePropertySwitch(writer, info);
         }
     }
 
@@ -61,13 +61,13 @@ public sealed partial class SerializerGenerator
         writer.WriteLine($"foreach (var value in global::CommunityToolkit.HighPerformance.ReadOnlySpanExtensions.Tokenize(input, '{info.Class.PropSeparator}'))");
         using (writer.WriteBlock())
         {
-            WriteThrowingLogic(writer, info);
+            WritePropertySwitch(writer, info);
 
             writer.WriteLine("key++;");
         }
     }
 
-    public static void WriteThrowingLogic(IndentedTextWriter writer, SerializableClassInfo info)
+    public static void WritePropertySwitch(IndentedTextWriter writer, SerializableClassInfo info)
     {
         //writer.WriteLine("try"); //TODO what even can throw? use results?
         //using (writer.WriteBlock())
@@ -88,7 +88,7 @@ public sealed partial class SerializerGenerator
         //    """, true);
     }
 
-    public static void WriteDeserialization(IndentedTextWriter writer, Prop prop)
+    public static void WriteDeserializationMethods(IndentedTextWriter writer, Prop prop)
     {
         writer.WriteLine($"void Deserialize{prop.Name}(global::System.ReadOnlySpan<byte> input)");
         using (writer.WriteBlock())
