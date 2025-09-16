@@ -28,7 +28,7 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(serializableTypes, GenerateType);
     }
 
-    public static Class? GetClassInfo(GeneratorAttributeSyntaxContext ctx, ClassDeclarationSyntax decl, CancellationToken ct)
+    public static SerializableClass? GetClassInfo(GeneratorAttributeSyntaxContext ctx, ClassDeclarationSyntax decl, CancellationToken ct)
     {
         var separatorAttr = ctx.Attributes.Single(a => a.AttributeClass!.ToDisplayString() == KnownTypes.SeparatorAttribute);
         //TODO SingleOrDefault
@@ -50,9 +50,10 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
     }
 
     /// <summary>Collects info about properties marked with <see cref="KnownTypes.IndexAttribute"/>.</summary>
-    public static EquatableArray<Prop> GetPropertyInfos(GeneratorAttributeSyntaxContext ctx, SyntaxList<MemberDeclarationSyntax> members, CancellationToken ct)
+    public static EquatableArray<SerializableProperty> GetPropertyInfos(GeneratorAttributeSyntaxContext ctx, SyntaxList<MemberDeclarationSyntax> members, CancellationToken ct)
     {
-        var infos = new List<Prop>();
+        var infos = new List<SerializableProperty>();
+        var methods = members.OfType<MethodDeclarationSyntax>();
 
         foreach (var prop in members.OfType<PropertyDeclarationSyntax>())
         {
@@ -137,9 +138,18 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
 
                 if (PropTypeInfo.TryCreate(prop, ctx.SemanticModel, out var propTypeInfo)
                     && ctx.SemanticModel.GetTypeInfo(prop.Type).Type is { } typeSymbol)
+                {
+                    var onDeserializingHooked =
+                        methods.FirstOrDefault(m =>
+                            m.Modifiers.Any(tok => tok.Kind() is SyntaxKind.PartialKeyword)
+                            && m.ParameterList.Parameters is [{ }]
+                            && m.Identifier.Text == $"On{prop.Identifier}Deserializing")
+                        is not null;
+
                     infos.Add(new(typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
                         propTypeInfo, required, propName, index.Value, boolSpec,
-                        transforms.ToEquatableArray(), toNull.ToEquatableArray(), fromEmpty));
+                        transforms.ToEquatableArray(), toNull.ToEquatableArray(), fromEmpty, onDeserializingHooked));
+                }
             }
         }
 

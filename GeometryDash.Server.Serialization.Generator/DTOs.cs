@@ -7,11 +7,15 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace GeometryDash.Server.Serialization.Generator;
 
-public record struct SerializableClassInfo(Class Class, EquatableArray<Prop> Props);
-public sealed record Class(string Namespace, string Name, string Declarator, string PropSeparator, string ListSeparator, bool Keyed);
+public record struct SerializableClassInfo(SerializableClass Class, EquatableArray<SerializableProperty> Props);
+
+public sealed record SerializableClass(string Namespace, string Name, string Declarator, string PropSeparator,
+    string ListSeparator, bool Keyed);
+
 /// <param name="Type">Fully qualified type name.</param>
-public sealed record Prop(string Type, PropTypeInfo ParsedType, bool Required, string Name, uint Index, BoolSpec? BoolSpec, EquatableArray<Transform> Transforms,
-    EquatableArray<string> ToNull, string? FromEmpty);
+public sealed record SerializableProperty(string Type, PropTypeInfo ParsedType, bool Required, string Name,
+    uint Index, BoolSpec? BoolSpec, EquatableArray<Transform> Transforms, EquatableArray<string> ToNull,
+    string? FromEmpty, bool OnDeserializingHooked);
 
 /// <param name="ConstructedFrom">
 /// For e.g. <c>System.UInt32</c>, the value is <see cref="uint"/>.

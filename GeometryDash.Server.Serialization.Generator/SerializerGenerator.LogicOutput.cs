@@ -57,7 +57,7 @@ public sealed partial class SerializerGenerator
 
     public static void WriteKeylessBody(IndentedTextWriter writer, SerializableClassInfo info)
     {
-        writer.WriteLine("uint key = 1;");
+        writer.WriteLine("var key = 1;");
         writer.WriteLine($"foreach (var value in global::CommunityToolkit.HighPerformance.ReadOnlySpanExtensions.Tokenize(input, '{info.Class.PropSeparator}'))");
         using (writer.WriteBlock())
         {
@@ -69,31 +69,26 @@ public sealed partial class SerializerGenerator
 
     public static void WritePropertySwitch(IndentedTextWriter writer, SerializableClassInfo info)
     {
-        //writer.WriteLine("try"); //TODO what even can throw? use results?
-        //using (writer.WriteBlock())
-        //{
         writer.WriteLine("switch (key)");
         using (writer.WriteBlock())
         {
             foreach (var prop in info.Props)
-                writer.WriteLine($"case {prop.Index}: Deserialize{prop.Name}(value); break;");
+                writer.WriteLine($"case {prop.Index}: ret.Deserialize{prop.Name}(value); break;");
             //don't throw on unrecognized keys to maintain forward-compat //TODO option to disable (for server api monitoring)
         }
-        //}
-        //writer.WriteLine($$"""
-        //    catch (global::System.Exception e)
-        //    {
-        //        throw new global::GeometryDash.Server.Serialization.SerializationException(k, v, e);
-        //    }
-        //    """, true);
     }
 
-    public static void WriteDeserializationMethods(IndentedTextWriter writer, Prop prop)
+    public static void WriteDeserializationMethods(IndentedTextWriter writer, SerializableProperty prop)
     {
         writer.WriteLine($"void Deserialize{prop.Name}(global::System.ReadOnlySpan<byte> input)");
         using (writer.WriteBlock())
         {
-            writer.WriteLine($"On{prop.Name}Deserializing(input);");
+            writer.WriteLine($"""
+                var buffer = new global::PoolBuffers.PooledBuffer<byte>(input);
+
+                On{prop.Name}Deserializing(buffer);
+                """, true);
+
             //read attributes from end, since they're in serialization order, not deserialization order
             var lastSpanVar = "input";
             var cleanup = new List<string>();
@@ -101,7 +96,6 @@ public sealed partial class SerializerGenerator
             {
                 var transform = prop.Transforms[i];
                 writer.WriteLine($"//{transform.ToString()}");
-                //TODO use throw helpers or switch to results (or use ExceptionDispatchInfo.SetCurrentStackTrace to return an exception to throw later)
                 switch (transform)
                 {
                     //case Transform.Xor:
@@ -112,12 +106,16 @@ public sealed partial class SerializerGenerator
                 }
             }
 
-            writer.WriteLine($"On{prop.Name}Deserialized({lastSpanVar});");
+            if (prop.Transforms.Length > 0)
+            {
+                writer.WriteLine();
+                writer.WriteLine($"On{prop.Name}Deserialized(buffer);");
+            }
 
-            //Prop = {currentDataVar%conversion};
+            WriteBytesToValueConversion();
 
-            foreach (var code in cleanup)
-                writer.WriteLine(code);
+            if (prop.Transforms.Length > 0)
+                writer.WriteLine("buffer.Dispose();");
 
             writer.WriteLine($"On{prop.Name}Deserialized();");
         }
@@ -127,7 +125,7 @@ public sealed partial class SerializerGenerator
         writer.WriteLine();
         writer.WriteLine($"partial void On{prop.Name}Deserialized(scoped global::System.ReadOnlySpan<byte> output);");
         writer.WriteLine();
-        writer.WriteLine($"partial void On{prop.Name}Deserialized({prop.Type} value);");
+        writer.WriteLine($"partial void On{prop.Name}Deserialized();");
     }
 
     private static string WriteBase64Deserialization(IndentedTextWriter writer, int i, string lastSpanVar, List<string> cleanup)
@@ -137,7 +135,7 @@ public sealed partial class SerializerGenerator
             byte[]? t{{i}}_decodedArray = null;
             scoped global::System.Span<byte> t{{i}}_decoded;
 
-            var t{{i}}_maxLength = global::GeometryDash.Server.Serialization.Base64.GetMaxDecodedLength({{lastSpanVar}});
+            var t{{i}}_maxLength = global::GeometryDash.Server.Serialization.Base64.GetMaxDecodedLength({{lastSpanVar}}.Length);
             if (t{{i}}_maxLength > {{StackallocTreshold}})
             {
                 t{{i}}_decodedArray = global::System.Buffers.ArrayPool<byte>.Shared.Rent(t{{i}}_maxLength);
