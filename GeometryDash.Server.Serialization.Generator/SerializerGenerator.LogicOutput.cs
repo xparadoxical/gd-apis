@@ -83,88 +83,73 @@ public sealed partial class SerializerGenerator
         writer.WriteLine($"void Deserialize{prop.Name}(global::System.ReadOnlySpan<byte> input)");
         using (writer.WriteBlock())
         {
-            writer.WriteLine($"""
-                var buffer = new global::PoolBuffers.PooledBuffer<byte>(input);
+            if (prop is not { OnDeserializingHooked: false, Transforms: [] })
+            {
+                writer.WriteLine($"""
+                    var buffer = new global::PoolBuffers.PooledBuffer<byte>(input);
 
-                On{prop.Name}Deserializing(buffer);
-                """, true);
+                    On{prop.Name}Deserializing(buffer);
+
+                    """, true);
+            }
 
             //read attributes from end, since they're in serialization order, not deserialization order
-            var lastSpanVar = "input";
-            var cleanup = new List<string>();
             for (int i = prop.Transforms.Length - 1; i >= 0; i--)
             {
                 var transform = prop.Transforms[i];
-                writer.WriteLine($"//{transform.ToString()}");
                 switch (transform)
                 {
-                    //case Transform.Xor:
-                    //    break;
                     case Transform.Base64:
-                        lastSpanVar = WriteBase64Deserialization(writer, i, lastSpanVar, cleanup);
+                        writer.WriteLine("""
+                            buffer.EnsureCapacity(global::GeometryDash.Server.Serialization.Base64.GetMaxDecodedLength(buffer.DataLength));
+                            buffer.DataLength = global::GeometryDash.Server.Serialization.Base64.Decode(buffer.DataSpan);
+                            """, true);
                         break;
+
+                    case Transform.Xor xor:
+                        writer.WriteLine($"""global::GeometryDash.Server.Serialization.Xor.Apply(buffer.DataSpan, {xor.KeyExpr}u8);""");
+                        break;
+
+                    case Transform.Gzip:
+                        writer.WriteLine($"""
+                            var t{i}_length = global::GeometryDash.Server.Serialization.Gzip.GetDecompressedLength(buffer.DataSpan);
+                            var t{i}_output = global::System.Buffers.ArrayPool<byte>.Shared.Rent((int)t{i}_length);
+                            global::GeometryDash.Server.Serialization.Gzip.Decompress(buffer.DataSpan, t{i}_output);
+                            buffer.DataLength = t{i}_output.Length;
+                            global::System.MemoryExtensions.AsSpan(t{i}_output).CopyTo(buffer.DataSpan);
+                            global::System.Buffers.ArrayPool<byte>.Shared.Return(t{i}_output);
+                            """, true);
+                        break;
+
+                    default:
+                        throw new NotImplementedException(transform.ToString());
                 }
-            }
-
-            if (prop.Transforms.Length > 0)
-            {
                 writer.WriteLine();
-                writer.WriteLine($"On{prop.Name}Deserialized(buffer);");
             }
 
-            WriteBytesToValueConversion();
+            if (prop.Transforms is not [])
+            {
+                writer.WriteLine($"On{prop.Name}Deserialized(buffer);");
+                writer.WriteLine();
+            }
 
-            if (prop.Transforms.Length > 0)
+            WriteBytesToValueConversion(); //includes tonull and emptyto handling
+            writer.WriteLine();
+
+            if (prop.Transforms is not [])
                 writer.WriteLine("buffer.Dispose();");
 
             writer.WriteLine($"On{prop.Name}Deserialized();");
         }
 
         writer.WriteLine();
-        writer.WriteLine($"partial void On{prop.Name}Deserializing(scoped global::System.ReadOnlySpan<byte> input);");
-        writer.WriteLine();
-        writer.WriteLine($"partial void On{prop.Name}Deserialized(scoped global::System.ReadOnlySpan<byte> output);");
+        writer.WriteLine($"partial void On{prop.Name}Deserializing(global::PoolBuffers.PooledBuffer<byte> input);");
+        if (prop.Transforms is not [])
+        {
+            writer.WriteLine();
+            writer.WriteLine($"partial void On{prop.Name}Deserialized(global::PoolBuffers.PooledBuffer<byte> output);");
+        }
         writer.WriteLine();
         writer.WriteLine($"partial void On{prop.Name}Deserialized();");
-    }
-
-    private static string WriteBase64Deserialization(IndentedTextWriter writer, int i, string lastSpanVar, List<string> cleanup)
-    {
-        const int StackallocTreshold = 512;
-        writer.WriteLine($$"""
-            byte[]? t{{i}}_decodedArray = null;
-            scoped global::System.Span<byte> t{{i}}_decoded;
-
-            var t{{i}}_maxLength = global::GeometryDash.Server.Serialization.Base64.GetMaxDecodedLength({{lastSpanVar}}.Length);
-            if (t{{i}}_maxLength > {{StackallocTreshold}})
-            {
-                t{{i}}_decodedArray = global::System.Buffers.ArrayPool<byte>.Shared.Rent(t{{i}}_maxLength);
-                t{{i}}_decoded = global::System.MemoryExtensions.AsSpan(t{{i}}_decodedArray);
-            }
-            else
-                t{{i}}_decoded = stackalloc byte[{{StackallocTreshold}}];
-
-            var t{{i}}_status = global::GeometryDash.Server.Serialization.Base64.DecodeCore({{lastSpanVar}}, t{{i}}_decoded, out _, out var t{{i}}_written);
-
-            if (t{{i}}_status != global::System.Buffers.OperationStatus.Done)
-            {
-                if (t{{i}}_decodedArray is not null)
-                    global::System.Buffers.ArrayPool<byte>.Shared.Return(t{{i}}_decodedArray);
-                throw new global::System.ArgumentException($"Operation status indicates failure: {t{{i}}_status}");
-            }
-
-            var t{{i}} = t{{i}}_decoded[..t{{i}}_written];
-            """, true);
-
-        cleanup.Add($"""
-            if (t{i}_decodedArray is not null)
-                global::System.Buffers.ArrayPool<byte>.Shared.Return(t{i}_decodedArray);
-            """);
-        return $"t{i}";
-    }
-
-    public static void WritePostDeserializationValidation()
-    {
-
     }
 }
