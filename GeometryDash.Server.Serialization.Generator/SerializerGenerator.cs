@@ -94,8 +94,7 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
                         continue;
 
                     var falseArg = attr.ArgumentList.Arguments.ElementAtOrDefault(1);
-                    if (falseArg is not null
-                        and not { NameEquals.Name.Identifier.Text: "False" })
+                    if (falseArg is not null and not { NameEquals.Name.Identifier.Text: "False" })
                         continue;
 
                     boolSpec = new(trueExpr.ToString(), falseArg?.Expression.ToString());
