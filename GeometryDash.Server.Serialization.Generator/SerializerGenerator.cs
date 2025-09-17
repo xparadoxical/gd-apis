@@ -53,7 +53,6 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
     public static EquatableArray<SerializableProperty> GetPropertyInfos(GeneratorAttributeSyntaxContext ctx, SyntaxList<MemberDeclarationSyntax> members, CancellationToken ct)
     {
         var infos = new List<SerializableProperty>();
-        var methods = members.OfType<MethodDeclarationSyntax>();
 
         foreach (var prop in members.OfType<PropertyDeclarationSyntax>())
         {
@@ -140,7 +139,7 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
                     && ctx.SemanticModel.GetTypeInfo(prop.Type).Type is { } typeSymbol)
                 {
                     var onDeserializingHooked =
-                        methods.FirstOrDefault(m =>
+                        members.OfType<MethodDeclarationSyntax>().FirstOrDefault(m =>
                             m.Modifiers.Any(tok => tok.Kind() is SyntaxKind.PartialKeyword)
                             && m.ParameterList.Parameters is [{ }]
                             && m.Identifier.Text == $"On{prop.Identifier}Deserializing")
