@@ -18,7 +18,8 @@ public static class GeneratorTestHelper
             [
                 .. Basic.Reference.Assemblies.Net80.References.All,
                 MetadataReference.CreateFromFile(typeof(ServerSerializer).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(CommunityToolkit.HighPerformance.ArrayExtensions).Assembly.Location)
+                MetadataReference.CreateFromFile(typeof(CommunityToolkit.HighPerformance.ArrayExtensions).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(PoolBuffers.PooledBuffer<>).Assembly.Location)
             ],
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true)
         );
