@@ -48,7 +48,7 @@ public sealed partial class SerializerGenerator
 
     public static void WriteKeyedBody(IndentedTextWriter writer, SerializableClassInfo info)
     {
-        writer.WriteLine($"foreach (var (key, value) in new global::GeometryDash.Server.Serialization.RobTopStringReader(input) {{ Separator = (byte)'{info.Class.PropSeparator}' }})");
+        writer.WriteLine($"foreach (var (key, value) in new global::GeometryDash.Server.Serialization.RobTopStringReader(input) {{ Separator = (byte){info.Class.PropSeparator} }})");
         using (writer.WriteBlock())
         {
             WritePropertySwitch(writer, info);
@@ -58,7 +58,7 @@ public sealed partial class SerializerGenerator
     public static void WriteKeylessBody(IndentedTextWriter writer, SerializableClassInfo info)
     {
         writer.WriteLine("var key = 1;");
-        writer.WriteLine($"foreach (var value in global::CommunityToolkit.HighPerformance.ReadOnlySpanExtensions.Tokenize(input, '{info.Class.PropSeparator}'))");
+        writer.WriteLine($"foreach (var value in global::CommunityToolkit.HighPerformance.ReadOnlySpanExtensions.Tokenize(input, {info.Class.PropSeparator}))");
         using (writer.WriteBlock())
         {
             WritePropertySwitch(writer, info);
@@ -83,7 +83,9 @@ public sealed partial class SerializerGenerator
         writer.WriteLine($"void Deserialize{prop.Name}(global::System.ReadOnlySpan<byte> input)");
         using (writer.WriteBlock())
         {
-            if (prop is not { OnDeserializingHooked: false, Transforms: [] })
+            var usePooledBuffer = prop is not { OnDeserializingHooked: false, Transforms: [] };
+
+            if (usePooledBuffer)
             {
                 writer.WriteLine($"""
                     var buffer = new global::PoolBuffers.PooledBuffer<byte>(input);
@@ -133,15 +135,16 @@ public sealed partial class SerializerGenerator
                 writer.WriteLine();
             }
 
-            WriteBytesToValueConversion(); //includes tonull and emptyto handling
-            writer.WriteLine();
+            WritePostTransformationConversion(writer, prop); //includes tonull and emptyto handling
 
-            if (prop.Transforms is not [])
+            if (usePooledBuffer)
                 writer.WriteLine("buffer.Dispose();");
 
             writer.WriteLine($"On{prop.Name}Deserialized();");
         }
 
+        //OnDeserializing always needs to be generated for it to be available in partial method suggestions.
+        //It requires a PooledBuffer, so when it's implemented, the "only use the input ROS" optimization gets disabled.
         writer.WriteLine();
         writer.WriteLine($"partial void On{prop.Name}Deserializing(global::PoolBuffers.PooledBuffer<byte> input);");
         if (prop.Transforms is not [])
@@ -151,5 +154,71 @@ public sealed partial class SerializerGenerator
         }
         writer.WriteLine();
         writer.WriteLine($"partial void On{prop.Name}Deserialized();");
+    }
+
+    public static void WritePostTransformationConversion(IndentedTextWriter writer, SerializableProperty prop)
+    {
+        var usePooledBuffer = prop is not { OnDeserializingHooked: false, Transforms: [] };
+        var spanExpr = usePooledBuffer ? "buffer.DataSpan" : "input";
+
+        if (prop.FromEmpty is not null)
+        {
+            writer.Write($"if (");
+            writer.Write(usePooledBuffer ? "buffer.DataLength == 0" : "input.IsEmpty");
+            writer.WriteLine(")");
+
+            writer.IncreaseIndent();
+            writer.WriteLine($"{prop.Name} = {prop.FromEmpty};");
+            writer.DecreaseIndent();
+
+            writer.WriteLine("else");
+            writer.IncreaseIndent();
+        }
+
+        writer.Write($"{prop.Name} = ");
+
+        if (prop.ParsedType.SpecialType == SpecialType.System_String)
+        {
+            writer.WriteLine($"global::System.Text.Encoding.UTF8.GetString({spanExpr});"); //TODO string.Create+Utf8.ToUtf16
+        }
+        else if (prop.ParsedType.IsINumberBase)
+        {
+            writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<{prop.ParsedType.Type}>({spanExpr});");
+        }
+        else if (prop.ParsedType.ConstructedFrom == "System.TimeSpan")
+        {
+            writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.ParseTimeSpan({spanExpr});");
+        }
+        else if (prop.ParsedType.Kind == TypeKind.Enum)
+        {
+            writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.ParseEnum<{prop.ParsedType.Type}>({spanExpr});");
+        }
+        else if (prop is { ParsedType.SpecialType: SpecialType.System_Boolean, BoolSpec: BoolSpec(var trueExpr, var falseExpr) })
+        {
+            writer.Write($"global::GeometryDash.Server.Serialization.ParsingExtensions.ParseBool<{prop.ParsedType.Type}>({spanExpr}, {trueExpr}");
+            if (falseExpr is not null)
+                writer.Write($", {falseExpr}");
+            writer.WriteLine(");");
+        }
+        else if (prop.ParsedType.Kind == TypeKind.Array)
+        {
+            writer.WriteLine($"global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeArray<{prop.ParsedType.ElementType}>({spanExpr});");
+        }
+        else
+            writer.WriteLine($"global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<{prop.ParsedType.Type}>({spanExpr});");
+
+        if (prop.FromEmpty is not null)
+            writer.DecreaseIndent();
+
+        writer.WriteLine();
+
+        if (prop.ToNull is not [])
+        {
+            writer.WriteLine($"if ({prop.Name} is {string.Join(" or ", prop.ToNull)})");
+            writer.IncreaseIndent();
+            writer.WriteLine($"{prop.Name} = null;");
+            writer.DecreaseIndent();
+            writer.WriteLine();
+        }
     }
 }

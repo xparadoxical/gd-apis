@@ -17,13 +17,17 @@ public sealed record SerializableProperty(string Type, PropTypeInfo ParsedType, 
     uint Index, BoolSpec? BoolSpec, EquatableArray<Transform> Transforms, EquatableArray<string> ToNull,
     string? FromEmpty, bool OnDeserializingHooked);
 
+/// <param name="Type"></param>
+/// <param name="ElementType">The type of elements of an array or an enumerable type.</param>
 /// <param name="ConstructedFrom">
 /// For e.g. <c>System.UInt32</c>, the value is <see cref="uint"/>.
 /// Returns <see langword="null"/> when <paramref name="Type"/> is an array, a pointer or a type parameter.
 /// </param>
-public sealed record PropTypeInfo(bool Nullable, string Type, SpecialType SpecialType, string? ConstructedFrom)
+public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementType, TypeKind Kind,
+    SpecialType SpecialType, bool IsINumberBase, string? ConstructedFrom)
 {
-    public static bool TryCreate(PropertyDeclarationSyntax prop, SemanticModel sm, [NotNullWhen(true)] out PropTypeInfo? result)
+    public static bool TryCreate(PropertyDeclarationSyntax prop, SemanticModel sm,
+        [NotNullWhen(true)] out PropTypeInfo? result)
     {
         var typeSyntax = prop.Type;
 
@@ -40,8 +44,10 @@ public sealed record PropTypeInfo(bool Nullable, string Type, SpecialType Specia
             return false;
         }
 
-        //useful: typeSymbol.Is*, typeSymbol.ToDisplayParts() //TODO wtf did I mean?
-        result = new(nullable, typeSyntax.ToString(), typeSymbol.SpecialType, (typeSymbol as INamedTypeSymbol)?.ConstructedFrom.Name);
+        result = new(nullable, typeSyntax.ToString(), (typeSyntax as ArrayTypeSyntax)?.ElementType.ToString(),
+            typeSymbol.TypeKind, typeSymbol.SpecialType,
+            typeSymbol.AllInterfaces.Any(sym => sym.ToString() == "System.Numerics.INumberBase`1"),
+            (typeSymbol as INamedTypeSymbol)?.ConstructedFrom.Name);
         return true;
     }
 }
