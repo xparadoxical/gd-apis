@@ -58,7 +58,7 @@ public sealed partial class SerializerGenerator
     public static void WriteKeylessBody(IndentedTextWriter writer, SerializableClassInfo info)
     {
         writer.WriteLine("var key = 1;");
-        writer.WriteLine($"foreach (var value in global::CommunityToolkit.HighPerformance.ReadOnlySpanExtensions.Tokenize(input, {info.Class.PropSeparator}))");
+        writer.WriteLine($"foreach (var value in global::CommunityToolkit.HighPerformance.ReadOnlySpanExtensions.Tokenize(input, (byte){info.Class.PropSeparator}))");
         using (writer.WriteBlock())
         {
             WritePropertySwitch(writer, info);

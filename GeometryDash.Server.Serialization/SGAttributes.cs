@@ -15,8 +15,8 @@ public sealed class KeyedAttribute : Attribute;
 [AttributeUsage(SupportedTargets.Types, Inherited = false)]
 public sealed class SeparatorAttribute : Attribute
 {
-    public required string Prop { get; init; }
-    public required string ListItem { get; init; }
+    public required char Prop { get; init; }
+    public required char ListItem { get; init; }
 }
 
 [AttributeUsage(SupportedTargets.Members, Inherited = false)]
@@ -24,14 +24,14 @@ public sealed class IndexAttribute(uint index) : Attribute;
 
 /// <summary>
 /// Specifies what value indicates <see langword="true"/>.
-/// If <see cref="False"/> is not set, any value other than <paramref name="trueString"/> means <see langword="false"/>.
+/// If <see cref="False"/> is not set, any value other than <paramref name="trueChar"/> means <see langword="false"/>.
 /// </summary>
 [AttributeUsage(SupportedTargets.Members, Inherited = false)]
-public sealed class BoolAttribute(string trueString) : Attribute
+public sealed class BoolAttribute(char trueChar) : Attribute
 {
-    public string TrueString { get; } = trueString;
+    public char True { get; } = trueChar;
     /// <summary>The value that indicates <see langword="false"/>.</summary>
-    public string? False { get; init; }
+    public char False { get; init; }
 }
 
 /// <summary>The specified value will be converted to <see langword="null"/>.</summary>
