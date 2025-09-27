@@ -1,101 +1,26 @@
 [
   {
     Location: /*
-        uint key = 1;
-        foreach (var value in global::CommunityToolkit.HighPerformance.ReadOnlySpanExtensions.Tokenize(input, '":"'))
-                                                                                                              
-        {
+    [Index(5)]
+    public C[] Arr { get; set; }
+               ^^^
+
 */
- GeometryDash.Server.Serialization.Generator\GeometryDash.Server.Serialization.Generator.SerializerGenerator\N.C.g.cs: (9,110)-(9,110),
-    Message: Too many characters in character literal,
-    Severity: Error,
+ Class1.Test.cs: (54,15)-(54,18),
+    Message: Non-nullable property 'Arr' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.,
+    Severity: Warning,
+    WarningLevel: 1,
     Descriptor: {
-      Id: CS1012,
-      Title: ,
-      HelpLink: https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS1012),
-      MessageFormat: Too many characters in character literal,
+      Id: CS8618,
+      Title: Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.,
+      HelpLink: https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8618),
+      MessageFormat: Non-nullable {0} '{1}' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the {0} as nullable.,
       Category: Compiler,
-      DefaultSeverity: Error,
+      DefaultSeverity: Warning,
       IsEnabledByDefault: true,
       CustomTags: [
         Compiler,
-        Telemetry,
-        NotConfigurable
-      ]
-    }
-  },
-  {
-    Location: /*
-            {
-                case 2: DeserializeS(value); break;
-                                     ^^^^^
-            }
-*/
- GeometryDash.Server.Serialization.Generator\GeometryDash.Server.Serialization.Generator.SerializerGenerator\N.C.g.cs: (13,37)-(13,42),
-    Message: Argument 1: cannot convert from 'System.ReadOnlySpan<T>' to 'System.ReadOnlySpan<byte>',
-    Severity: Error,
-    Descriptor: {
-      Id: CS1503,
-      Title: ,
-      HelpLink: https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS1503),
-      MessageFormat: Argument {0}: cannot convert from '{1}' to '{2}',
-      Category: Compiler,
-      DefaultSeverity: Error,
-      IsEnabledByDefault: true,
-      CustomTags: [
-        Compiler,
-        Telemetry,
-        NotConfigurable
-      ]
-    }
-  },
-  {
-    Location: /*
-        
-        var t0_maxLength = global::GeometryDash.Server.Serialization.Base64.GetMaxDecodedLength(input);
-                                                                                                ^^^^^
-        if (t0_maxLength > 512)
-*/
- GeometryDash.Server.Serialization.Generator\GeometryDash.Server.Serialization.Generator.SerializerGenerator\N.C.g.cs: (28,96)-(28,101),
-    Message: Argument 1: cannot convert from 'System.ReadOnlySpan<byte>' to 'int',
-    Severity: Error,
-    Descriptor: {
-      Id: CS1503,
-      Title: ,
-      HelpLink: https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS1503),
-      MessageFormat: Argument {0}: cannot convert from '{1}' to '{2}',
-      Category: Compiler,
-      DefaultSeverity: Error,
-      IsEnabledByDefault: true,
-      CustomTags: [
-        Compiler,
-        Telemetry,
-        NotConfigurable
-      ]
-    }
-  },
-  {
-    Location: /*
-    global::System.Buffers.ArrayPool<byte>.Shared.Return(t0_decodedArray);
-        OnSDeserialized();
-        ^^^^^^^^^^^^^^^
-    }
-*/
- GeometryDash.Server.Serialization.Generator\GeometryDash.Server.Serialization.Generator.SerializerGenerator\N.C.g.cs: (50,8)-(50,23),
-    Message: No overload for method 'OnSDeserialized' takes 0 arguments,
-    Severity: Error,
-    Descriptor: {
-      Id: CS1501,
-      Title: ,
-      HelpLink: https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS1501),
-      MessageFormat: No overload for method '{0}' takes {1} arguments,
-      Category: Compiler,
-      DefaultSeverity: Error,
-      IsEnabledByDefault: true,
-      CustomTags: [
-        Compiler,
-        Telemetry,
-        NotConfigurable
+        Telemetry
       ]
     }
   }
