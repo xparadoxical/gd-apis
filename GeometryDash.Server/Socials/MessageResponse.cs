@@ -28,7 +28,7 @@ public sealed class MessageResponse : ISerializable<MessageResponse>
             input.CopyTo(buf);
 
             Xor.Apply(buf, Xor.Keys.Messages);
-            inst.Value.Message = Base64.Decode(buf);
+            inst.Value.Message = null!;//Base64.Decode(buf);
         })
         .Deserializer(6, (input, inst) => inst.Value.OtherUserName = Encoding.UTF8.GetString(input))
         .Deserializer(7, (input, inst) => inst.Value.Age = input.ParseTimeSpan())
