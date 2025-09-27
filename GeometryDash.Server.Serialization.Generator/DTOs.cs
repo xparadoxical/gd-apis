@@ -24,7 +24,7 @@ public sealed record SerializableProperty(string Type, PropTypeInfo ParsedType, 
 /// Returns <see langword="null"/> when <paramref name="Type"/> is an array, a pointer or a type parameter.
 /// </param>
 public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementType, TypeKind Kind,
-    SpecialType SpecialType, bool IsINumberBase, string? ConstructedFrom)
+    SpecialType SpecialType, bool IsINumberBase)
 {
     public static bool TryCreate(PropertyDeclarationSyntax prop, SemanticModel sm,
         [NotNullWhen(true)] out PropTypeInfo? result)
@@ -44,10 +44,22 @@ public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementTyp
             return false;
         }
 
-        result = new(nullable, typeSyntax.ToString(), (typeSyntax as ArrayTypeSyntax)?.ElementType.ToString(),
+        TypeSyntax? collectionElementType = null;
+        if (typeSyntax is ArrayTypeSyntax arrayType)
+        {
+            collectionElementType = arrayType.ElementType;
+        }
+        //TODO enumerable types
+
+        ITypeSymbol? collectionElementTypeSymbol = null;
+        if (collectionElementType is not null && sm.GetTypeInfo(collectionElementType) is { Type: { } colElTypeSymbol })
+            collectionElementTypeSymbol = colElTypeSymbol;
+
+        result = new(nullable, typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+            collectionElementTypeSymbol?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
             typeSymbol.TypeKind, typeSymbol.SpecialType,
-            typeSymbol.AllInterfaces.Any(sym => sym.ToString() == "System.Numerics.INumberBase`1"),
-            (typeSymbol as INamedTypeSymbol)?.ConstructedFrom.Name);
+            typeSymbol.AllInterfaces.Any(sym => sym.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat).StartsWith("global::System.Numerics.INumberBase<"))
+            );
         return true;
     }
 }

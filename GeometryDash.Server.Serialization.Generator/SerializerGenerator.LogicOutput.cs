@@ -185,7 +185,7 @@ public sealed partial class SerializerGenerator
         {
             writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<{prop.ParsedType.Type}>({spanExpr});");
         }
-        else if (prop.ParsedType.ConstructedFrom == "System.TimeSpan")
+        else if (prop.ParsedType.Type == "global::System.TimeSpan")
         {
             writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.ParseTimeSpan({spanExpr});");
         }
