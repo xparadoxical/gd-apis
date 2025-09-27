@@ -45,7 +45,7 @@ public sealed class EmptyDefaultsToAttribute(object defaultValue) : Attribute;
 public abstract class DataTransformAttribute : Attribute;
 
 [AttributeUsage(SupportedTargets.Members, Inherited = false)]
-public sealed class Base64EncodedAttribute : DataTransformAttribute;
+public sealed class Base64EncodeAttribute : DataTransformAttribute;
 
 [AttributeUsage(SupportedTargets.Members, Inherited = false)]
 public sealed class XorAttribute : DataTransformAttribute

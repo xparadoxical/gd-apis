@@ -113,7 +113,7 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
 
                     fromEmpty = expr.ToString();
                 }
-                else if (attrFullName == KnownTypes.Base64EncodedAttribute)
+                else if (attrFullName == KnownTypes.Base64EncodeAttribute)
                     transforms.Add(new Transform.Base64());
                 else if (attrFullName == KnownTypes.XorAttribute)
                 {

@@ -10,7 +10,7 @@ namespace N;
 internal partial class C
 {
     [Index(1)]
-    [Base64Encoded, Xor("12345")]
+    [Base64Encode, Xor("12345")]
     public string S { get; set; } = null!;
 
     public int Ignored { get; set; }
@@ -24,7 +24,7 @@ internal partial class C
     public bool B2 { get; set; }
 
     [Index(3)]
-    [Base64Encoded, Gzip, CoalesceToNull("example")] //CTN after transformations
+    [Base64Encode, Gzip, CoalesceToNull("example")] //CTN after transformations
     public string? Zip { get; set; }
 
     [Index(5)]
