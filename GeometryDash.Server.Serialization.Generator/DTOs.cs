@@ -58,8 +58,7 @@ public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementTyp
         result = new(nullable, typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
             collectionElementTypeSymbol?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
             typeSymbol.TypeKind, typeSymbol.SpecialType,
-            typeSymbol.AllInterfaces.Any(sym => sym.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat).StartsWith("global::System.Numerics.INumberBase<"))
-            );
+            typeSymbol.AllInterfaces.Any(sym => sym.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat).StartsWith("global::System.Numerics.INumberBase<")));
         return true;
     }
 }
