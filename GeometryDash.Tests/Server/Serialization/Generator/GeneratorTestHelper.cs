@@ -21,7 +21,9 @@ public static class GeneratorTestHelper
                 MetadataReference.CreateFromFile(typeof(CommunityToolkit.HighPerformance.ArrayExtensions).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(PoolBuffers.PooledBuffer<>).Assembly.Location)
             ],
-            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, allowUnsafe: true)
+            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
+                allowUnsafe: true,
+                nullableContextOptions: NullableContextOptions.Enable)
         );
 
         var driver = CSharpGeneratorDriver.Create([new SerializerGenerator().AsSourceGenerator()],
