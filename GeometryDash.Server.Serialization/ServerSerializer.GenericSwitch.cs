@@ -17,8 +17,8 @@ public partial class ServerSerializer
         .GetMethod(nameof(DeserializeNumber), NonPublic | Static) ?? throw null!;
     private static readonly MethodInfo _deserializeSpanParsable = typeof(ServerSerializer)
         .GetMethod(nameof(DeserializeSpanParsable), NonPublic | Static) ?? throw null!;
-    private static readonly MethodInfo _deserializeArrayWithDefaultSeparator = typeof(ServerSerializer)
-        .GetMethod(nameof(DeserializeArrayWithDefaultSeparator), NonPublic | Static) ?? throw null!;
+    //private static readonly MethodInfo _deserializeArrayWithDefaultSeparator = typeof(ServerSerializer)
+    //    .GetMethod(nameof(DeserializeArrayWithDefaultSeparator), NonPublic | Static) ?? throw null!;
 
     public static unsafe T Deserialize<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>(ReadOnlySpan<byte> input)
     {
@@ -50,11 +50,6 @@ public partial class ServerSerializer
         else if (typeof(IUtf8SpanParsable<>).TryMakeGenericType(out _, t))
             method = _deserializeSpanParsable;
         //else if (T is (new El)[])
-        else if (t.IsArray && t.GetElementType() is Type el)
-        {
-            t = el;
-            method = _deserializeArrayWithDefaultSeparator;
-        }
         else
             throw new ArgumentException($"'{t.FullName}' is not a supported type.");
 
@@ -66,7 +61,4 @@ public partial class ServerSerializer
 
     private static T DeserializeSpanParsable<T>(ReadOnlySpan<byte> input) where T : IUtf8SpanParsable<T>
         => T.Parse(input, null);
-
-    private static T[] DeserializeArrayWithDefaultSeparator<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>(ReadOnlySpan<byte> input)
-        => DeserializeArray<T>(input);
 }
