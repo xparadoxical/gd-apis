@@ -23,7 +23,7 @@ public sealed partial class MessageResponse : ISerializable<MessageResponse>
     public string? Message { get; set; }
 
     [Index(6)]
-    public string OtherUserName { get; set; }
+    public string OtherUsername { get; set; }
 
     [Index(7)]
     public TimeSpan Age { get; set; }

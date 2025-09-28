@@ -3,7 +3,7 @@ public class MessageInfo
 {
     protected internal MessageInfo(MessageResponse response)
     {
-        OtherUser = new(response.OtherUserAccountId, response.OtherUserPlayerId, response.OtherUserName);
+        OtherUser = new(response.OtherUserAccountId, response.OtherUserPlayerId, response.OtherUsername);
         MessageId = response.MessageId;
         Title = response.Title;
         Age = response.Age;
@@ -19,4 +19,4 @@ public class MessageInfo
     public required bool IsIncoming { get; set; }
 }
 
-public record struct MessageUser(uint AccountId, uint PlayerId, string UserName);
+public record struct MessageUser(uint AccountId, uint PlayerId, string Username);

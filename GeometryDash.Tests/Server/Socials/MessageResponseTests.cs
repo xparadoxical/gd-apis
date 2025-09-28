@@ -16,7 +16,7 @@ public class MessageResponseTests : SerializationTest
                     OtherUserAccountId = 29292372,
                     OtherUserPlayerId = 245093986,
                     Title = "e",
-                    OtherUserName = "maximo21009",
+                    OtherUsername = "maximo21009",
                     Age = TimeSpan.FromDays(365),
                     IsRead = true,
                     IsIncoming = false
@@ -28,7 +28,7 @@ public class MessageResponseTests : SerializationTest
                     OtherUserPlayerId = 245093986,
                     Title = "e",
                     Message = "hi",
-                    OtherUserName = "maximo21009",
+                    OtherUsername = "maximo21009",
                     Age = TimeSpan.FromDays(365),
                     IsRead = true,
                     IsIncoming = false

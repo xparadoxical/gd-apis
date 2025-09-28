@@ -11,7 +11,7 @@ public class UserResponseTests : SerializationTest
             """u8.ToArray(), [
                 new()
                 {
-                    UserName = "Robergamer100",
+                    Username = "Robergamer100",
                     PlayerId = 11386212,
                     Stars = 10658,
                     Demons = 213,
@@ -29,7 +29,7 @@ public class UserResponseTests : SerializationTest
                 },
                 new()
                 {
-                    UserName = "SweetNight",
+                    Username = "SweetNight",
                     PlayerId = 10115453,
                     Stars = 10658,
                     Demons = 757,
@@ -56,7 +56,7 @@ public class UserResponseTests : SerializationTest
 
         Assert.Equivalent(new UserResponse
         {
-            UserName = "ViPriN",
+            Username = "ViPriN",
             PlayerId = 1078150,
             Stars = 33486,
             Demons = 1122,
@@ -98,7 +98,7 @@ public class UserResponseTests : SerializationTest
         {
             new()
             {
-                UserName = "Afterfive",
+                Username = "Afterfive",
                 PlayerId = 3543535,
                 ShowcaseIconId = 39,
                 PlayerColor1 = 20,
@@ -111,7 +111,7 @@ public class UserResponseTests : SerializationTest
             },
             new()
             {
-                UserName = "EndorphinexPL",
+                Username = "EndorphinexPL",
                 PlayerId = 17208997,
                 ShowcaseIconId = 6,
                 PlayerColor1 = 12,
@@ -134,7 +134,7 @@ public class UserResponseTests : SerializationTest
 
         Assert.Equivalent(new UserResponse
         {
-            UserName = "VaXeN",
+            Username = "VaXeN",
             ShowcaseIconId = 1,
             PlayerColor1 = 0,
             PlayerColor2 = 3,
@@ -154,7 +154,7 @@ public class UserResponseTests : SerializationTest
         {
             Data = new()
             {
-                UserName = "EndorphinexPL",
+                Username = "EndorphinexPL",
                 PlayerId = 17208997,
                 ShowcaseIconId = 6,
                 PlayerColor1 = 12,

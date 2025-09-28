@@ -6,7 +6,7 @@ public class User
     [SetsRequiredMembers]
     protected internal User(UserResponse response)
     {
-        UserName = response.UserName;
+        Username = response.Username;
         PlayerId = response.PlayerId!.Value;
         PlayerColor1 = response.PlayerColor1;
         PlayerColor2 = response.PlayerColor2;
@@ -14,7 +14,7 @@ public class User
         AccountId = response.AccountId;
     }
 
-    public required string UserName { get; set; }
+    public required string Username { get; set; }
     public required uint PlayerId { get; set; }
     public required byte PlayerColor1 { get; set; }
     public required byte PlayerColor2 { get; set; }

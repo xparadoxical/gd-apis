@@ -11,7 +11,7 @@ public class PagedDataTests
         {
             Data = new()
             {
-                UserName = "a",
+                Username = "a",
                 PlayerColor1 = 1,
                 PlayerColor2 = 2,
                 AccountId = 3

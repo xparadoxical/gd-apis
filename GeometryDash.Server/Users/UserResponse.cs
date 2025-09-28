@@ -6,7 +6,7 @@ namespace GeometryDash.Server.Users;
 public sealed partial class UserResponse : ISerializable<UserResponse>
 {
     [Index(1)]
-    public string UserName { get; set; }
+    public string Username { get; set; }
 
     [Index(2)]
     public uint? PlayerId { get; set; }
