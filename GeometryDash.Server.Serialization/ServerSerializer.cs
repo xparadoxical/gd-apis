@@ -24,49 +24,8 @@ public sealed partial class ServerSerializer
         where T : ISerializable<T>
         => input.ToUtf8(&DeserializeSerializable<T>);
 
-    public static T DeserializeSerializable<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>
-        (ReadOnlySpan<byte> input)
-        where T : ISerializable<T>
-    {
-        var type = typeof(T);
-        //TODO add hashing
-
-        var (keyed, fieldSeparator, _) = T.Options;
-        var deserializers = T.SerializationLogic.Deserializers;
-
-        var t = Activator.CreateInstance<T>()!;
-        if (keyed)
-        {
-            foreach (var prop in new RobTopStringReader(input) { Separator = fieldSeparator })
-            {
-                try
-                {
-                    deserializers[prop.Key](prop.Value, new(ref t));
-                }
-                catch (Exception e)
-                {
-                    throw new SerializationException(prop.Key, prop.Value, e);
-                }
-            }
-        }
-        else
-        {
-            uint key = 0;
-            foreach (var value in input.Tokenize(fieldSeparator))
-            {
-                try
-                {
-                    deserializers[key++](value, new(ref t));
-                }
-                catch (Exception e)
-                {
-                    throw new SerializationException(key, value, e);
-                }
-            }
-        }
-
-        return t;
-    }
+    public static T DeserializeSerializable<T>(ReadOnlySpan<byte> input) where T : ISerializable<T>
+        => T.Deserialize(input);
 
     public static T[] DeserializeArray<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>(string input, byte itemSeparator = (byte)'|')
         => input.ToUtf8(span => DeserializeArray<T>(span, itemSeparator));
