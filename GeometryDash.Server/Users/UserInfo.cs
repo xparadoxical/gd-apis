@@ -13,7 +13,7 @@ public class UserInfo : User
         UserCoins = response.UserCoins!.Value;
         AllowMessagesFrom = response.AllowMessagesFrom!.Value;
         AllowFriendRequests = response.AllowFriendRequests!.Value;
-        YouTube = response.YouTube!.Value;
+        YouTube = new(LinkedServiceProfile.YouTube, response.YouTubeChannelId!);
         CubeId = response.CubeId!.Value;
         ShipId = response.ShipId!.Value;
         BallId = response.BallId!.Value;
@@ -22,8 +22,8 @@ public class UserInfo : User
         RobotId = response.RobotId!.Value;
         GlobalLeaderboardPosition = response.GlobalLeaderboardPosition;
         SpiderId = response.SpiderId!.Value;
-        Twitter = response.Twitter!.Value;
-        Twitch = response.Twitter!.Value;
+        Twitter = new(LinkedServiceProfile.Twitter, response.TwitterUsername!);
+        Twitch = new(LinkedServiceProfile.Twitch, response.TwitterUsername!);
         Diamonds = response.Diamonds!.Value;
         ExplosionId = response.ExplosionId!.Value;
         ModeratorStatus = response.ModeratorStatus!.Value;

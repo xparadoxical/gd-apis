@@ -1,53 +1,51 @@
 using GeometryDash.Server.Users;
 
 namespace GeometryDash.Tests.Server.Users;
-public class UserResponseTests
+public class UserResponseTests : SerializationTest
 {
-    [Theory]
-    [InlineData("1:Robergamer100:2:11386212:13:149:17:2692:6:15209:9:24:10:12:11:12:14:3:15:0:16:2577515:3:10658:8:0:46:8375:4:213|1:SweetNight:2:10115453:13:149:17:800:6:15210:9:17:10:17:11:12:14:6:15:2:16:1625356:3:10658:8:0:46:13601:4:757")]
-    public void SerializationLogic_getGJScores_Works(string input)
+    [Fact]
+    public void SerializationLogic_getGJScores_Works()
     {
-        var deserialized = ServerSerializer.Deserialize<UserResponse[]>(input);
-
-        Assert.Equivalent(new UserResponse[]
-        {
-            new()
-            {
-                UserName = "Robergamer100",
-                PlayerId = 11386212,
-                Stars = 10658,
-                Demons = 213,
-                LeaderboardPosition = 15209,
-                CreatorPoints = 0,
-                ShowcaseIconId = 24,
-                PlayerColor1 = 12,
-                PlayerColor2 = 12,
-                SecretCoins = 149,
-                ShowcaseIconType = GameMode.Ufo,
-                HasGlow = false,
-                AccountId = 2577515,
-                UserCoins = 2692,
-                Diamonds = 8375
-            },
-            new()
-            {
-                UserName = "SweetNight",
-                PlayerId = 10115453,
-                Stars = 10658,
-                Demons = 757,
-                LeaderboardPosition = 15210,
-                CreatorPoints = 0,
-                ShowcaseIconId = 17,
-                PlayerColor1 = 17,
-                PlayerColor2 = 12,
-                SecretCoins = 149,
-                ShowcaseIconType = GameMode.Spider,
-                HasGlow = true,
-                AccountId = 1625356,
-                UserCoins = 800,
-                Diamonds = 13601
-            }
-        }, deserialized, true);
+        TestArrayDeserialization<UserResponse>("""
+            1:Robergamer100:2:11386212:13:149:17:2692:6:15209:9:24:10:12:11:12:14:3:15:0:16:2577515:3:10658:8:0:46:8375:4:213|1:SweetNight:2:10115453:13:149:17:800:6:15210:9:17:10:17:11:12:14:6:15:2:16:1625356:3:10658:8:0:46:13601:4:757
+            """u8.ToArray(), [
+                new()
+                {
+                    UserName = "Robergamer100",
+                    PlayerId = 11386212,
+                    Stars = 10658,
+                    Demons = 213,
+                    LeaderboardPosition = 15209,
+                    CreatorPoints = 0,
+                    ShowcaseIconId = 24,
+                    PlayerColor1 = 12,
+                    PlayerColor2 = 12,
+                    SecretCoins = 149,
+                    ShowcaseIconType = GameMode.Ufo,
+                    HasGlow = false,
+                    AccountId = 2577515,
+                    UserCoins = 2692,
+                    Diamonds = 8375
+                },
+                new()
+                {
+                    UserName = "SweetNight",
+                    PlayerId = 10115453,
+                    Stars = 10658,
+                    Demons = 757,
+                    LeaderboardPosition = 15210,
+                    CreatorPoints = 0,
+                    ShowcaseIconId = 17,
+                    PlayerColor1 = 17,
+                    PlayerColor2 = 12,
+                    SecretCoins = 149,
+                    ShowcaseIconType = GameMode.Spider,
+                    HasGlow = true,
+                    AccountId = 1625356,
+                    UserCoins = 800,
+                    Diamonds = 13601
+                }
+            ]);
     }
 
     [Theory]
@@ -70,7 +68,7 @@ public class UserResponseTests
             UserCoins = 3555,
             AllowMessagesFrom = PrivacyGroup.Friends,
             AllowFriendRequests = false,
-            YouTube = new(LinkedServiceProfile.YouTube, "UCUwapObI2gw2Tovu5oj-wng"),
+            YouTubeChannelId = "UCUwapObI2gw2Tovu5oj-wng",
             CubeId = 133,
             ShipId = 42,
             BallId = 32,
@@ -81,8 +79,8 @@ public class UserResponseTests
             GlobalLeaderboardPosition = null,
             FriendState = FriendState.None,
             SpiderId = 11,
-            Twitter = new(LinkedServiceProfile.Twitter, "vipringd"),
-            Twitch = new(LinkedServiceProfile.Twitch, "viprin"),
+            TwitterUsername = "vipringd",
+            TwitchUsername = "viprin",
             Diamonds = 31038,
             ExplosionId = 1,
             ModeratorStatus = ModeratorStatus.ElderModerator,
@@ -131,7 +129,7 @@ public class UserResponseTests
     [InlineData("1~VaXeN~9~1~10~0~11~3~14~0~15~0~16~7121876")]
     public void SerializationLogic_getGJComments_Works(string input)
     {
-        var normalized = input.Replace('~', (char)UserResponse.Options.FieldSeparator); //TODO separator overriding
+        var normalized = input.Replace('~', (char)'a'); //TODO separator overriding
         var deserialized = ServerSerializer.Deserialize<UserResponse>(normalized);
 
         Assert.Equivalent(new UserResponse
