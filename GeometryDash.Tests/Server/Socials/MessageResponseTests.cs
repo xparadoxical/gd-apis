@@ -4,7 +4,7 @@ namespace GeometryDash.Tests.Server.Socials;
 public class MessageResponseTests : SerializationTest
 {
     [Fact]
-    public void DeserializationWorks()
+    public void Deserialization_Works()
     {
         TestDeserialization<MessageResponse>([
                 "6:maximo21009:3:245093986:2:29292372:1:83299152:4:ZQ==:8:1:9:0:7:1 year"u8.ToArray(),
