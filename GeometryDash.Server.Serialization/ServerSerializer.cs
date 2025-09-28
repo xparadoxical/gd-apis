@@ -30,14 +30,14 @@ public sealed partial class ServerSerializer
     public static T[] DeserializeArray<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>(string input, byte itemSeparator = (byte)'|')
         => input.ToUtf8(span => DeserializeArray<T>(span, itemSeparator));
 
-    public static T[] DeserializeArray<[DynamicallyAccessedMembers(PublicParameterlessConstructor)] T>(ReadOnlySpan<byte> input, byte itemSeparator = (byte)'|')
+    public static T[] DeserializeArray<T>(ReadOnlySpan<byte> input, byte itemSeparator = (byte)'|') where T : ISerializable<T>
     {
         var ret = new T[System.MemoryExtensions.Count(input, itemSeparator) + 1];
 
         int i = 0;
         foreach (var value in input.Tokenize(itemSeparator))
         {
-            ret[i++] = Deserialize<T>(value);
+            ret[i++] = DeserializeSerializable<T>(value);
         }
 
         return ret;
