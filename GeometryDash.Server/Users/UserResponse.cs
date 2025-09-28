@@ -187,6 +187,7 @@ public enum FriendState : byte
 {
     None = 0,
     Friend = 1,
+    //2 unknown
     RequestSent = 3,
     RequestReceived = 4
 }
@@ -196,6 +197,6 @@ public enum ModeratorStatus : byte
     None,
     Moderator,
     ElderModerator,
-    /// <summary>Visible only in <see cref="UserInfo"/>.</summary>
+    /// <summary>This value is visible only in <see cref="UserInfo"/>.</summary>
     LeaderboardModerator
 }
