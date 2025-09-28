@@ -3,12 +3,12 @@ public class MessageInfo
 {
     protected internal MessageInfo(MessageResponse response)
     {
-        OtherUser = new(response.OtherUserAccountId!.Value, response.OtherUserPlayerId!.Value, response.OtherUserName!);
-        MessageId = response.MessageId!.Value;
-        Title = response.Title!;
-        Age = response.Age!.Value;
-        IsRead = response.IsRead!.Value;
-        IsIncoming = response.IsIncoming!.Value;
+        OtherUser = new(response.OtherUserAccountId, response.OtherUserPlayerId, response.OtherUserName);
+        MessageId = response.MessageId;
+        Title = response.Title;
+        Age = response.Age;
+        IsRead = response.IsRead;
+        IsIncoming = response.IsIncoming;
     }
 
     public required MessageUser OtherUser { get; set; }
