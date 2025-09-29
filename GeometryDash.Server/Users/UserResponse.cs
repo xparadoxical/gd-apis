@@ -88,7 +88,9 @@ public sealed partial class UserResponse : ISerializable<UserResponse>
 
     //public ushort? TrailId { get; set; } //27 never sent
 
-    //28 == 15
+    [Index(28)] //28 == 15
+    [Bool('1', False = '0')]
+    private bool HasGlowAlternate { set => HasGlow = value; }
 
     public bool IsRegistered => AccountId is not null; //29, no point in deserializing
 
