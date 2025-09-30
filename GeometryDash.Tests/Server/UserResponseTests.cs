@@ -1,6 +1,6 @@
 using GeometryDash.Server.Users;
 
-namespace GeometryDash.Tests.Server.Users;
+namespace GeometryDash.Tests.Server;
 public class UserResponseTests : SerializationTest
 {
     [Fact]

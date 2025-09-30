@@ -1,6 +1,6 @@
 using GeometryDash.Server.Socials;
 
-namespace GeometryDash.Tests.Server.Socials;
+namespace GeometryDash.Tests.Server;
 public class MessageResponseTests : SerializationTest
 {
     [Fact]
