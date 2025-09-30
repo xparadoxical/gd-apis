@@ -1,37 +1,17 @@
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.InteropServices;
-
 using GeometryDash.Server.Serialization;
 
 namespace GeometryDash.Server;
-public class PagedData<T> : IUtf8SpanParsable<PagedData<T>>
+
+public sealed record class PagedData<T>(T Data, PagingInfo Paging) : ISerializable<PagedData<T>>
     where T : ISerializable<T>
 {
-    public required T Data { get; init; }
-    public required PagingInfo Paging { get; init; }
-
-    public static PagedData<T> Parse(ReadOnlySpan<byte> input, IFormatProvider? provider = null)
+    public static PagedData<T> Deserialize(ReadOnlySpan<byte> input)
     {
-        if (!TryParse(input, provider, out var ret))
-            throw new FormatException("The input span was not in a correct format.");
+        var separatorPos = input.LastIndexOf((byte)'#');
 
-        return ret;
-    }
+        var data = ServerSerializer.DeserializeSerializable<T>(input[..separatorPos]);
+        var paging = ServerSerializer.DeserializeSerializable<PagingInfo>(input[(separatorPos + 1)..]);
 
-    public static bool TryParse(ReadOnlySpan<byte> input, [Optional, DefaultParameterValue(null)] IFormatProvider? provider, [MaybeNullWhen(false)] out PagedData<T> ret)
-    {
-        var hash = input.LastIndexOf((byte)'#');
-        if (!PagingInfo.TryParse(input[(hash + 1)..], result: out var info))
-        {
-            ret = default;
-            return false;
-        }
-
-        ret = new()
-        {
-            Data = ServerSerializer.Deserialize<T>(input[..hash]),
-            Paging = info
-        };
-        return true;
+        return new(data, paging);
     }
 }

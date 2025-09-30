@@ -48,55 +48,53 @@ public class UserResponseTests : SerializationTest
             ]);
     }
 
-    [Theory]
-    [InlineData("1:ViPriN:2:1078150:13:149:17:3555:10:11:11:13:3:33486:46:31038:4:1122:8:281:18:1:19:1:50:2:20:UCUwapObI2gw2Tovu5oj-wng:21:133:22:42:23:32:24:29:25:30:26:16:28:1:43:11:48:1:30:0:16:2795:31::44:vipringd:45:viprin:49:2:29:1")]
-    public void SerializationLogic_getGJUserInfo_Works(string input)
+    [Fact]
+    public void SerializationLogic_getGJUserInfo_Works()
     {
-        var deserialized = ServerSerializer.Deserialize<UserResponse>(input);
-
-        Assert.Equivalent(new UserResponse
-        {
-            Username = "ViPriN",
-            PlayerId = 1078150,
-            Stars = 33486,
-            Demons = 1122,
-            CreatorPoints = 281,
-            PlayerColor1 = 11,
-            PlayerColor2 = 13,
-            SecretCoins = 149,
-            AccountId = 2795,
-            UserCoins = 3555,
-            AllowMessagesFrom = PrivacyGroup.Friends,
-            AllowFriendRequests = false,
-            YouTubeChannelId = "UCUwapObI2gw2Tovu5oj-wng",
-            CubeId = 133,
-            ShipId = 42,
-            BallId = 32,
-            UfoId = 29,
-            WaveId = 30,
-            RobotId = 16,
-            HasGlow = true,
-            GlobalLeaderboardPosition = null,
-            FriendState = FriendState.None,
-            SpiderId = 11,
-            TwitterUsername = "vipringd",
-            TwitchUsername = "viprin",
-            Diamonds = 31038,
-            ExplosionId = 1,
-            ModeratorStatus = ModeratorStatus.ElderModerator,
-            CommentHistoryPublicTo = PrivacyGroup.Private
-        }, deserialized, true);
+        TestDeserialization<UserResponse>("""
+            1:ViPriN:2:1078150:13:149:17:3555:10:11:11:13:3:33486:46:31038:4:1122:8:281:18:1:19:1:50:2:20:UCUwapObI2gw2Tovu5oj-wng:21:133:22:42:23:32:24:29:25:30:26:16:28:1:43:11:48:1:30:0:16:2795:31::44:vipringd:45:viprin:49:2:29:1
+            """u8.ToArray(),
+            new()
+            {
+                Username = "ViPriN",
+                PlayerId = 1078150,
+                Stars = 33486,
+                Demons = 1122,
+                CreatorPoints = 281,
+                PlayerColor1 = 11,
+                PlayerColor2 = 13,
+                SecretCoins = 149,
+                AccountId = 2795,
+                UserCoins = 3555,
+                AllowMessagesFrom = PrivacyGroup.Friends,
+                AllowFriendRequests = false,
+                YouTubeChannelId = "UCUwapObI2gw2Tovu5oj-wng",
+                CubeId = 133,
+                ShipId = 42,
+                BallId = 32,
+                UfoId = 29,
+                WaveId = 30,
+                RobotId = 16,
+                HasGlow = true,
+                GlobalLeaderboardPosition = null,
+                FriendState = FriendState.None,
+                SpiderId = 11,
+                TwitterUsername = "vipringd",
+                TwitchUsername = "viprin",
+                Diamonds = 31038,
+                ExplosionId = 1,
+                ModeratorStatus = ModeratorStatus.ElderModerator,
+                CommentHistoryPublicTo = PrivacyGroup.Private
+            });
     }
 
-    [Theory]
-    [InlineData("1:Afterfive:2:3543535:9:39:10:20:11:15:14:1:15:2:16:2235541:18:0:41:|1:EndorphinexPL:2:17208997:9:6:10:12:11:3:14:5:15:2:16:5116312:18:0:41:1")]
-    public void SerializationLogic_getGJUserList_Works(string input)
+    [Fact]
+    public void SerializationLogic_getGJUserList_Works()
     {
-        var deserialized = ServerSerializer.Deserialize<UserResponse[]>(input);
-
-        Assert.Equivalent(new UserResponse[]
-        {
-            new()
+        TestArrayDeserialization<UserResponse>("""
+            1:Afterfive:2:3543535:9:39:10:20:11:15:14:1:15:2:16:2235541:18:0:41:|1:EndorphinexPL:2:17208997:9:6:10:12:11:3:14:5:15:2:16:5116312:18:0:41:1
+            """u8.ToArray(),
+            [new()
             {
                 Username = "Afterfive",
                 PlayerId = 3543535,
@@ -122,52 +120,49 @@ public class UserResponseTests : SerializationTest
                 AllowMessagesFrom = PrivacyGroup.Everyone,
                 IsNewFriendOrRequest = true
             }
-        }, deserialized, true);
+        ]);
     }
 
-    [Theory]
-    [InlineData("1~VaXeN~9~1~10~0~11~3~14~0~15~0~16~7121876")]
-    public void SerializationLogic_getGJComments_Works(string input)
+    [Fact]
+    public void SerializationLogic_getGJComments_Works()
     {
-        var normalized = input.Replace('~', (char)'a'); //TODO separator overriding
-        var deserialized = ServerSerializer.Deserialize<UserResponse>(normalized);
-
-        Assert.Equivalent(new UserResponse
-        {
-            Username = "VaXeN",
-            ShowcaseIconId = 1,
-            PlayerColor1 = 0,
-            PlayerColor2 = 3,
-            ShowcaseIconType = GameMode.Cube,
-            HasGlow = false,
-            AccountId = 7121876
-        }, deserialized, true);
-    }
-
-    [Theory]
-    [InlineData("1:EndorphinexPL:2:17208997:9:6:10:12:11:3:14:5:15:2:16:5116312:32:60220714:35:dGVzdA==:41::37:7 minutes#0:0:20")]
-    public void SerializationLogic_getGJFriendRequests_Works(string input)
-    {
-        var deserialized = ServerSerializer.Deserialize<PagedData<UserResponse>>(input);
-
-        Assert.Equivalent(new PagedData<UserResponse>()
-        {
-            Data = new()
+        TestDeserialization<UserResponse>(
+            "1~VaXeN~9~1~10~0~11~3~14~0~15~0~16~7121876"u8.ToArray()
+                .Select(c => c == (byte)'~' ? (byte)':' : c).ToArray(), //TODO separator overriding
+            new()
             {
-                Username = "EndorphinexPL",
-                PlayerId = 17208997,
-                ShowcaseIconId = 6,
-                PlayerColor1 = 12,
+                Username = "VaXeN",
+                ShowcaseIconId = 1,
+                PlayerColor1 = 0,
                 PlayerColor2 = 3,
-                ShowcaseIconType = GameMode.Robot,
-                HasGlow = true,
-                AccountId = 5116312,
-                FriendRequestId = 60220714,
-                FriendRequestMessage = "test",
-                FriendRequestAge = TimeSpan.FromMinutes(7),
-                IsNewFriendOrRequest = false
-            },
-            Paging = new(0, 0, 20)
-        }, deserialized, true);
+                ShowcaseIconType = GameMode.Cube,
+                HasGlow = false,
+                AccountId = 7121876
+            });
+    }
+
+    [Fact]
+    public void SerializationLogic_getGJFriendRequests_Works()
+    {
+        TestDeserialization<PagedData<UserResponse>>([
+                "1:EndorphinexPL:2:17208997:9:6:10:12:11:3:14:5:15:2:16:5116312:32:60220714:35:dGVzdA==:41::37:7 minutes#0:0:20"u8.ToArray()
+            ], [
+                new(new()
+                {
+                    Username = "EndorphinexPL",
+                    PlayerId = 17208997,
+                    ShowcaseIconId = 6,
+                    PlayerColor1 = 12,
+                    PlayerColor2 = 3,
+                    ShowcaseIconType = GameMode.Robot,
+                    HasGlow = true,
+                    AccountId = 5116312,
+                    FriendRequestId = 60220714,
+                    FriendRequestMessage = "test",
+                    FriendRequestAge = TimeSpan.FromMinutes(7),
+                    IsNewFriendOrRequest = false
+                },
+                new(0, 0, 20))
+            ]);
     }
 }
