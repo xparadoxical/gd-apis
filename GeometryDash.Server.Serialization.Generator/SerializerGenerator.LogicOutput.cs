@@ -103,8 +103,8 @@ public sealed partial class SerializerGenerator
                 {
                     case Transform.Base64:
                         writer.WriteLine("""
-                            buffer.EnsureCapacity(global::GeometryDash.Server.Serialization.Base64.GetMaxDecodedLength(buffer.DataLength));
-                            buffer.DataLength = global::GeometryDash.Server.Serialization.Base64.Decode(buffer.DataSpan);
+                            buffer.EnsureCapacity(global::GeometryDash.Server.Serialization.Base64.GetMaxDecodedLength(buffer.Length));
+                            buffer.Length = global::GeometryDash.Server.Serialization.Base64.Decode(buffer.DataSpan);
                             """, true);
                         break;
 
@@ -117,7 +117,7 @@ public sealed partial class SerializerGenerator
                             var t{i}_length = global::GeometryDash.Server.Serialization.Gzip.GetDecompressedLength(buffer.DataSpan);
                             var t{i}_output = global::System.Buffers.ArrayPool<byte>.Shared.Rent((int)t{i}_length);
                             global::GeometryDash.Server.Serialization.Gzip.Decompress(buffer.DataSpan, t{i}_output);
-                            buffer.DataLength = t{i}_output.Length;
+                            buffer.Length = t{i}_output.Length;
                             global::System.MemoryExtensions.AsSpan(t{i}_output).CopyTo(buffer.DataSpan);
                             global::System.Buffers.ArrayPool<byte>.Shared.Return(t{i}_output);
                             """, true);
@@ -164,7 +164,7 @@ public sealed partial class SerializerGenerator
         if (prop.FromEmpty is not null)
         {
             writer.Write($"if (");
-            writer.Write(usePooledBuffer ? "buffer.DataLength == 0" : "input.IsEmpty");
+            writer.Write(usePooledBuffer ? "buffer.Length == 0" : "input.IsEmpty");
             writer.WriteLine(")");
 
             writer.IncreaseIndent();
