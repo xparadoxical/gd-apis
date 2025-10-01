@@ -7,10 +7,10 @@ public class User
     protected internal User(UserResponse response)
     {
         Username = response.Username;
-        PlayerId = response.PlayerId!.Value;
+        PlayerId = response.PlayerId;
         PlayerColor1 = response.PlayerColor1;
         PlayerColor2 = response.PlayerColor2;
-        HasGlow = response.HasGlow!.Value;
+        HasGlow = response.HasGlow!.Value; //TODO verify if HasGlow is "always fake 0" for some endpoints
         AccountId = response.AccountId;
     }
 

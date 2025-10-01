@@ -9,7 +9,7 @@ public sealed partial class UserResponse : ISerializable<UserResponse>
     public string Username { get; set; }
 
     [Index(2)]
-    public uint? PlayerId { get; set; }
+    public uint PlayerId { get; set; }
 
     [Index(3)]
     public uint? Stars { get; set; }
