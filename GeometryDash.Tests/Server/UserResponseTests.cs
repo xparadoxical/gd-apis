@@ -159,7 +159,7 @@ public class UserResponseTests : SerializationTest
                     AccountId = 5116312,
                     FriendRequestId = 60220714,
                     FriendRequestMessage = "test",
-                    FriendRequestAge = TimeSpan.FromMinutes(7),
+                    FriendRequestAge = TimeUnit.Minute * 7,
                     IsNewFriendOrRequest = false
                 },
                 new(0, 0, 20))

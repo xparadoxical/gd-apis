@@ -153,7 +153,7 @@ public static class ParsingExtensions
             if (unit.SequenceEqual("minute"u8))
                 return TimeSpan.FromMinutes(count);
             else if (unit.SequenceEqual("month"u8))
-                return TimeSpan.FromDays(count * 31 /*30.5?*/);
+                return TimeUnit.Month * count;
         }
         else if (unit.SequenceEqual("second"u8))
             return TimeSpan.FromSeconds(count);
@@ -162,9 +162,9 @@ public static class ParsingExtensions
         else if (unit.SequenceEqual("day"u8))
             return TimeSpan.FromDays(count);
         else if (unit.SequenceEqual("week"u8))
-            return TimeSpan.FromDays(count * 7);
+            return TimeUnit.Week * count;
         else if (unit.SequenceEqual("year"u8))
-            return TimeSpan.FromDays(count * 365 /*365.25?*/);
+            return TimeUnit.Year * count;
 
         throw new FormatException("Unknown time unit.");
     }
