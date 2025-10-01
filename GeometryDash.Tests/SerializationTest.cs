@@ -1,7 +1,7 @@
 namespace GeometryDash.Tests;
 public class SerializationTest
 {
-    protected void TestDeserialization<T>(byte[] input, T expectedOutput) where T : ISerializable<T>
+    protected void TestDeserialization<T>(ReadOnlySpan<byte> input, T expectedOutput) where T : ISerializable<T>
         => Assert.Equivalent(expectedOutput, ServerSerializer.DeserializeSerializable<T>(input), true);
 
     protected void TestDeserialization<T>(byte[][] inputs, T[] expectedOutputs) where T : ISerializable<T>
