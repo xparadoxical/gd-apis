@@ -9,5 +9,5 @@ public class ColoredComment : Comment
         Color = response.Color;
     }
 
-    public required CommentColor? Color { get; set; }
+    public required Color? Color { get; set; }
 }

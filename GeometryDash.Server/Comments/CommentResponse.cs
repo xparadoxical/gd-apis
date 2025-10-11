@@ -38,16 +38,5 @@ public sealed partial class CommentResponse
     public ModeratorStatus ModeratorStatus { get; set; }
 
     [Index(12)]
-    public CommentColor? Color { get; set; }
-}
-
-[Separator(Prop = ',', ListItem = '|')]
-public sealed partial class CommentColor
-{
-    [Index(1)]
-    public byte Red { get; set; }
-    [Index(2)]
-    public byte Green { get; set; }
-    [Index(3)]
-    public byte Blue { get; set; }
+    public Color? Color { get; set; }
 }
