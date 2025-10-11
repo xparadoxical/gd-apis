@@ -7,8 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GeometryDash.Server.Serialization.Generator\GeometryDash.Server.Serialization.Generator.csproj"
-                      OutputItemType="Analyzer">
+    <ProjectReference Include="..\GeometryDash.Server.Serialization.Generator\GeometryDash.Server.Serialization.Generator.csproj" OutputItemType="Analyzer">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
     <ProjectReference Include="..\GeometryDash.Server.Serialization\GeometryDash.Server.Serialization.csproj" />
