@@ -24,7 +24,7 @@ public sealed class IndexAttribute(uint index) : Attribute;
 
 /// <summary>
 /// Specifies what value indicates <see langword="true"/>.
-/// If <see cref="False"/> is not set, any value other than <paramref name="trueChar"/> means <see langword="false"/>.
+/// If <see cref="False"/> is not set, an empty value means <see langword="false"/>.
 /// </summary>
 [AttributeUsage(SupportedTargets.Members, Inherited = false)]
 public sealed class BoolAttribute(char trueChar) : Attribute
