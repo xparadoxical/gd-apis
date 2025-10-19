@@ -25,7 +25,7 @@ public sealed partial class LevelResponse
     public uint? PlayerId { get; set; }
 
     [Index(7)]
-    public LevelDifficulty? Difficulty { get; set; }
+    public LevelDifficulty? ListDifficulty { get; set; }
 
     [Index(8)]
     //TODO [Bool("10", False = "0")]
@@ -70,7 +70,7 @@ public sealed partial class LevelResponse
 
     [Index(25)]
     [Bool('1')]
-    public uint? Auto { get; set; }
+    public bool? Auto { get; set; }
 
     //26 never sent
 
@@ -176,9 +176,10 @@ public sealed partial class LevelResponse
     public uint? VerificationFrames { get; set; }
 }
 
-public enum NonDemonDifficulty : byte
+public enum NonDemonDifficulty : sbyte
 {
-    Unrated = 0,
+    Auto = -10,
+    NA = 0,
     Easy = 10,
     Normal = 20,
     Hard = 30,
