@@ -25,7 +25,7 @@ public sealed partial class LevelResponse
     public uint? PlayerId { get; set; }
 
     [Index(7)]
-    public Difficulty? Difficulty { get; set; }
+    public LevelDifficulty? Difficulty { get; set; }
 
     [Index(8)]
     //TODO [Bool("10", False = "0")]
@@ -204,7 +204,7 @@ public enum LevelLength : byte
     XL = 4
 }
 
-public enum Difficulty : sbyte
+public enum LevelDifficulty : sbyte
 {
     NA = -1,
     Auto = 0,
