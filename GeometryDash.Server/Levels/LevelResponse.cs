@@ -63,7 +63,7 @@ public sealed partial class LevelResponse
     public bool IsFeatured => FeaturedScore != 0;
 
     [Index(19)]
-    [EmptyDefaultsTo(0)] //featured lists
+    [EmptyDefaultsTo(0)] //unfeatured lists
     public uint FeaturedScore { get; set; }
 
     //20-24 unknown
