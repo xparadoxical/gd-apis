@@ -15,7 +15,7 @@ public ref struct RobTopStringReader(ReadOnlySpan<byte> input)
     public byte Separator { get; init; } = (byte)':'; //TODO song response uses "~|~"
 
     /// <summary>Duck-typed IEnumerator implementation.</summary>
-    public readonly Prop Current => new(_span[_keyStart.._keyEnd].Parse<uint>(), _span[_valueStart.._valueEnd]);
+    public readonly KeyValueSpanPair Current => new(_span[_keyStart.._keyEnd].Parse<uint>(), _span[_valueStart.._valueEnd]);
 
     /// <summary>Duck-typed IEnumerable implementation.</summary>
     public readonly RobTopStringReader GetEnumerator() => this;

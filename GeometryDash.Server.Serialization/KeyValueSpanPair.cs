@@ -1,12 +1,12 @@
 using CommunityToolkit.HighPerformance;
 
 namespace GeometryDash.Server.Serialization;
-public readonly ref struct Prop
+public readonly ref struct KeyValueSpanPair
 {
     public readonly uint Key { get; }
     public readonly ReadOnlySpan<byte> Value { get; }
 
-    internal Prop(uint key, ReadOnlySpan<byte> value)
+    internal KeyValueSpanPair(uint key, ReadOnlySpan<byte> value)
     {
         Key = key;
         Value = value;

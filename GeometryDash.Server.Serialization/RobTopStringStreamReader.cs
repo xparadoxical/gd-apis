@@ -12,7 +12,7 @@ public ref struct RobTopStringStreamReader(Stream input, IBuffer<byte> buffer, b
     public byte Separator { get; init; } = (byte)':';
 
     /// <summary>Duck-typed IEnumerator implementation.</summary>
-    public Prop Current { get; private set; }
+    public KeyValueSpanPair Current { get; private set; }
 
     /// <summary>Duck-typed IEnumerable implementation.</summary>
     public readonly RobTopStringStreamReader GetEnumerator() => this; //no way for >1 enumerator to be at different positions in one stream
@@ -56,7 +56,7 @@ public ref struct RobTopStringStreamReader(Stream input, IBuffer<byte> buffer, b
             key = _currentHasValue ? Current.Key + 1 : 0;
         }
 
-        Current = new Prop(key!.Value, buffer.WrittenSpan);
+        Current = new KeyValueSpanPair(key!.Value, buffer.WrittenSpan);
         _currentHasValue = true;
         if (end)
             _expectingMore = false;
