@@ -38,7 +38,7 @@ public enum MapPackDifficulty : byte
     Hard = 3,
     Harder = 4,
     Insane = 5,
-    HardDemon = 6,
+    HardDemon = 6, //TODO check in decomp if this order is in fact different than LevelDificulty
     EasyDemon = 7,
     MediumDemon = 8,
     InsaneDemon = 9,

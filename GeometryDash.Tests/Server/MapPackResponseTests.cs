@@ -25,7 +25,7 @@ public class MapPackResponseTests : SerializationTest
                 LevelIds = "1668421,1703546,923264",
                 Stars = 10,
                 Coins = 2,
-                Difficulty = 6,
+                Difficulty = MapPackDifficulty.HardDemon,
                 TextColor = new() { Red = 255, Green = 255, Blue = 0 },
                 ProgressBarColor = new() { Red = 255, Green = 255, Blue = 0 }
             });

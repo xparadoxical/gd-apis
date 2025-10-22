@@ -23,7 +23,7 @@ public class MapPack
 
     public byte Coins { get; set; }
 
-    public byte Difficulty { get; set; }
+    public MapPackDifficulty Difficulty { get; set; }
 
     public Color TextColor { get; set; }
 
