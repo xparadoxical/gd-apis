@@ -2,7 +2,7 @@ using GeometryDash.Server.Serialization;
 
 namespace GeometryDash.Server.Levels;
 
-[Separator(Prop = ':', ListItem = '|')]
+[Separator(Prop = ":", ListItem = "|")]
 public sealed partial class LevelResponse
 {
     [Index(1)]

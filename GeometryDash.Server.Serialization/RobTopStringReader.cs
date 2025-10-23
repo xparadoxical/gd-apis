@@ -12,7 +12,7 @@ public ref struct RobTopStringReader(ReadOnlySpan<byte> input)
     private int _valueStart = 0;
     private int _valueEnd = -1;
 
-    public byte Separator { get; init; } = (byte)':'; //TODO song response uses "~|~"
+    public required ReadOnlySpan<byte> Separator { get; init; }
 
     /// <summary>Duck-typed IEnumerator implementation.</summary>
     public readonly KeyValueSpanPair Current => new(_span[_keyStart.._keyEnd].Parse<uint>(), _span[_valueStart.._valueEnd]);

@@ -10,7 +10,7 @@ public class RobTopStringReaderTests(ITestOutputHelper output)
         output.WriteLine("'{0}'{1}", input, keyed ? " keyed" : "");
 
         var props = new List<(uint, string)>();
-        foreach (var (k, v) in new RobTopStringReader(Encoding.UTF8.GetBytes(input)))
+        foreach (var (k, v) in new RobTopStringReader(Encoding.UTF8.GetBytes(input)) { Separator = ":"u8 })
         {
             string s = Encoding.UTF8.GetString(v);
             output.WriteLine($"{k}: '{s}'");

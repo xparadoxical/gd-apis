@@ -9,7 +9,7 @@ public ref struct RobTopStringStreamReader(Stream input, IBuffer<byte> buffer, b
     private bool _currentHasValue = false;
     private bool _expectingMore = false;
 
-    public byte Separator { get; init; } = (byte)':';
+    public byte Separator { get; init; } = (byte)':'; //TODO ROS<byte> or remove the type
 
     /// <summary>Duck-typed IEnumerator implementation.</summary>
     public KeyValueSpanPair Current { get; private set; }

@@ -2,7 +2,7 @@ using GeometryDash.Server.Serialization;
 
 namespace GeometryDash.Server;
 
-[Separator(Prop = ',', ListItem = '|')]
+[Separator(Prop = ",", ListItem = "|")]
 public sealed partial class Color
 {
     [Index(1)]

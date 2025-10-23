@@ -15,8 +15,8 @@ public sealed class KeyedAttribute : Attribute;
 [AttributeUsage(SupportedTargets.Types, Inherited = false)]
 public sealed class SeparatorAttribute : Attribute
 {
-    public required char Prop { get; init; }
-    public required char ListItem { get; init; }
+    public required string Prop { get; init; }
+    public required string ListItem { get; init; }
 }
 
 [AttributeUsage(SupportedTargets.Members, Inherited = false)]

@@ -6,7 +6,7 @@ using PoolBuffers;
 
 namespace N;
 
-[Separator(Prop = ':', ListItem = '|')]
+[Separator(Prop = ":", ListItem = "|")]
 internal partial class C
 {
     [Index(1)]
@@ -48,7 +48,7 @@ public class S : ISerializable<S>
 }
 
 [Keyed]
-[Separator(Prop = ',', ListItem = ';')]
+[Separator(Prop = ",", ListItem = ";")]
 internal partial class D
 {
     [Index(5)]

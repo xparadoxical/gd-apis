@@ -7,7 +7,7 @@ partial class D : global::GeometryDash.Server.Serialization.ISerializable<D>
     public static D Deserialize(global::System.ReadOnlySpan<byte> input)
     {
         var ret = new D();
-        foreach (var (key, value) in new global::GeometryDash.Server.Serialization.RobTopStringReader(input) { Separator = (byte)',' })
+        foreach (var (key, value) in new global::GeometryDash.Server.Serialization.RobTopStringReader(input) { Separator = ","u8 })
         {
             switch (key)
             {

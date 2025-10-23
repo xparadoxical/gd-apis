@@ -3,7 +3,7 @@ using GeometryDash.Server.Users;
 
 namespace GeometryDash.Server.Comments;
 
-[Separator(Prop = '~', ListItem = '|'), Keyed]
+[Separator(Prop = "~", ListItem = "|"), Keyed]
 public sealed partial class CommentResponse
 {
     [Index(1)]

@@ -8,7 +8,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
     {
         var ret = new C();
         var key = 1;
-        foreach (var value in global::CommunityToolkit.HighPerformance.ReadOnlySpanExtensions.Tokenize(input, (byte)':'))
+        foreach (var value in new global::CommunityToolkit.HighPerformance.Enumerables.ReadOnlySpanTokenizerWithSpanSeparator<byte>(input, ":"u8))
         {
             switch (key)
             {
@@ -34,8 +34,8 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
         global::GeometryDash.Server.Serialization.Xor.Apply(buffer.DataSpan, "12345"u8);
 
-        buffer.EnsureCapacity(global::GeometryDash.Server.Serialization.Base64.GetMaxDecodedLength(buffer.DataLength));
-        buffer.DataLength = global::GeometryDash.Server.Serialization.Base64.Decode(buffer.DataSpan);
+        buffer.EnsureCapacity(global::GeometryDash.Server.Serialization.Base64.GetMaxDecodedLength(buffer.Length));
+        buffer.Length = global::GeometryDash.Server.Serialization.Base64.Decode(buffer.DataSpan);
 
         OnSDeserialized(buffer);
 
@@ -85,12 +85,12 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
         var t1_length = global::GeometryDash.Server.Serialization.Gzip.GetDecompressedLength(buffer.DataSpan);
         var t1_output = global::System.Buffers.ArrayPool<byte>.Shared.Rent((int)t1_length);
         global::GeometryDash.Server.Serialization.Gzip.Decompress(buffer.DataSpan, t1_output);
-        buffer.DataLength = t1_output.Length;
+        buffer.Length = t1_output.Length;
         global::System.MemoryExtensions.AsSpan(t1_output).CopyTo(buffer.DataSpan);
         global::System.Buffers.ArrayPool<byte>.Shared.Return(t1_output);
 
-        buffer.EnsureCapacity(global::GeometryDash.Server.Serialization.Base64.GetMaxDecodedLength(buffer.DataLength));
-        buffer.DataLength = global::GeometryDash.Server.Serialization.Base64.Decode(buffer.DataSpan);
+        buffer.EnsureCapacity(global::GeometryDash.Server.Serialization.Base64.GetMaxDecodedLength(buffer.Length));
+        buffer.Length = global::GeometryDash.Server.Serialization.Base64.Decode(buffer.DataSpan);
 
         OnZipDeserialized(buffer);
 

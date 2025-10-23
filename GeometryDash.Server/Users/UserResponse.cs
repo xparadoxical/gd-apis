@@ -2,7 +2,7 @@ using GeometryDash.Server.Serialization;
 
 namespace GeometryDash.Server.Users;
 
-[Separator(Prop = ':', ListItem = '|'), Keyed]
+[Separator(Prop = ":", ListItem = "|"), Keyed]
 public sealed partial class UserResponse : ISerializable<UserResponse>
 {
     [Index(1)]

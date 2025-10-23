@@ -2,7 +2,7 @@ using GeometryDash.Server.Serialization;
 
 namespace GeometryDash.Server;
 
-[Separator(Prop = ':', ListItem = '|')]
+[Separator(Prop = ":", ListItem = "|")]
 public partial class PagingInfo(uint results, uint pageIndex, uint pageSize) : ISerializable<PagingInfo>
 {
     public PagingInfo() : this(0, 0, 0) { } //TODO record/primaryctor support

@@ -2,7 +2,7 @@ using GeometryDash.Server.Serialization;
 
 namespace GeometryDash.Server.Socials;
 
-[Separator(Prop = ':', ListItem = '|'), Keyed]
+[Separator(Prop = ":", ListItem = "|"), Keyed]
 public sealed partial class MessageResponse : ISerializable<MessageResponse>
 {
     [Index(1)]
