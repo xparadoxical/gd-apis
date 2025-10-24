@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace GeometryDash.Server.Serialization;
 
 file static class SupportedTargets
@@ -12,9 +14,13 @@ file static class SupportedTargets
 [AttributeUsage(SupportedTargets.Types, Inherited = false)]
 public sealed class KeyedAttribute : Attribute;
 
-[AttributeUsage(SupportedTargets.Types, Inherited = false)]
+[AttributeUsage(SupportedTargets.Types | SupportedTargets.Members, Inherited = false)]
 public sealed class SeparatorAttribute : Attribute
 {
+    public SeparatorAttribute() { }
+    [SetsRequiredMembers] //lies... but list properties can only specify item separator
+    public SeparatorAttribute(string itemSeparator) { }
+
     public required string Prop { get; init; }
     public required string ListItem { get; init; }
 }

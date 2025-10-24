@@ -20,6 +20,8 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
                 case 6: ret.DeserializeTime(value); break;
                 case 7: ret.DeserializeE(value); break;
                 case 8: ret.DeserializeNested(value); break;
+                case 9: ret.DeserializeD1(value); break;
+                case 10: ret.DeserializeD2(value); break;
             }
             key++;
         }
@@ -157,4 +159,26 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
     partial void OnNestedDeserializing(global::PoolBuffers.PooledBuffer<byte> input);
 
     partial void OnNestedDeserialized();
+
+    void DeserializeD1(global::System.ReadOnlySpan<byte> input)
+    {
+        D1 = global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeArray<global::N.D>(input, ";"u8);
+
+        OnD1Deserialized();
+    }
+
+    partial void OnD1Deserializing(global::PoolBuffers.PooledBuffer<byte> input);
+
+    partial void OnD1Deserialized();
+
+    void DeserializeD2(global::System.ReadOnlySpan<byte> input)
+    {
+        D2 = global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeArray<global::N.D>(input, "#"u8);
+
+        OnD2Deserialized();
+    }
+
+    partial void OnD2Deserializing(global::PoolBuffers.PooledBuffer<byte> input);
+
+    partial void OnD2Deserialized();
 }

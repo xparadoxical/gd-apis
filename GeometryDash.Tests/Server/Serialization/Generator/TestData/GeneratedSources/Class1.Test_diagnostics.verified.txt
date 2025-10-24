@@ -1,13 +1,63 @@
 [
   {
     Location: /*
-    [Index(5)]
+    [Separator("|")]
     public C[] Arr { get; set; }
                ^^^
 
 */
- Class1.Test.cs: (54,15)-(54,18),
+ Class1.Test.cs: (62,15)-(62,18),
     Message: Non-nullable property 'Arr' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.,
+    Severity: Warning,
+    WarningLevel: 1,
+    Descriptor: {
+      Id: CS8618,
+      Title: Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.,
+      HelpLink: https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8618),
+      MessageFormat: Non-nullable {0} '{1}' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the {0} as nullable.,
+      Category: Compiler,
+      DefaultSeverity: Warning,
+      IsEnabledByDefault: true,
+      CustomTags: [
+        Compiler,
+        Telemetry
+      ]
+    }
+  },
+  {
+    Location: /*
+    [Index(9)]
+    public D[] D1 { get; set; }
+               ^^
+
+*/
+ Class1.Test.cs: (44,15)-(44,17),
+    Message: Non-nullable property 'D1' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.,
+    Severity: Warning,
+    WarningLevel: 1,
+    Descriptor: {
+      Id: CS8618,
+      Title: Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.,
+      HelpLink: https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS8618),
+      MessageFormat: Non-nullable {0} '{1}' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the {0} as nullable.,
+      Category: Compiler,
+      DefaultSeverity: Warning,
+      IsEnabledByDefault: true,
+      CustomTags: [
+        Compiler,
+        Telemetry
+      ]
+    }
+  },
+  {
+    Location: /*
+    [Separator("#")]
+    public D[] D2 { get; set; }
+               ^^
+}
+*/
+ Class1.Test.cs: (48,15)-(48,17),
+    Message: Non-nullable property 'D2' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.,
     Severity: Warning,
     WarningLevel: 1,
     Descriptor: {

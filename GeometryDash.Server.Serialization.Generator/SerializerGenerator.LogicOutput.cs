@@ -202,7 +202,7 @@ public sealed partial class SerializerGenerator
         }
         else if (prop.ParsedType.Kind == TypeKind.Array)
         {
-            writer.WriteLine($"global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeArray<{prop.ParsedType.ElementType}>({spanExpr});");
+            writer.WriteLine($"global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeArray<{prop.ParsedType.ElementType}>({spanExpr}, {prop.ElementSeparatorOverride ?? prop.ParsedType.ElementSeparator}u8);");
         }
         else
             writer.WriteLine($"global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<{prop.ParsedType.Type}>({spanExpr});");

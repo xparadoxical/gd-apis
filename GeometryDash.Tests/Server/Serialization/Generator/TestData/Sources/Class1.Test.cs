@@ -40,6 +40,13 @@ internal partial class C
     public S Nested { get; set; } = null!;
 
     partial void OnTimeDeserializing(PooledBuffer<byte> input) => throw new NotImplementedException();
+
+    [Index(9)]
+    public D[] D1 { get; set; }
+
+    [Index(10)]
+    [Separator("#")]
+    public D[] D2 { get; set; }
 }
 
 public class S : ISerializable<S>
@@ -52,6 +59,7 @@ public class S : ISerializable<S>
 internal partial class D
 {
     [Index(5)]
+    [Separator("|")]
     public C[] Arr { get; set; }
 
     //IEnumerable, ICollection, IList, IReadOnlyX, IFrozenX

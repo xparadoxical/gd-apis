@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Mvvm.SourceGenerators.Helpers;
 
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace GeometryDash.Server.Serialization.Generator;
@@ -15,7 +16,7 @@ public sealed record SerializableClass(string Namespace, string Name, string Dec
 /// <param name="Type">Fully qualified type name.</param>
 public sealed record SerializableProperty(string Type, PropTypeInfo ParsedType, bool Required, string Name,
     uint Index, BoolSpec? BoolSpec, EquatableArray<Transform> Transforms, EquatableArray<string> ToNull,
-    string? FromEmpty, bool OnDeserializingHooked);
+    string? FromEmpty, bool OnDeserializingHooked, string? ElementSeparatorOverride);
 
 /// <param name="Type"></param>
 /// <param name="ElementType">The type of elements of an array or an enumerable type.</param>
@@ -23,8 +24,8 @@ public sealed record SerializableProperty(string Type, PropTypeInfo ParsedType, 
 /// For e.g. <c>System.UInt32</c>, the value is <see cref="uint"/>.
 /// Returns <see langword="null"/> when <paramref name="Type"/> is an array, a pointer or a type parameter.
 /// </param>
-public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementType, TypeKind Kind,
-    SpecialType SpecialType, bool IsINumberBase)
+public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementType, string? ElementSeparator,
+    TypeKind Kind, SpecialType SpecialType, bool IsINumberBase)
 {
     public static bool TryCreate(PropertyDeclarationSyntax prop, SemanticModel sm,
         [NotNullWhen(true)] out PropTypeInfo? result)
@@ -55,10 +56,18 @@ public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementTyp
         if (collectionElementType is not null && sm.GetTypeInfo(collectionElementType) is { Type: { } colElTypeSymbol })
             collectionElementTypeSymbol = colElTypeSymbol;
 
-        result = new(nullable, typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
-            collectionElementTypeSymbol?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
-            typeSymbol.TypeKind, typeSymbol.SpecialType,
-            typeSymbol.AllInterfaces.Any(sym => sym.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat).StartsWith("global::System.Numerics.INumberBase<")));
+        var propertyTypeFQN = typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+        var collectionElementTypeFQN = collectionElementTypeSymbol?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+
+        var typeProvidedElementSeparator = collectionElementTypeSymbol?.GetAttributes()
+            .FirstOrDefault(a => a.AttributeClass?.ToDisplayString() == KnownTypes.SeparatorAttribute)
+            ?.NamedArguments.SingleOrNullable(kvp => kvp.Key == "ListItem")
+            ?.Value.ToCSharpString();
+
+        var implementsINumberBase = typeSymbol.AllInterfaces.Any(sym => sym.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat).StartsWith("global::System.Numerics.INumberBase<"));
+
+        result = new(nullable, propertyTypeFQN, collectionElementTypeFQN, typeProvidedElementSeparator,
+            typeSymbol.TypeKind, typeSymbol.SpecialType, implementsINumberBase);
         return true;
     }
 }

@@ -19,7 +19,7 @@ partial class D : global::GeometryDash.Server.Serialization.ISerializable<D>
 
     void DeserializeArr(global::System.ReadOnlySpan<byte> input)
     {
-        Arr = global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeArray<global::N.C>(input);
+        Arr = global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeArray<global::N.C>(input, "|"u8);
 
         OnArrDeserialized();
     }

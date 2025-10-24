@@ -61,6 +61,7 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
             var transforms = new List<Transform>();
             var toNull = new List<string>();
             string? fromEmpty = null;
+            string? separator = null;
             foreach (var attr in prop.AttributeLists.SelectMany(l => l.Attributes))
             {
                 var type = ctx.SemanticModel.GetTypeInfo(attr, ct).Type;
@@ -129,6 +130,8 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
                 }
                 else if (attrFullName == KnownTypes.GzipAttribute)
                     transforms.Add(new Transform.Gzip());
+                else if (attrFullName == KnownTypes.SeparatorAttribute)
+                    separator = attr.ArgumentList?.Arguments.FirstOrDefault()?.Expression.ToString();
             }
 
             if (index is not null)
@@ -147,8 +150,8 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
                         is not null;
 
                     infos.Add(new(typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
-                        propTypeInfo, required, propName, index.Value, boolSpec,
-                        transforms.ToEquatableArray(), toNull.ToEquatableArray(), fromEmpty, onDeserializingHooked));
+                        propTypeInfo, required, propName, index.Value, boolSpec, transforms.ToEquatableArray(),
+                        toNull.ToEquatableArray(), fromEmpty, onDeserializingHooked, separator));
                 }
             }
         }
