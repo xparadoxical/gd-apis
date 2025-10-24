@@ -13,7 +13,7 @@ public class SerializationTest
 
     protected void TestArrayDeserialization<T>(byte[] input, T[] expectedOutputs) where T : ISerializable<T>
     {
-        Assert.Multiple(ServerSerializer.DeserializeArray<T>(input)
+        Assert.Multiple(ServerSerializer.DeserializeArray<T>(input, "|"u8)
             .Zip(expectedOutputs)
             .Select(inOut => new Action(() => Assert.Equivalent(inOut.Second, inOut.First, true)))
             .ToArray());
