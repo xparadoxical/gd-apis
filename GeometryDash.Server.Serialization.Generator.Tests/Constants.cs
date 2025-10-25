@@ -10,7 +10,7 @@ public static class Constants
 
     static Constants()
     {
-        TestDataPath = Path.Combine("Server", "Serialization", "Generator", "TestData");
+        TestDataPath = "TestData";
         GeneratedSourceFolderPath = Path.Combine(TestDataPath, "GeneratedSources");
 
         var executingAsmPath = Path.GetFullPath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!);

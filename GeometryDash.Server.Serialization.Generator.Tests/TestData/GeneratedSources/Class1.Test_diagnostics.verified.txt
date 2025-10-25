@@ -2,11 +2,11 @@
   {
     Location: /*
     [Separator("|")]
-    public C[] Arr { get; set; }
-               ^^^
+    public int[] Arr { get; set; }
+                 ^^^
 
 */
- Class1.Test.cs: (62,15)-(62,18),
+ Class1.Test.cs: (62,17)-(62,20),
     Message: Non-nullable property 'Arr' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.,
     Severity: Warning,
     WarningLevel: 1,

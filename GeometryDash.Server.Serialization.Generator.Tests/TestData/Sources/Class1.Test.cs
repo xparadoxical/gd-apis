@@ -60,7 +60,7 @@ internal partial class D
 {
     [Index(5)]
     [Separator("|")]
-    public C[] Arr { get; set; }
+    public int[] Arr { get; set; }
 
     //IEnumerable, ICollection, IList, IReadOnlyX, IFrozenX
 }

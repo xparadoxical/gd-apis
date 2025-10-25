@@ -162,7 +162,11 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
     void DeserializeD1(global::System.ReadOnlySpan<byte> input)
     {
-        D1 = global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeArray<global::N.D>(input, ";"u8);
+        var ret = new global::N.D[global::System.MemoryExtensions.Count(input, ";"u8) + 1];
+        int i = 0;
+        foreach (var value in new global::CommunityToolkit.HighPerformance.Enumerables.ReadOnlySpanTokenizerWithSpanSeparator<byte>(input, ";"u8))
+            ret[i++] = global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<global::N.D>(value);
+        D1 = ret;
 
         OnD1Deserialized();
     }
@@ -173,7 +177,11 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
     void DeserializeD2(global::System.ReadOnlySpan<byte> input)
     {
-        D2 = global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeArray<global::N.D>(input, "#"u8);
+        var ret = new global::N.D[global::System.MemoryExtensions.Count(input, "#"u8) + 1];
+        int i = 0;
+        foreach (var value in new global::CommunityToolkit.HighPerformance.Enumerables.ReadOnlySpanTokenizerWithSpanSeparator<byte>(input, "#"u8))
+            ret[i++] = global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<global::N.D>(value);
+        D2 = ret;
 
         OnD2Deserialized();
     }

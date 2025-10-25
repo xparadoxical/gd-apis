@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GeometryDash.Server.Common\GeometryDash.Server.Common.csproj" />
-    <ProjectReference Include="..\GeometryDash.Server.Serialization.Generator\GeometryDash.Server.Serialization.Generator.csproj" />
     <ProjectReference Include="..\GeometryDash.Server\GeometryDash.Server.csproj" />
     <Using Include="GeometryDash.Server" />
     <ProjectReference Include="..\GeometryDash.Server.Serialization\GeometryDash.Server.Serialization.csproj" />
@@ -18,25 +17,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Basic.Reference.Assemblies.Net80" Version="1.8.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
-    <PackageReference Include="Verify.SourceGenerators" Version="2.5.0" />
-    <PackageReference Include="Verify.Xunit" Version="28.14.0" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <!-- don't compile test data files, but don't exclude them from project  -->
-  <PropertyGroup>
-    <SGTestData>Server\Serialization\Generator\TestData</SGTestData>
-    <DefaultItemExcludesInProjectFolder>$(DefaultItemExcludesInProjectFolder);$(SGTestData)\Sources\*</DefaultItemExcludesInProjectFolder>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="$(SGTestData)\Sources\*.cs" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>
