@@ -22,4 +22,23 @@ public static class Extensions
 
         return result;
     }
+
+    public static void MultiFirst<T>(this IEnumerable<T> e, params (Func<T, bool> predicate, Action<T> success)[] queries)
+    {
+        Span<bool> hitFlags = stackalloc bool[queries.Length];
+        foreach (var item in e)
+        {
+            for (int i = 0; i < queries.Length; i++)
+            {
+                if (hitFlags[i])
+                    continue;
+                var (predicate, success) = queries[i];
+                if (predicate(item))
+                {
+                    hitFlags[i] = true;
+                    success(item);
+                }
+            }
+        }
+    }
 }

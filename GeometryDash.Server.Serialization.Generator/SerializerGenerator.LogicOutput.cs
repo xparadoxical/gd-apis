@@ -172,43 +172,82 @@ public sealed partial class SerializerGenerator
             writer.DecreaseIndent();
 
             writer.WriteLine("else");
-            writer.IncreaseIndent();
         }
 
-        writer.Write($"{prop.Name} = ");
+        if (!prop.ParsedType.IsListType)
+        {
+            if (prop.FromEmpty is not null)
+                writer.IncreaseIndent();
+            writer.Write($"{prop.Name} = ");
 
-        if (prop.ParsedType.SpecialType == SpecialType.System_String)
-        {
-            writer.WriteLine($"global::System.Text.Encoding.UTF8.GetString({spanExpr});"); //TODO string.Create+Utf8.ToUtf16
-        }
-        else if (prop.ParsedType.IsINumberBase)
-        {
-            writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<{prop.ParsedType.Type}>({spanExpr});");
-        }
-        else if (prop.ParsedType.Type == "global::System.TimeSpan")
-        {
-            writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.ParseTimeSpan({spanExpr});");
-        }
-        else if (prop.ParsedType.Kind == TypeKind.Enum)
-        {
-            writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.ParseEnum<{prop.ParsedType.Type}>({spanExpr});");
-        }
-        else if (prop is { ParsedType.SpecialType: SpecialType.System_Boolean, BoolSpec: BoolSpec(var trueExpr, var falseExpr) })
-        {
-            writer.Write($"global::GeometryDash.Server.Serialization.ParsingExtensions.ParseBool({spanExpr}, {trueExpr}");
-            if (falseExpr is not null)
-                writer.Write($", {falseExpr}");
-            writer.WriteLine(");");
-        }
-        else if (prop.ParsedType.Kind == TypeKind.Array)
-        {
-            writer.WriteLine($"global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeArray<{prop.ParsedType.ElementType}>({spanExpr}, {prop.ElementSeparatorOverride ?? prop.ParsedType.ElementSeparator}u8);");
+            if (prop.ParsedType.SpecialType == SpecialType.System_String)
+            {
+                writer.WriteLine($"global::System.Text.Encoding.UTF8.GetString({spanExpr});"); //TODO string.Create+Utf8.ToUtf16
+            }
+            else if (prop.ParsedType.ElementIsINumberBase)
+            {
+                writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<{prop.ParsedType.Type}>({spanExpr});");
+            }
+            else if (prop.ParsedType.Type == "global::System.TimeSpan")
+            {
+                writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.ParseTimeSpan({spanExpr});");
+            }
+            else if (prop.ParsedType.Kind == TypeKind.Enum)
+            {
+                writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.ParseEnum<{prop.ParsedType.Type}>({spanExpr});");
+            }
+            else if (prop is { ParsedType.SpecialType: SpecialType.System_Boolean, BoolSpec: BoolSpec(var trueExpr, var falseExpr) })
+            {
+                writer.Write($"global::GeometryDash.Server.Serialization.ParsingExtensions.ParseBool({spanExpr}, {trueExpr}");
+                if (falseExpr is not null)
+                    writer.Write($", {falseExpr}");
+                writer.WriteLine(");");
+            }
+            else if (prop.ParsedType.ElementIsISerializable)
+                writer.WriteLine($"global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<{prop.ParsedType.Type}>({spanExpr});");
+
+            if (prop.FromEmpty is not null)
+                writer.DecreaseIndent();
         }
         else
-            writer.WriteLine($"global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<{prop.ParsedType.Type}>({spanExpr});");
+        {
+            if (prop.FromEmpty is not null)
+            {
+                writer.WriteLine("{");
+                writer.IncreaseIndent();
+            }
 
-        if (prop.FromEmpty is not null)
+            writer.Write("var ret = ");
+
+            if (prop.ParsedType.Kind == TypeKind.Array)
+                writer.WriteLine($"new {prop.ParsedType.ElementType}[global::System.MemoryExtensions.Count({spanExpr}, {prop.EffectiveElementSeparator}u8) + 1];");
+            //TODO other collection types
+
+            writer.WriteLine($"""
+                int i = 0;
+                foreach (var value in new global::CommunityToolkit.HighPerformance.Enumerables.ReadOnlySpanTokenizerWithSpanSeparator<byte>({spanExpr}, {prop.EffectiveElementSeparator}u8))
+                """, true);
+
+            writer.IncreaseIndent();
+
+            if (prop.ParsedType.Kind == TypeKind.Array)
+                writer.Write("ret[i++] = ");
+
+            if (prop.ParsedType.ElementIsISerializable)
+                writer.WriteLine($"global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<{prop.ParsedType.ElementType}>(value);");
+            else if (prop.ParsedType.ElementIsINumberBase)
+                writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<{prop.ParsedType.ElementType}>(value);");
+
             writer.DecreaseIndent();
+
+            writer.WriteLine($"{prop.Name} = ret;");
+
+            if (prop.FromEmpty is not null)
+            {
+                writer.WriteLine("}");
+                writer.DecreaseIndent();
+            }
+        }
 
         writer.WriteLine();
 

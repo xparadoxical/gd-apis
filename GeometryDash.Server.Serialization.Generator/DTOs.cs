@@ -16,7 +16,10 @@ public sealed record SerializableClass(string Namespace, string Name, string Dec
 /// <param name="Type">Fully qualified type name.</param>
 public sealed record SerializableProperty(string Type, PropTypeInfo ParsedType, bool Required, string Name,
     uint Index, BoolSpec? BoolSpec, EquatableArray<Transform> Transforms, EquatableArray<string> ToNull,
-    string? FromEmpty, bool OnDeserializingHooked, string? ElementSeparatorOverride);
+    string? FromEmpty, bool OnDeserializingHooked, string? ElementSeparatorOverride)
+{
+    public string? EffectiveElementSeparator => ElementSeparatorOverride ?? ParsedType.ElementSeparator;
+}
 
 /// <param name="Type"></param>
 /// <param name="ElementType">The type of elements of an array or an enumerable type.</param>
@@ -25,8 +28,10 @@ public sealed record SerializableProperty(string Type, PropTypeInfo ParsedType, 
 /// Returns <see langword="null"/> when <paramref name="Type"/> is an array, a pointer or a type parameter.
 /// </param>
 public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementType, string? ElementSeparator,
-    TypeKind Kind, SpecialType SpecialType, bool IsINumberBase)
+    TypeKind Kind, SpecialType SpecialType, bool ElementIsINumberBase, bool ElementIsISerializable)
 {
+    public bool IsListType => ElementType is not null;
+
     public static bool TryCreate(PropertyDeclarationSyntax prop, SemanticModel sm,
         [NotNullWhen(true)] out PropTypeInfo? result)
     {
@@ -59,15 +64,25 @@ public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementTyp
         var propertyTypeFQN = typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
         var collectionElementTypeFQN = collectionElementTypeSymbol?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
 
-        var typeProvidedElementSeparator = collectionElementTypeSymbol?.GetAttributes()
+        var typeProvidedElementSeparator = (collectionElementTypeSymbol ?? typeSymbol)?.GetAttributes()
             .FirstOrDefault(a => a.AttributeClass?.ToDisplayString() == KnownTypes.SeparatorAttribute)
             ?.NamedArguments.SingleOrNullable(kvp => kvp.Key == "ListItem")
             ?.Value.ToCSharpString();
 
-        var implementsINumberBase = typeSymbol.AllInterfaces.Any(sym => sym.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat).StartsWith("global::System.Numerics.INumberBase<"));
+        //generated partial declarations with ISerializable implementation are not detectable here,
+        //but if SeparatorAttr is used, the type will be serializable
+        bool implementsINumberBase = false;
+        bool implementsISerializable = typeProvidedElementSeparator is not null;
+        (collectionElementTypeSymbol ?? typeSymbol).AllInterfaces
+            .Select(sym => sym.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat))
+            .MultiFirst(
+                (fqn => fqn.StartsWith("global::System.Numerics.INumberBase<"),
+                    _ => implementsINumberBase = true),
+                (fqn => fqn.StartsWith("global::" + KnownTypes.ISerializable),
+                    _ => implementsISerializable = true));
 
         result = new(nullable, propertyTypeFQN, collectionElementTypeFQN, typeProvidedElementSeparator,
-            typeSymbol.TypeKind, typeSymbol.SpecialType, implementsINumberBase);
+            typeSymbol.TypeKind, typeSymbol.SpecialType, implementsINumberBase, implementsISerializable);
         return true;
     }
 }
