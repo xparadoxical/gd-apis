@@ -9,5 +9,5 @@ public class Gauntlet
 
     public ushort Id { get; set; }
 
-    public string LevelIds { get; set; }
+    public uint[] LevelIds { get; set; }
 }

@@ -17,7 +17,7 @@ public class MapPack
 
     public string Name { get; set; }
 
-    public string LevelIds { get; set; }
+    public uint[] LevelIds { get; set; }
 
     public byte Stars { get; set; }
 

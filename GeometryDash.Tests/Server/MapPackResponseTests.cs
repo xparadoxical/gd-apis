@@ -10,7 +10,7 @@ public class MapPackResponseTests : SerializationTest
             new()
             {
                 Id = 1,
-                LevelIds = "27732941,28200611,27483789,28225110,27448202"
+                LevelIds = [27732941, 28200611, 27483789, 28225110, 27448202]
             });
     }
 
@@ -22,7 +22,7 @@ public class MapPackResponseTests : SerializationTest
             {
                 Id = 65,
                 Name = "Demon Pack 16",
-                LevelIds = "1668421,1703546,923264",
+                LevelIds = [1668421, 1703546, 923264],
                 Stars = 10,
                 Coins = 2,
                 Difficulty = MapPackDifficulty.HardDemon,

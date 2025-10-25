@@ -12,7 +12,8 @@ public sealed partial class MapPackResponse
     public string? Name { get; set; }
 
     [Index(3)]
-    public string LevelIds { get; set; } //TODO uint[]
+    [Separator(",")]
+    public uint[] LevelIds { get; set; }
 
     [Index(4)]
     public byte? Stars { get; set; }

@@ -23,7 +23,7 @@ public class Level : LevelInfo
     public string? UpdateDate { get; set; }
     public string? CapacityString { get; set; }
     public bool LowDetailMode { get; set; }
-    public string? SongIds { get; set; }
-    public string? SoundEffectIds { get; set; }
+    public uint[]? SongIds { get; set; }
+    public uint[]? SoundEffectIds { get; set; }
     public uint? VerificationFrames { get; set; } //TODO VersionGuard(2.2)
 }

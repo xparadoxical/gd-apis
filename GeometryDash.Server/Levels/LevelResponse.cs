@@ -151,13 +151,16 @@ public sealed partial class LevelResponse
     public string? Username { get; set; }
 
     [Index(51)]
-    public string? LevelIds { get; set; } //TODO deserialize to uint[]
+    [Separator(",")]
+    public uint[]? LevelIds { get; set; }
 
     [Index(52)]
-    public string? SongIds { get; set; } //TODO deserialize to uint[]
+    [Separator(",")]
+    public uint[]? SongIds { get; set; }
 
     [Index(53)]
-    public string? SoundEffectIds { get; set; } //TODO deserialize to uint[]
+    [Separator(",")]
+    public uint[]? SoundEffectIds { get; set; }
 
     //54 never sent
 

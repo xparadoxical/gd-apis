@@ -43,7 +43,7 @@ internal class List
     public string? UpdateDate { get; set; }
     public required uint AccountId { get; set; }
     public required string Username { get; set; }
-    public required string LevelIds { get; set; }
+    public required uint[] LevelIds { get; set; }
     public byte? DiamondReward { get; set; }
     public byte? CompletionCountRequirement { get; set; }
 }
