@@ -125,9 +125,6 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
                     if (attr.ArgumentList is not { Arguments: [{ Expression: var expr }] })
                         continue;
 
-                    if (ctx.SemanticModel.GetTypeInfo(expr, ct).Type is not { } typeSymbol)
-                        continue;
-
                     transforms.Add(new Transform.Xor(expr.ToString()));
                 }
                 else if (attrFullName == KnownTypes.GzipAttribute)
