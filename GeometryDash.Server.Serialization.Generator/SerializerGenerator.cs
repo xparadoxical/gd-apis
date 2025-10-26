@@ -112,9 +112,11 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
                     if (attr.ArgumentList is not { Arguments: [{ Expression: var expr }] })
                         continue;
 
-                    //if (expr is MemberAccessExpressionSyntax { Expression: MemberAccess })
-                    //TODO if it's `TypeQualification.Member`, fully qualify the TypeQualification
-                    fromEmpty = expr.ToString();
+                    if (ctx.SemanticModel.GetSymbolInfo(expr).Symbol is IFieldSymbol fieldSymbol)
+                        fromEmpty = fieldSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat
+                            .WithMemberOptions(SymbolDisplayMemberOptions.IncludeContainingType));
+                    else
+                        fromEmpty = expr.ToString();
                 }
                 else if (attrFullName == KnownTypes.Base64EncodeAttribute)
                     transforms.Add(new Transform.Base64());

@@ -99,7 +99,7 @@ public sealed partial class UserResponse : ISerializable<UserResponse>
     public uint? GlobalLeaderboardPosition { get; set; }
 
     [Index(31)]
-    [EmptyDefaultsTo(Users.FriendState.None)]
+    [EmptyDefaultsTo(Users.FriendState.None)] //TODO https://github.com/dotnet/roslyn/issues/80904
     public FriendState? FriendState { get; set; }
 
     [Index(32)]
