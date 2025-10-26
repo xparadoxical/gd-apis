@@ -15,7 +15,7 @@ public sealed record SerializableClass(string Namespace, string Name, string Dec
 
 /// <param name="Type">Fully qualified type name.</param>
 public sealed record SerializableProperty(string Type, PropTypeInfo ParsedType, bool Required, string Name,
-    uint Index, BoolSpec? BoolSpec, EquatableArray<Transform> Transforms, EquatableArray<string> ToNull,
+    string? Index, BoolSpec? BoolSpec, EquatableArray<Transform> Transforms, EquatableArray<string> ToNull,
     string? FromEmpty, bool OnDeserializingHooked, string? ElementSeparatorOverride)
 {
     public string? EffectiveElementSeparator => ElementSeparatorOverride ?? ParsedType.ElementSeparator;

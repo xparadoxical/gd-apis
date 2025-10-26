@@ -56,7 +56,7 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
 
         foreach (var prop in members.OfType<PropertyDeclarationSyntax>())
         {
-            uint? index = null;
+            string? index = null;
             BoolSpec? boolSpec = null;
             var transforms = new List<Transform>();
             var toNull = new List<string>();
@@ -78,12 +78,7 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
                     if (arglist.Arguments is not [{ Expression: var expr }])
                         continue;
 
-                    if (expr is LiteralExpressionSyntax literal
-                        && uint.TryParse(literal.ToString(), out var parsed))
-                        index = parsed;
-                    else if (expr is IdentifierNameSyntax identifier
-                        && ctx.SemanticModel.GetConstantValue(identifier, ct) is { Value: uint constValue })
-                        index = constValue;
+                    index = expr.ToString();
                 }
                 else if (attrFullName == KnownTypes.BoolAttribute)
                 {
@@ -149,7 +144,7 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
                         is not null;
 
                     infos.Add(new(typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
-                        propTypeInfo, required, propName, index.Value, boolSpec, transforms.ToEquatableArray(),
+                        propTypeInfo, required, propName, index, boolSpec, transforms.ToEquatableArray(),
                         toNull.ToEquatableArray(), fromEmpty, onDeserializingHooked, separator));
                 }
             }
