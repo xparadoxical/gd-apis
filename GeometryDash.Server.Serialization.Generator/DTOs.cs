@@ -50,21 +50,15 @@ public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementTyp
             return false;
         }
 
-        TypeSyntax? collectionElementType = null;
-        if (typeSyntax is ArrayTypeSyntax arrayType)
-        {
-            collectionElementType = arrayType.ElementType;
-        }
-        //TODO enumerable types
+        ITypeSymbol? elementTypeSymbol = null;
 
-        ITypeSymbol? collectionElementTypeSymbol = null;
-        if (collectionElementType is not null && sm.GetTypeInfo(collectionElementType) is { Type: { } colElTypeSymbol })
-            collectionElementTypeSymbol = colElTypeSymbol;
+        if (typeSymbol is IArrayTypeSymbol arrayTypeSymbol)
+            elementTypeSymbol = arrayTypeSymbol.ElementType;
 
         var propertyTypeFQN = typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-        var collectionElementTypeFQN = collectionElementTypeSymbol?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+        var collectionElementTypeFQN = elementTypeSymbol?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
 
-        var typeProvidedElementSeparator = (collectionElementTypeSymbol ?? typeSymbol)?.GetAttributes()
+        var typeProvidedElementSeparator = (elementTypeSymbol ?? typeSymbol)?.GetAttributes()
             .FirstOrDefault(a => a.AttributeClass?.ToDisplayString() == KnownTypes.SeparatorAttribute)
             ?.NamedArguments.SingleOrNullable(kvp => kvp.Key == "ListItem")
             ?.Value.ToCSharpString();
@@ -73,7 +67,7 @@ public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementTyp
         //but if SeparatorAttr is used, the type will be serializable
         bool implementsINumberBase = false;
         bool implementsISerializable = typeProvidedElementSeparator is not null;
-        (collectionElementTypeSymbol ?? typeSymbol).AllInterfaces
+        (elementTypeSymbol ?? typeSymbol).AllInterfaces
             .Select(sym => sym.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat))
             .MultiFirst(
                 (fqn => fqn.StartsWith("global::System.Numerics.INumberBase<"),
