@@ -39,6 +39,7 @@ public class RobTopStringReaderTests(ITestOutputHelper output)
     [InlineData("3:a:2:b", ":", new object[] { 3, "a", 2, "b" })]
     [InlineData("69::5:", ":", new object[] { 69, "", 5, "" })]
     [InlineData("", ":", new object[0])]
+    [InlineData("1~|~a~|~2~|~b", "~|~", new object[] { 1, "a", 2, "b" })]
     public void Works(string input, string separator, object[] outputs) => TestOutputs(input, separator, outputs);
 
     [Theory]
