@@ -5,12 +5,12 @@ using Xunit.Abstractions;
 namespace GeometryDash.Tests.Server.Serialization;
 public class RobTopStringReaderTests(ITestOutputHelper output)
 {
-    public List<(uint, string)> Read(string input, bool keyed)
+    public List<(uint, string)> Read(string input, string separator)
     {
-        output.WriteLine("'{0}'{1}", input, keyed ? " keyed" : "");
+        output.WriteLine("{0} '{1}'", separator, input);
 
         var props = new List<(uint, string)>();
-        foreach (var (k, v) in new RobTopStringReader(Encoding.UTF8.GetBytes(input)) { Separator = ":"u8 })
+        foreach (var (k, v) in new RobTopStringReader(Encoding.UTF8.GetBytes(input)) { Separator = Encoding.UTF8.GetBytes(separator) })
         {
             string s = Encoding.UTF8.GetString(v);
             output.WriteLine($"{k}: '{s}'");
@@ -19,9 +19,9 @@ public class RobTopStringReaderTests(ITestOutputHelper output)
         return props;
     }
 
-    internal void TestOutputs(string input, bool keyed, object[] outputs)
+    internal void TestOutputs(string input, string separator, object[] outputs)
     {
-        var results = Read(input, keyed);
+        var results = Read(input, separator);
 
         var assertions = new List<Action>(results.Count + 1);
 
@@ -36,10 +36,10 @@ public class RobTopStringReaderTests(ITestOutputHelper output)
     }
 
     [Theory]
-    [InlineData("3:a:2:b", new object[] { 3, "a", 2, "b" })]
-    [InlineData("69::5:", new object[] { 69, "", 5, "" })]
-    [InlineData("", new object[0])]
-    public void Works(string input, object[] outputs) => TestOutputs(input, true, outputs);
+    [InlineData("3:a:2:b", ":", new object[] { 3, "a", 2, "b" })]
+    [InlineData("69::5:", ":", new object[] { 69, "", 5, "" })]
+    [InlineData("", ":", new object[0])]
+    public void Works(string input, string separator, object[] outputs) => TestOutputs(input, separator, outputs);
 
     [Theory]
     [InlineData(":")]
@@ -47,5 +47,5 @@ public class RobTopStringReaderTests(ITestOutputHelper output)
     [InlineData("3:a:")]
     [InlineData("3:a:4")]
     [InlineData("1:::")]
-    public void Fails(string input) => Assert.ThrowsAny<Exception>(() => Read(input, true));
+    public void Fails(string input) => Assert.ThrowsAny<Exception>(() => Read(input, ":"));
 }
