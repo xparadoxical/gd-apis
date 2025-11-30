@@ -49,7 +49,7 @@ public static class ParsingExtensions
 
     private static ulong EnumRangeCheck<T>(long toConvert) where T : struct, Enum
     {
-        return EnumTypeInfo<T>.TypeCode switch
+        return Type.GetTypeCode(typeof(T)) switch
         {
             TypeCode.Int32 => (ulong)checked((int)toConvert),
             TypeCode.UInt32 => checked((uint)toConvert),
