@@ -29,10 +29,10 @@ public sealed partial class MessageResponse : ISerializable<MessageResponse>
     public TimeSpan Age { get; set; }
 
     [Index(8)]
-    [Bool('1', False = '0')]
+    [Bool(True = "1", False = "0")]
     public bool IsRead { get; set; }
 
     [Index(9)]
-    [Bool('1', False = '0')]
+    [Bool(True = "1", False = "0")]
     public bool IsIncoming { get; set; }
 }

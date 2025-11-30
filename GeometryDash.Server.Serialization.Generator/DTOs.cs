@@ -81,7 +81,7 @@ public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementTyp
     }
 }
 
-public record struct BoolSpec(string TrueExpr, string? FalseExpr);
+public record struct BoolSpec(string? TrueExpr, string? FalseExpr);
 
 public abstract record Transform
 {

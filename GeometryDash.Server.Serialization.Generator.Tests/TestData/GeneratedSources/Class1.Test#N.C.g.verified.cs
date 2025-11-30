@@ -55,7 +55,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
     void DeserializeB1(global::System.ReadOnlySpan<byte> input)
     {
-        B1 = global::GeometryDash.Server.Serialization.ParsingExtensions.ParseBool(input, '1');
+        B1 = global::GeometryDash.Server.Serialization.ParsingExtensions.ParseBool(input, "1"u8, new());
 
         OnB1Deserialized();
     }
@@ -69,7 +69,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
         if (input.IsEmpty)
             B2 = true;
         else
-            B2 = global::GeometryDash.Server.Serialization.ParsingExtensions.ParseBool(input, '2', '1');
+            B2 = global::GeometryDash.Server.Serialization.ParsingExtensions.ParseBool(input, "2"u8, "1"u8);
 
         OnB2Deserialized();
     }

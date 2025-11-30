@@ -66,33 +66,24 @@ public static class ParsingExtensions
         return inst;
     }
 
-    public static bool ParseBool(this ReadOnlySpan<byte> input, char trueValue, char falseValue)
+    public static bool ParseBool(this ReadOnlySpan<byte> input, OptionalRef<ReadOnlySpan<byte>> trueValue, OptionalRef<ReadOnlySpan<byte>> falseValue)
     {
-        if (input.Length is not 1)
-            throw new ArgumentException("Length of the span was not 1.", nameof(input));
+        if (!trueValue.HasValue && !falseValue.HasValue)
+            throw new ArgumentException($"{nameof(trueValue)} or {nameof(falseValue)} must have a value.");
 
-        var c = (char)input[0];
+        if (trueValue.HasValue && falseValue.HasValue && trueValue.Value.SequenceEqual(falseValue))
+            throw new ArgumentException($"{nameof(trueValue)} and {nameof(falseValue)} cannot be equal.");
 
-        if (c != trueValue && c != falseValue)
-            throw new ArgumentOutOfRangeException(nameof(input), c, $"Expected '{trueValue}' or '{falseValue}'");
+        var equalToTrue = trueValue.HasValue && input.SequenceEqual(trueValue);
+        var equalToFalse = falseValue.HasValue && input.SequenceEqual(falseValue);
 
-        return c == trueValue;
-    }
+        if (equalToTrue || (!trueValue.HasValue && falseValue.HasValue && !equalToFalse))
+            return true;
 
-    /// <summary>Parses a span of bytes to a <see langword="bool"/>. The <see langword="false"/> value is an empty span.</summary>
-    public static bool ParseBool(this ReadOnlySpan<byte> input, char trueValue)
-    {
-        if (input.Length is 0)
+        if (equalToFalse || (!falseValue.HasValue && trueValue.HasValue && !equalToTrue))
             return false;
-        else if (input.Length is > 1)
-            throw new ArgumentException("Length of the span was greater than 1.", nameof(input));
 
-        var c = (char)input[0];
-
-        if (c != trueValue)
-            throw new ArgumentOutOfRangeException(nameof(input), c, $"Expected '{trueValue}' or an empty span");
-
-        return true;
+        throw new ArgumentException("Unhandled value.", nameof(input));
     }
 
     public static T ParseEnum<T>(this ReadOnlySpan<byte> input) where T : struct, Enum

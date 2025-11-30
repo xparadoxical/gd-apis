@@ -63,6 +63,40 @@ public class ParsingExtensionsTests
         Assert.Equal(TimeSpan.FromTicks(resultTicks), Utf8(input).ParseTimeSpan());
     }
 
+    [Theory]
+    [InlineData("5", "5", "0", true)]
+    [InlineData("", "", null, true)]
+    [InlineData("5", null, "", true)]
+    [InlineData("", null, "0", true)]
+    [InlineData("00", null, "00", false)]
+    [InlineData("00", "0", "00", false)]
+    [InlineData("00", "1", null, false)]
+    [InlineData("", "1", "", false)]
+    public void ParseBool_Works(string input, string? trueValue, string? falseValue, bool expected)
+    {
+        OptionalRef<ReadOnlySpan<byte>> optionalTrueValue = trueValue is null ? default : new(Utf8(trueValue));
+        OptionalRef<ReadOnlySpan<byte>> optionalFalseValue = falseValue is null ? default : new(Utf8(falseValue));
+
+        Assert.Equal(expected, ParsingExtensions.ParseBool(Utf8(input), optionalTrueValue, optionalFalseValue));
+    }
+
+    [Theory]
+    [InlineData("", "", "")]
+    [InlineData("", null, null)]
+    [InlineData("w", "t", "f")]
+    [InlineData("w", "t", "")]
+    [InlineData("w", "", "f")]
+    public void ParseBool_Throws(string input, string? trueValue, string? falseValue)
+    {
+        Assert.Throws<ArgumentException>(() =>
+        {
+            OptionalRef<ReadOnlySpan<byte>> optionalTrueValue = trueValue is null ? default : new(Utf8(trueValue));
+            OptionalRef<ReadOnlySpan<byte>> optionalFalseValue = falseValue is null ? default : new(Utf8(falseValue));
+
+            return ParsingExtensions.ParseBool(Utf8(input), optionalTrueValue, optionalFalseValue);
+        });
+    }
+
     private enum ShortEnum : short { A = -1 }
     private enum UShortEnum : ushort { A }
 }

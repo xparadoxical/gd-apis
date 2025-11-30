@@ -198,10 +198,9 @@ public sealed partial class SerializerGenerator
             }
             else if (prop is { ParsedType.SpecialType: SpecialType.System_Boolean, BoolSpec: BoolSpec(var trueExpr, var falseExpr) })
             {
-                writer.Write($"global::GeometryDash.Server.Serialization.ParsingExtensions.ParseBool({spanExpr}, {trueExpr}");
-                if (falseExpr is not null)
-                    writer.Write($", {falseExpr}");
-                writer.WriteLine(");");
+                var trueArg = trueExpr is null ? "new()" : $"{trueExpr}u8";
+                var falseArg = falseExpr is null ? "new()" : $"{falseExpr}u8";
+                writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.ParseBool({spanExpr}, {trueArg}, {falseArg});");
             }
             else if (prop.ParsedType.ElementIsISerializable)
                 writer.WriteLine($"global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<{prop.ParsedType.Type}>({spanExpr});");

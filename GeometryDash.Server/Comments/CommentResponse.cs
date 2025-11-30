@@ -23,7 +23,7 @@ public sealed partial class CommentResponse
     public uint Id { get; set; }
 
     [Index(7)]
-    [Bool('1', False = '0')]
+    [Bool(True = "1", False = "0")]
     public bool? Spam { get; set; }
 
     [Index(9)]

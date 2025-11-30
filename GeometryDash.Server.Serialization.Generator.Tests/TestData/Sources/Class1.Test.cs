@@ -16,11 +16,11 @@ internal partial class C
     public int Ignored { get; set; }
 
     [Index(2)]
-    [Bool('1')]
+    [Bool(True = "1")]
     public bool B1 { get; set; }
 
     [Index(4)] //intentional
-    [Bool('2', False = '1'), EmptyDefaultsTo(true)] //EDT before transformations
+    [Bool(True = "2", False = "1"), EmptyDefaultsTo(true)] //EDT before transformations
     public bool B2 { get; set; }
 
     [Index(3)]

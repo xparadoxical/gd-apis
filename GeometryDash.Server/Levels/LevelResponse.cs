@@ -28,8 +28,8 @@ public sealed partial class LevelResponse
     public LevelDifficulty? ListDifficulty { get; set; }
 
     [Index(8)]
-    //TODO [Bool("10", False = "0")]
-    public int? DifficultyDenominator { get; set; }
+    [Bool(True = "10", False = "0")]
+    public bool? DifficultyDenominator { get; set; }
 
     [Index(9)]
     public NonDemonDifficulty? DifficultyVariantIndex { get; set; }
@@ -54,7 +54,7 @@ public sealed partial class LevelResponse
     //16 never sent
 
     [Index(17)]
-    [Bool('1')]
+    [Bool(True = "1", False = "")]
     public bool? IsDemon { get; set; }
 
     [Index(18)]
@@ -69,7 +69,7 @@ public sealed partial class LevelResponse
     //20-24 unknown
 
     [Index(25)]
-    [Bool('1')]
+    [Bool(True = "1", False = "")]
     public bool? Auto { get; set; }
 
     //26 never sent
@@ -91,7 +91,7 @@ public sealed partial class LevelResponse
     public uint? OriginalLevelId { get; set; }
 
     [Index(31)]
-    [Bool('1', False = '0')]
+    [Bool(True = "1", False = "0")]
     public bool? TwoPlayer { get; set; }
 
     //32-34 unknown
@@ -107,14 +107,14 @@ public sealed partial class LevelResponse
     public byte? Coins { get; set; }
 
     [Index(38)]
-    [Bool('1', False = '0')]
+    [Bool(True = "1", False = "0")]
     public bool? CoinsVerified { get; set; }
 
     [Index(39)]
     public byte? RequestedStars { get; set; }
 
     [Index(40)]
-    [Bool('1', False = '0'), EmptyDefaultsTo(false)]
+    [Bool(True = "1", False = "0"), EmptyDefaultsTo(false)]
     public bool? LowDetailMode { get; set; }
 
     [Index(41)]

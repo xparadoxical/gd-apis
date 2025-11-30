@@ -8,7 +8,8 @@ file static class SupportedTargets
     internal const AttributeTargets Members = AttributeTargets.Property;
 }
 
-//#pragma warning disable CS9113
+#pragma warning disable CS9113
+#pragma warning disable CS8618
 
 /// <summary>The type is serialized with prop indexes as keys.</summary>
 [AttributeUsage(SupportedTargets.Types, Inherited = false)]
@@ -29,15 +30,14 @@ public sealed class SeparatorAttribute : Attribute
 public sealed class IndexAttribute(uint index) : Attribute;
 
 /// <summary>
-/// Specifies what value indicates <see langword="true"/>.
-/// If <see cref="False"/> is not set, an empty value means <see langword="false"/>.
+/// Specifies what values indicate <see langword="true"/> and <see langword="false"/>.
+/// If a property is not set, it corresponds to any value different from the one specified for the other property.
 /// </summary>
 [AttributeUsage(SupportedTargets.Members, Inherited = false)]
-public sealed class BoolAttribute(char trueChar) : Attribute
+public sealed class BoolAttribute : Attribute
 {
-    public char True { get; } = trueChar;
-    /// <summary>The value that indicates <see langword="false"/>.</summary>
-    public char False { get; init; }
+    public string True { get; init; }
+    public string False { get; init; }
 }
 
 /// <summary>The specified value will be converted to <see langword="null"/>.</summary>

@@ -84,16 +84,25 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
                 {
                     if (attr.ArgumentList is not
                         {
-                            Arguments: [{ NameEquals: null, Expression: var trueExpr }, ..]
-                                and { Count: 1 or 2 }
+                            Arguments: [{ NameEquals: not null }]
+                                or [{ NameEquals: not null }, { NameEquals: not null }]
                         })
                         continue;
 
-                    var falseArg = attr.ArgumentList.Arguments.ElementAtOrDefault(1);
-                    if (falseArg is not null and not { NameEquals.Name.Identifier.Text: "False" })
+                    AttributeArgumentSyntax? trueArg = null;
+                    AttributeArgumentSyntax? falseArg = null;
+                    foreach (var arg in attr.ArgumentList.Arguments)
+                    {
+                        if (arg.NameEquals!.Name.Identifier.Text is "True")
+                            trueArg = arg;
+                        else if (arg.NameEquals.Name.Identifier.Text is "False")
+                            falseArg = arg;
+                    }
+
+                    if (trueArg is null && falseArg is null)
                         continue;
 
-                    boolSpec = new(trueExpr.ToString(), falseArg?.Expression.ToString());
+                    boolSpec = new(trueArg?.Expression.ToString(), falseArg?.Expression.ToString());
                 }
                 else if (attrFullName == KnownTypes.CoalesceToNullAttribute)
                 {

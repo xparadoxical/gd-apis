@@ -48,7 +48,7 @@ public sealed partial class UserResponse : ISerializable<UserResponse>
     public GameMode? ShowcaseIconType { get; set; }
 
     [Index(15)]
-    [Bool('2', False = '0')]
+    [Bool(True = "2", False = "0")]
     public bool? HasGlow { get; set; }
 
     [Index(16)]
@@ -62,7 +62,7 @@ public sealed partial class UserResponse : ISerializable<UserResponse>
     public PrivacyGroup? AllowMessagesFrom { get; set; }
 
     [Index(19)]
-    [Bool('0', False = '1')]
+    [Bool(True = "0", False = "1")]
     public bool? AllowFriendRequests { get; set; }
 
     [Index(20)]
@@ -89,7 +89,7 @@ public sealed partial class UserResponse : ISerializable<UserResponse>
     //public ushort? TrailId { get; set; } //27 never sent
 
     [Index(28)] //28 == 15
-    [Bool('1', False = '0')]
+    [Bool(True = "1", False = "0")]
     private bool HasGlowAlternate { set => HasGlow = value; }
 
     public bool IsRegistered => AccountId is not null; //29, no point in deserializing
@@ -126,7 +126,7 @@ public sealed partial class UserResponse : ISerializable<UserResponse>
     public byte? NewFriendsCount { get; set; }
 
     [Index(41)]
-    [Bool('1')]
+    [Bool(True = "1", False = "")]
     public bool? IsNewFriendOrRequest { get; set; }
 
     [Index(42)]
