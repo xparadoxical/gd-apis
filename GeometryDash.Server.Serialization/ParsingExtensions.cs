@@ -75,10 +75,10 @@ public static class ParsingExtensions
         if (space is not 1 or 2)
             throw new FormatException("");
 
-        var count = input[..space].Parse<byte>();
+        var amount = input[..space].Parse<byte>();
         var plural = input[^1] == (byte)'s';
         //valid if (>1) == (has -s)
-        if (count > 1 ^ plural)
+        if (amount > 1 ^ plural)
             throw new FormatException("Mismatched grammatical number.");
 
         var unit = input[(space + 1)..^(plural ? 1 : 0)];
@@ -87,20 +87,20 @@ public static class ParsingExtensions
         if (unit[0] is (byte)'m')
         {
             if (unit.SequenceEqual("minute"u8))
-                return TimeSpan.FromMinutes(count);
+                return TimeSpan.FromMinutes(amount);
             else if (unit.SequenceEqual("month"u8))
-                return TimeUnit.Month * count;
+                return TimeUnit.Month * amount;
         }
         else if (unit.SequenceEqual("second"u8))
-            return TimeSpan.FromSeconds(count);
+            return TimeSpan.FromSeconds(amount);
         else if (unit.SequenceEqual("hour"u8))
-            return TimeSpan.FromHours(count);
+            return TimeSpan.FromHours(amount);
         else if (unit.SequenceEqual("day"u8))
-            return TimeSpan.FromDays(count);
+            return TimeSpan.FromDays(amount);
         else if (unit.SequenceEqual("week"u8))
-            return TimeUnit.Week * count;
+            return TimeUnit.Week * amount;
         else if (unit.SequenceEqual("year"u8))
-            return TimeUnit.Year * count;
+            return TimeUnit.Year * amount;
 
         throw new FormatException("Unknown time unit.");
     }

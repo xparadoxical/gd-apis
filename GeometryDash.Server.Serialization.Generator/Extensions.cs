@@ -23,7 +23,7 @@ public static class Extensions
         return result;
     }
 
-    public static void MultiFirst<T>(this IEnumerable<T> e, params (Func<T, bool> predicate, Action<T> success)[] queries)
+    public static void MultiFirst<T>(this IEnumerable<T> e, params (Func<T, bool> predicate, Action<T> onSuccess)[] queries)
     {
         Span<bool> hitFlags = stackalloc bool[queries.Length];
         foreach (var item in e)
@@ -32,11 +32,11 @@ public static class Extensions
             {
                 if (hitFlags[i])
                     continue;
-                var (predicate, success) = queries[i];
+                var (predicate, onSuccess) = queries[i];
                 if (predicate(item))
                 {
                     hitFlags[i] = true;
-                    success(item);
+                    onSuccess(item);
                 }
             }
         }
