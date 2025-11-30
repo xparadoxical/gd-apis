@@ -1,10 +1,7 @@
-using System.Buffers;
 using System.Buffers.Binary;
 using System.Globalization;
 using System.Numerics;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Text.Unicode;
 
 using CommunityToolkit.HighPerformance;
 
@@ -13,58 +10,6 @@ public static class ParsingExtensions
 {
     public static T Parse<T>(this ReadOnlySpan<byte> input) where T : INumberBase<T>
         => T.Parse(input, NumberStyles.AllowLeadingSign, null);
-
-    /// <summary>An always-throwing version of <see cref="IUtf8SpanFormattable.TryFormat(Span{byte}, out int, ReadOnlySpan{char}, IFormatProvider?)"/>.</summary>
-    /// <returns>A part of <paramref name="output"/> containing just the formatted <paramref name="value"/>.</returns>
-    internal static Span<byte> Format<T>(this T value, Span<byte> output) where T : IUtf8SpanFormattable
-    {
-        if (value.TryFormat(output, out var written, default, null))
-            return output[..written];
-
-        throw new ArgumentException("Not enough space in the output buffer.");
-    }
-
-    public static void WriteUtf8<T>(this IBufferWriter<byte> writer, T value) where T : INumberBase<T>
-    {
-        Span<byte> buf = stackalloc byte[20]; //max ulong/long length
-        writer.Write(value.Format(buf));
-    }
-
-    public delegate R ReadOnlySpanFunc<E, R>(ReadOnlySpan<E> span);
-
-    public static T ToUtf8<T>(this string s, ReadOnlySpanFunc<byte, T> consumer)
-    {
-        var buf = ArrayPool<byte>.Shared.Rent(Encoding.UTF8.GetMaxByteCount(s.Length));
-
-        var status = Utf8.FromUtf16(s, buf, out _, out var bytesWritten, false);
-        if (status is not OperationStatus.Done)
-        {
-            ArrayPool<byte>.Shared.Return(buf);
-            ThrowHelpers.OperationStatusUnsuccessful(status);
-        }
-
-        var inst = consumer(buf.AsSpan(..bytesWritten));
-
-        ArrayPool<byte>.Shared.Return(buf);
-        return inst;
-    }
-
-    public static unsafe T ToUtf8<T>(this string s, delegate*<ReadOnlySpan<byte>, T> consumer)
-    {
-        var buf = ArrayPool<byte>.Shared.Rent(Encoding.UTF8.GetMaxByteCount(s.Length));
-
-        var status = Utf8.FromUtf16(s, buf, out _, out var bytesWritten, false);
-        if (status is not OperationStatus.Done)
-        {
-            ArrayPool<byte>.Shared.Return(buf);
-            ThrowHelpers.OperationStatusUnsuccessful(status);
-        }
-
-        var inst = consumer(buf.AsSpan(..bytesWritten));
-
-        ArrayPool<byte>.Shared.Return(buf);
-        return inst;
-    }
 
     public static bool ParseBool(this ReadOnlySpan<byte> input, OptionalRef<ReadOnlySpan<byte>> trueValue, OptionalRef<ReadOnlySpan<byte>> falseValue)
     {
