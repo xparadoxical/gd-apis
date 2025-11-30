@@ -16,7 +16,7 @@ public static class GeneratorTestHelper
             "Tests",
             [CSharpSyntaxTree.ParseText(source, path: path)],
             [
-                .. Basic.Reference.Assemblies.Net80.References.All,
+                .. Basic.Reference.Assemblies.Net90.References.All,
                 MetadataReference.CreateFromFile(typeof(ServerSerializer).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(CommunityToolkit.HighPerformance.ArrayExtensions).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(PoolBuffers.PooledBuffer<>).Assembly.Location)
