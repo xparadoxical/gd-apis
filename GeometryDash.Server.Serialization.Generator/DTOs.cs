@@ -37,6 +37,7 @@ public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementTyp
     {
         var typeSyntax = prop.Type;
 
+        //extract type from nullable
         var nullable = false;
         if (typeSyntax is NullableTypeSyntax nullableType)
         {
@@ -52,11 +53,12 @@ public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementTyp
 
         ITypeSymbol? elementTypeSymbol = null;
 
+        //extract element type - the T in T[], List<T>, Optional<T>, etc
         if (typeSymbol is IArrayTypeSymbol arrayTypeSymbol)
             elementTypeSymbol = arrayTypeSymbol.ElementType;
 
         var propertyTypeFQN = typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-        var collectionElementTypeFQN = elementTypeSymbol?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+        var elementTypeFQN = elementTypeSymbol?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
 
         var typeProvidedElementSeparator = (elementTypeSymbol ?? typeSymbol)?.GetAttributes()
             .FirstOrDefault(a => a.AttributeClass?.ToDisplayString() == KnownTypes.SeparatorAttribute)
@@ -65,8 +67,8 @@ public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementTyp
 
         //generated partial declarations with ISerializable implementation are not detectable here,
         //but if SeparatorAttr is used, the type will be serializable
-        bool implementsINumberBase = false;
-        bool implementsISerializable = typeProvidedElementSeparator is not null;
+        var implementsINumberBase = false;
+        var implementsISerializable = typeProvidedElementSeparator is not null;
         (elementTypeSymbol ?? typeSymbol).AllInterfaces
             .Select(sym => sym.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat))
             .MultiFirst(
@@ -75,7 +77,7 @@ public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementTyp
                 (fqn => fqn.StartsWith("global::" + KnownTypes.ISerializable),
                     _ => implementsISerializable = true));
 
-        result = new(nullable, propertyTypeFQN, collectionElementTypeFQN, typeProvidedElementSeparator,
+        result = new(nullable, propertyTypeFQN, elementTypeFQN, typeProvidedElementSeparator,
             typeSymbol.TypeKind, typeSymbol.SpecialType, implementsINumberBase, implementsISerializable);
         return true;
     }
