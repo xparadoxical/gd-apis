@@ -152,7 +152,7 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
                             && m.Identifier.Text == $"On{prop.Identifier}Deserializing")
                         is not null;
 
-                    infos.Add(new(typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+                    infos.Add(new(
                         propTypeInfo, required, propName, index, boolSpec, transforms.ToEquatableArray(),
                         toNull.ToEquatableArray(), fromEmpty, onDeserializingHooked, separator));
                 }

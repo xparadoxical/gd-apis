@@ -14,7 +14,7 @@ public sealed record SerializableClass(string Namespace, string Name, string Dec
     string ListSeparator, bool Keyed);
 
 /// <param name="Type">Fully qualified type name.</param>
-public sealed record SerializableProperty(string Type, PropTypeInfo ParsedType, bool Required, string Name,
+public sealed record SerializableProperty(PropTypeInfo ParsedType, bool Required, string Name,
     string? Index, BoolSpec? BoolSpec, EquatableArray<Transform> Transforms, EquatableArray<string> ToNull,
     string? FromEmpty, bool OnDeserializingHooked, string? ElementSeparatorOverride)
 {
