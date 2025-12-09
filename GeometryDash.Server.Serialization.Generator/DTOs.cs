@@ -28,8 +28,7 @@ public sealed record SerializableProperty(PropTypeInfo ParsedType, bool Required
 /// Returns <see langword="null"/> when <paramref name="Type"/> is an array, a pointer or a type parameter.
 /// </param>
 public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementType, string? ElementSeparator,
-    TypeKind Kind, SpecialType SpecialType, SpecialType ElementSpecialType, bool ElementIsINumberBase, bool ElementIsISerializable,
-    bool Optional, bool IsListType)
+    TypeKind Kind, SpecialType SpecialType, bool ElementIsINumberBase, bool ElementIsISerializable, bool Optional, bool IsListType)
 {
     public static bool TryCreate(PropertyDeclarationSyntax prop, SemanticModel sm,
         [NotNullWhen(true)] out PropTypeInfo? result)
@@ -50,9 +49,10 @@ public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementTyp
             return false;
         }
 
-        //extract element type - the T in T[], List<T>, Optional<T>, etc
-        var isListType = false;
         ITypeSymbol? elementTypeSymbol = null;
+        bool isListType = false;
+
+        //extract element type - the T in T[], List<T>, Optional<T>, etc
         if (typeSymbol is IArrayTypeSymbol arrayTypeSymbol)
         {
             elementTypeSymbol = arrayTypeSymbol.ElementType;
@@ -66,13 +66,25 @@ public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementTyp
                     .WithGenericsOptions(SymbolDisplayGenericsOptions.None));
 
             if (namespaceQualifiedName == KnownTypes.Optional)
-                elementTypeSymbol = namedTypeSymbol.TypeArguments.FirstOrDefault();
+            {
+                var innerType = namedTypeSymbol.TypeArguments.FirstOrDefault();
+                if (innerType is IArrayTypeSymbol innerArrayType)
+                {
+                    elementTypeSymbol = innerArrayType.ElementType;
+                    isListType = true;
+                }
+                else
+                {
+                    elementTypeSymbol = innerType;
+                }
+            }
         }
 
         var propertyTypeFQN = typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
         var elementTypeFQN = elementTypeSymbol?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
 
         var coreType = elementTypeSymbol ?? typeSymbol;
+
         var typeProvidedElementSeparator = coreType.GetAttributes()
             .FirstOrDefault(a => a.AttributeClass?.ToDisplayString() == KnownTypes.SeparatorAttribute)
             ?.NamedArguments.SingleOrNullable(kvp => kvp.Key == "ListItem")
@@ -92,9 +104,11 @@ public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementTyp
 
         var isOptional = propertyTypeFQN.StartsWith("global::" + KnownTypes.Optional);
 
+        // Spoof TypeKind to Array if it is a list type (e.g. Optional<Array>)
+        var kind = isListType ? TypeKind.Array : typeSymbol.TypeKind;
+
         result = new(nullable, propertyTypeFQN, elementTypeFQN, typeProvidedElementSeparator,
-            typeSymbol.TypeKind, typeSymbol.SpecialType, coreType.SpecialType, implementsINumberBase, implementsISerializable,
-            isOptional, isListType);
+            kind, typeSymbol.SpecialType, implementsINumberBase, implementsISerializable, isOptional, isListType);
         return true;
     }
 }

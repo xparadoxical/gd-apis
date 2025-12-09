@@ -188,7 +188,8 @@ public sealed partial class SerializerGenerator
             }
             else if (prop.ParsedType.ElementIsINumberBase)
             {
-                writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<{prop.ParsedType.Type}>({spanExpr});");
+                var typeToParse = prop.ParsedType.Optional ? prop.ParsedType.ElementType : prop.ParsedType.Type;
+                writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<{typeToParse}>({spanExpr});");
             }
             else if (prop.ParsedType.Type == "global::System.TimeSpan")
             {
@@ -196,7 +197,8 @@ public sealed partial class SerializerGenerator
             }
             else if (prop.ParsedType.Kind == TypeKind.Enum)
             {
-                writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.ParseEnum<{prop.ParsedType.Type}>({spanExpr});");
+                var typeToParse = prop.ParsedType.Optional ? prop.ParsedType.ElementType : prop.ParsedType.Type;
+                writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.ParseEnum<{typeToParse}>({spanExpr});");
             }
             else if (prop is { ParsedType.ElementSpecialType: SpecialType.System_Boolean, BoolSpec: BoolSpec(var trueExpr, var falseExpr) })
             {
@@ -205,7 +207,10 @@ public sealed partial class SerializerGenerator
                 writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.ParseBool({spanExpr}, {trueArg}, {falseArg});");
             }
             else if (prop.ParsedType.ElementIsISerializable)
-                writer.WriteLine($"global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<{prop.ParsedType.Type}>({spanExpr});");
+            {
+                var typeToParse = prop.ParsedType.Optional ? prop.ParsedType.ElementType : prop.ParsedType.Type;
+                writer.WriteLine($"global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<{typeToParse}>({spanExpr});");
+            }
 
             if (includeEmptyInputPreambule)
                 writer.DecreaseIndent();
