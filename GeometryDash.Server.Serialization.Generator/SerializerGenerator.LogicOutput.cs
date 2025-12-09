@@ -159,16 +159,18 @@ public sealed partial class SerializerGenerator
     public static void WritePostTransformationConversion(IndentedTextWriter writer, SerializableProperty prop)
     {
         var usePooledBuffer = prop is not { OnDeserializingHooked: false, Transforms: [] };
+        var includeEmptyInputPreambule = prop is { FromEmpty: not null } or { ParsedType.Optional: true };
         var spanExpr = usePooledBuffer ? "buffer.DataSpan" : "input";
 
-        if (prop.FromEmpty is not null)
+        if (includeEmptyInputPreambule)
         {
             writer.Write($"if (");
             writer.Write(usePooledBuffer ? "buffer.Length == 0" : "input.IsEmpty");
             writer.WriteLine(")");
 
             writer.IncreaseIndent();
-            writer.WriteLine($"{prop.Name} = {prop.FromEmpty};");
+            var defaultValue = prop.ParsedType.Optional ? "new()" : prop.FromEmpty;
+            writer.WriteLine($"{prop.Name} = {defaultValue};");
             writer.DecreaseIndent();
 
             writer.WriteLine("else");
@@ -176,7 +178,7 @@ public sealed partial class SerializerGenerator
 
         if (!prop.ParsedType.IsListType)
         {
-            if (prop.FromEmpty is not null)
+            if (includeEmptyInputPreambule)
                 writer.IncreaseIndent();
             writer.Write($"{prop.Name} = ");
 
@@ -196,7 +198,7 @@ public sealed partial class SerializerGenerator
             {
                 writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.ParseEnum<{prop.ParsedType.Type}>({spanExpr});");
             }
-            else if (prop is { ParsedType.SpecialType: SpecialType.System_Boolean, BoolSpec: BoolSpec(var trueExpr, var falseExpr) })
+            else if (prop is { ParsedType.ElementSpecialType: SpecialType.System_Boolean, BoolSpec: BoolSpec(var trueExpr, var falseExpr) })
             {
                 var trueArg = trueExpr is null ? "new()" : $"{trueExpr}u8";
                 var falseArg = falseExpr is null ? "new()" : $"{falseExpr}u8";
@@ -205,12 +207,12 @@ public sealed partial class SerializerGenerator
             else if (prop.ParsedType.ElementIsISerializable)
                 writer.WriteLine($"global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<{prop.ParsedType.Type}>({spanExpr});");
 
-            if (prop.FromEmpty is not null)
+            if (includeEmptyInputPreambule)
                 writer.DecreaseIndent();
         }
         else
         {
-            if (prop.FromEmpty is not null)
+            if (includeEmptyInputPreambule)
             {
                 writer.WriteLine("{");
                 writer.IncreaseIndent();
@@ -241,7 +243,7 @@ public sealed partial class SerializerGenerator
 
             writer.WriteLine($"{prop.Name} = ret;");
 
-            if (prop.FromEmpty is not null)
+            if (includeEmptyInputPreambule)
             {
                 writer.WriteLine("}");
                 writer.DecreaseIndent();

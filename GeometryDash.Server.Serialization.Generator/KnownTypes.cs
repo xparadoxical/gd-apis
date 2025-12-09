@@ -16,4 +16,5 @@ internal static class KnownTypes
     public const string GzipAttribute = "GeometryDash.Server.Serialization.GzipAttribute";
 
     public const string ISerializable = "GeometryDash.Server.Serialization.ISerializable";
+    public const string Optional = "GeometryDash.Server.Serialization.Optional";
 }
