@@ -181,7 +181,7 @@ public sealed partial class SerializerGenerator
             writer.WriteLine("else");
         }
 
-        if (!prop.ParsedType.IsListType)
+        if (!prop.ParsedType.ElementType.IsListType)
         {
             if (includeEmptyInputPreambule)
                 writer.IncreaseIndent();
@@ -191,26 +191,26 @@ public sealed partial class SerializerGenerator
             {
                 writer.WriteLine($"global::System.Text.Encoding.UTF8.GetString({spanExpr});"); //TODO string.Create+Utf8.ToUtf16
             }
-            else if (prop.ParsedType.ElementIsINumberBase)
+            else if (prop.ParsedType.ElementType.IsINumberBase)
             {
-                writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<{prop.ParsedType.ElementType}>({spanExpr});");
+                writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<{prop.ParsedType.ElementType.Fqn}>({spanExpr});");
             }
-            else if (prop.ParsedType.Type == "global::System.TimeSpan")
+            else if (prop.ParsedType.Fqn == "global::System.TimeSpan")
             {
                 writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.ParseTimeSpan({spanExpr});");
             }
             else if (prop.ParsedType.Kind == TypeKind.Enum)
             {
-                writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.ParseEnum<{prop.ParsedType.ElementType}>({spanExpr});");
+                writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.ParseEnum<{prop.ParsedType.ElementType.Fqn}>({spanExpr});");
             }
-            else if (prop is { ParsedType.ElementSpecialType: SpecialType.System_Boolean, BoolSpec: BoolSpec(var trueExpr, var falseExpr) })
+            else if (prop is { ParsedType.ElementType.SpecialType: SpecialType.System_Boolean, BoolSpec: BoolSpec(var trueExpr, var falseExpr) })
             {
                 var trueArg = trueExpr is null ? "new()" : $"{trueExpr}u8";
                 var falseArg = falseExpr is null ? "new()" : $"{falseExpr}u8";
                 writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.ParseBool({spanExpr}, {trueArg}, {falseArg});");
             }
-            else if (prop.ParsedType.ElementIsISerializable)
-                writer.WriteLine($"global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<{prop.ParsedType.ElementType}>({spanExpr});");
+            else if (prop.ParsedType.ElementType.IsISerializable)
+                writer.WriteLine($"global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<{prop.ParsedType.ElementType.Fqn}>({spanExpr});");
 
             if (includeEmptyInputPreambule)
                 writer.DecreaseIndent();
@@ -226,7 +226,7 @@ public sealed partial class SerializerGenerator
             writer.Write("var ret = ");
 
             if (prop.ParsedType.Kind == TypeKind.Array)
-                writer.WriteLine($"new {prop.ParsedType.ElementType}[global::System.MemoryExtensions.Count({spanExpr}, {prop.EffectiveElementSeparator}u8) + 1];");
+                writer.WriteLine($"new {prop.ParsedType.ElementType.Fqn}[global::System.MemoryExtensions.Count({spanExpr}, {prop.EffectiveElementSeparator}u8) + 1];");
             //TODO other collection types
 
             writer.WriteLine($"""
@@ -239,10 +239,10 @@ public sealed partial class SerializerGenerator
             if (prop.ParsedType.Kind == TypeKind.Array)
                 writer.Write("ret[i++] = ");
 
-            if (prop.ParsedType.ElementIsISerializable)
-                writer.WriteLine($"global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<{prop.ParsedType.ElementType}>(value);");
-            else if (prop.ParsedType.ElementIsINumberBase)
-                writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<{prop.ParsedType.ElementType}>(value);");
+            if (prop.ParsedType.ElementType.IsISerializable)
+                writer.WriteLine($"global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<{prop.ParsedType.ElementType.Fqn}>(value);");
+            else if (prop.ParsedType.ElementType.IsINumberBase)
+                writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<{prop.ParsedType.ElementType.Fqn}>(value);");
 
             writer.DecreaseIndent();
 

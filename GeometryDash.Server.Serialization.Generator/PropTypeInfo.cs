@@ -6,15 +6,12 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace GeometryDash.Server.Serialization.Generator;
 
-/// <param name="Type"></param>
+public sealed record ElementTypeInfo(string Fqn, TypeKind Kind, SpecialType SpecialType, bool IsINumberBase,
+    bool IsISerializable, bool IsListType);
+
 /// <param name="ElementType">The type of elements of an array or an enumerable type.</param>
-/// <param name="ConstructedFrom">
-/// For e.g. <c>System.UInt32</c>, the value is <see cref="uint"/>.
-/// Returns <see langword="null"/> when <paramref name="Type"/> is an array, a pointer or a type parameter.
-/// </param>
-public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementType, string? ElementSeparator,
-    TypeKind Kind, SpecialType SpecialType, SpecialType ElementSpecialType, bool ElementIsINumberBase, bool ElementIsISerializable,
-    bool Optional, bool IsListType)
+public sealed record PropTypeInfo(bool Nullable, string Fqn, ElementTypeInfo ElementType, string? ElementSeparator,
+    TypeKind Kind, SpecialType SpecialType, bool Optional)
 {
     public static bool TryCreate(PropertyDeclarationSyntax prop, SemanticModel sm,
         [NotNullWhen(true)] out PropTypeInfo? result)
@@ -35,23 +32,27 @@ public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementTyp
             return false;
         }
 
-        //extract element type - the T in T[], List<T>, Optional<T>, etc
+        //unwrap Optional<T>
+        var isOptional = false;
+        if (typeSymbol is INamedTypeSymbol
+            {
+                IsGenericType: true,
+                TypeArguments: [var optionalArg],
+                Name: "Optional",
+                ContainingNamespace: { Name: "Serialization", ContainingNamespace: { Name: "Server", ContainingNamespace: { Name: "GeometryDash", ContainingNamespace.IsGlobalNamespace: true } } }
+            })
+        {
+            isOptional = true;
+            typeSymbol = optionalArg;
+        }
+
+        //extract element type - the T in T[], List<T>, etc
         var isListType = false;
         ITypeSymbol? elementTypeSymbol = null;
         if (typeSymbol is IArrayTypeSymbol arrayTypeSymbol)
         {
             elementTypeSymbol = arrayTypeSymbol.ElementType;
             isListType = true;
-        }
-        else if (typeSymbol is INamedTypeSymbol { } namedTypeSymbol)
-        {
-            var namespaceQualifiedName = namedTypeSymbol.ToDisplayString(
-                SymbolDisplayFormat.FullyQualifiedFormat
-                    .WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted)
-                    .WithGenericsOptions(SymbolDisplayGenericsOptions.None));
-
-            if (namespaceQualifiedName == KnownTypes.Optional)
-                elementTypeSymbol = namedTypeSymbol.TypeArguments.FirstOrDefault();
         }
 
         var propertyTypeFQN = typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
@@ -75,11 +76,10 @@ public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementTyp
                 (fqn => fqn.StartsWith("global::" + KnownTypes.ISerializable),
                     _ => implementsISerializable = true));
 
-        var isOptional = propertyTypeFQN.StartsWith("global::" + KnownTypes.Optional);
-
-        result = new(nullable, propertyTypeFQN, elementTypeFQN, typeProvidedElementSeparator,
-            typeSymbol.TypeKind, typeSymbol.SpecialType, coreType.SpecialType, implementsINumberBase, implementsISerializable,
-            isOptional, isListType);
+        result = new(nullable, propertyTypeFQN,
+            new(elementTypeFQN ?? propertyTypeFQN, coreType.TypeKind,
+            coreType.SpecialType, implementsINumberBase, implementsISerializable, isListType),
+            typeProvidedElementSeparator, typeSymbol.TypeKind, typeSymbol.SpecialType, isOptional);
         return true;
     }
 }
