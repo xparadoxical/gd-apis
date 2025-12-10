@@ -99,8 +99,7 @@ public sealed partial class UserResponse : ISerializable<UserResponse>
     public uint? GlobalLeaderboardPosition { get; set; }
 
     [Index(31)]
-    [EmptyDefaultsTo(Users.FriendState.None)] //TODO https://github.com/dotnet/roslyn/issues/80904
-    public FriendState? FriendState { get; set; }
+    public Optional<FriendState>? FriendState { get; set; }
 
     [Index(32)]
     public uint? FriendRequestId { get; set; }
@@ -127,7 +126,7 @@ public sealed partial class UserResponse : ISerializable<UserResponse>
 
     [Index(41)]
     [Bool(True = "1", False = "")]
-    public bool? IsNewFriendOrRequest { get; set; }
+    public Optional<bool>? IsNewFriendOrRequest { get; set; }
 
     [Index(42)]
     public TimeSpan? ScoreAge { get; set; }

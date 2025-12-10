@@ -55,9 +55,8 @@ public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementTyp
         }
 
         var propertyTypeFQN = typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-        var elementTypeFQN = elementTypeSymbol?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-
         var coreType = elementTypeSymbol ?? typeSymbol;
+        var elementTypeFQN = coreType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
         var typeProvidedElementSeparator = coreType.GetAttributes()
             .FirstOrDefault(a => a.AttributeClass?.ToDisplayString() == KnownTypes.SeparatorAttribute)
             ?.NamedArguments.SingleOrNullable(kvp => kvp.Key == "ListItem")
@@ -77,8 +76,10 @@ public sealed record PropTypeInfo(bool Nullable, string Type, string? ElementTyp
 
         var isOptional = propertyTypeFQN.StartsWith("global::" + KnownTypes.Optional);
 
-        result = new(nullable, propertyTypeFQN, elementTypeFQN, typeProvidedElementSeparator,
-            typeSymbol.TypeKind, typeSymbol.SpecialType, coreType.SpecialType, implementsINumberBase, implementsISerializable,
+        var effectiveType = isOptional ? coreType : typeSymbol;
+
+        result = new(nullable, effectiveType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat), elementTypeFQN, typeProvidedElementSeparator,
+            effectiveType.TypeKind, effectiveType.SpecialType, coreType.SpecialType, implementsINumberBase, implementsISerializable,
             isOptional, isListType);
         return true;
     }

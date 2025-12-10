@@ -34,8 +34,7 @@ public sealed partial class CommentResponse
     public byte? Percent { get; set; }
 
     [Index(11)]
-    [EmptyDefaultsTo(ModeratorStatus.None)]
-    public ModeratorStatus ModeratorStatus { get; set; }
+    public Optional<ModeratorStatus>? ModeratorStatus { get; set; }
 
     [Index(12)]
     public Color? Color { get; set; }
