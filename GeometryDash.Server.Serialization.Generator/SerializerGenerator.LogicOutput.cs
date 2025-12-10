@@ -152,12 +152,12 @@ public sealed partial class SerializerGenerator
                     throw new NotImplementedException(transform.ToString());
             }
             writer.WriteLine();
+        }
 
-            if (prop.Transforms is not [])
-            {
-                writer.WriteLine($"On{prop.Name}Deserialized(buffer);");
-                writer.WriteLine();
-            }
+        if (prop.Transforms is not [])
+        {
+            writer.WriteLine($"On{prop.Name}Deserialized(buffer);");
+            writer.WriteLine();
         }
     }
 
