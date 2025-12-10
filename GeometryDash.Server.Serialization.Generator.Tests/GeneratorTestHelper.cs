@@ -23,7 +23,8 @@ public static class GeneratorTestHelper
             ],
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
                 allowUnsafe: true,
-                nullableContextOptions: NullableContextOptions.Enable)
+                nullableContextOptions: NullableContextOptions.Enable,
+                specificDiagnosticOptions: [new("CS1701", ReportDiagnostic.Suppress)])
         );
 
         var driver = CSharpGeneratorDriver.Create([new SerializerGenerator().AsSourceGenerator()],
