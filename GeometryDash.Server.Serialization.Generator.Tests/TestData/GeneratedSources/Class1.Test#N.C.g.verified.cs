@@ -248,7 +248,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
             foreach (var value in new global::CommunityToolkit.HighPerformance.Enumerables.ReadOnlySpanTokenizerWithSpanSeparator<byte>(input, ","u8))
                 ret[i++] = global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<int>(value);
             O3 = ret;
-            }
+        }
 
         OnO3Deserialized();
     }
@@ -268,7 +268,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
             foreach (var value in new global::CommunityToolkit.HighPerformance.Enumerables.ReadOnlySpanTokenizerWithSpanSeparator<byte>(input, ","u8))
                 ret[i++] = global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<int>(value);
             O4 = ret;
-            }
+        }
 
         OnO4Deserialized();
     }

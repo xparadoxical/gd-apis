@@ -250,8 +250,8 @@ public sealed partial class SerializerGenerator
 
             if (includeEmptyInputPreambule)
             {
-                writer.WriteLine("}");
                 writer.DecreaseIndent();
+                writer.WriteLine("}");
             }
         }
 
