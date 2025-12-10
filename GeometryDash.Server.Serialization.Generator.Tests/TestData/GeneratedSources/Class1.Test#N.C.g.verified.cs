@@ -23,6 +23,10 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
                 case 9: ret.DeserializeD1(value); break;
                 case 10: ret.DeserializeD2(value); break;
                 case 11: ret.DeserializeB3(value); break;
+                case 12: ret.DeserializeO1(value); break;
+                case 13: ret.DeserializeO2(value); break;
+                case 14: ret.DeserializeO3(value); break;
+                case 15: ret.DeserializeO4(value); break;
             }
             key++;
         }
@@ -114,7 +118,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
     void DeserializeI(global::System.ReadOnlySpan<byte> input)
     {
-        I = global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<uint>(input);
+        I = global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<>(input);
 
         OnIDeserialized();
     }
@@ -141,7 +145,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
     void DeserializeE(global::System.ReadOnlySpan<byte> input)
     {
-        E = global::GeometryDash.Server.Serialization.ParsingExtensions.ParseEnum<global::System.StringSplitOptions>(input);
+        E = global::GeometryDash.Server.Serialization.ParsingExtensions.ParseEnum<>(input);
 
         OnEDeserialized();
     }
@@ -152,7 +156,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
     void DeserializeNested(global::System.ReadOnlySpan<byte> input)
     {
-        Nested = global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<global::N.S>(input);
+        Nested = global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<>(input);
 
         OnNestedDeserialized();
     }
@@ -204,4 +208,58 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
     partial void OnB3Deserializing(global::PoolBuffers.PooledBuffer<byte> input);
 
     partial void OnB3Deserialized();
+
+    void DeserializeO1(global::System.ReadOnlySpan<byte> input)
+    {
+        if (input.IsEmpty)
+            O1 = new();
+        else
+            O1 = global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<int>(input);
+
+        OnO1Deserialized();
+    }
+
+    partial void OnO1Deserializing(global::PoolBuffers.PooledBuffer<byte> input);
+
+    partial void OnO1Deserialized();
+
+    void DeserializeO2(global::System.ReadOnlySpan<byte> input)
+    {
+        if (input.IsEmpty)
+            O2 = new();
+        else
+            O2 = global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<int>(input);
+
+        OnO2Deserialized();
+    }
+
+    partial void OnO2Deserializing(global::PoolBuffers.PooledBuffer<byte> input);
+
+    partial void OnO2Deserialized();
+
+    void DeserializeO3(global::System.ReadOnlySpan<byte> input)
+    {
+        if (input.IsEmpty)
+            O3 = new();
+        else
+            O3 = 
+        OnO3Deserialized();
+    }
+
+    partial void OnO3Deserializing(global::PoolBuffers.PooledBuffer<byte> input);
+
+    partial void OnO3Deserialized();
+
+    void DeserializeO4(global::System.ReadOnlySpan<byte> input)
+    {
+        if (input.IsEmpty)
+            O4 = new();
+        else
+            O4 = 
+        OnO4Deserialized();
+    }
+
+    partial void OnO4Deserializing(global::PoolBuffers.PooledBuffer<byte> input);
+
+    partial void OnO4Deserialized();
 }

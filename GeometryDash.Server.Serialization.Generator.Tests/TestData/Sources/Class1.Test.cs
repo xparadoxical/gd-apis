@@ -51,6 +51,20 @@ internal partial class C
     [Index(11)]
     [Bool(True = "T")]
     public Optional<bool>? B3 { get; set; } //"T" -> true, "" -> no value, other value -> false, no occurence -> null
+
+    [Index(12)]
+    public Optional<int> O1 { get; set; }
+
+    [Index(13)]
+    public Optional<int>? O2 { get; set; }
+
+    [Index(14)]
+    [Separator(",")]
+    public Optional<int[]> O3 { get; set; }
+
+    [Index(15)]
+    [Separator(",")]
+    public Optional<int[]>? O4 { get; set; }
 }
 
 public class S : ISerializable<S>
