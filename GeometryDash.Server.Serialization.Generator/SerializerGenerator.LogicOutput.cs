@@ -95,45 +95,7 @@ public sealed partial class SerializerGenerator
                     """, true);
             }
 
-            //read attributes from end, since they're in serialization order, not deserialization order
-            for (int i = prop.Transforms.Length - 1; i >= 0; i--)
-            {
-                var transform = prop.Transforms[i];
-                switch (transform)
-                {
-                    case Transform.Base64:
-                        writer.WriteLine("""
-                            buffer.EnsureCapacity(global::GeometryDash.Server.Serialization.Base64.GetMaxDecodedLength(buffer.Length));
-                            buffer.Length = global::GeometryDash.Server.Serialization.Base64.Decode(buffer.DataSpan);
-                            """, true);
-                        break;
-
-                    case Transform.Xor xor:
-                        writer.WriteLine($"""global::GeometryDash.Server.Serialization.Xor.Apply(buffer.DataSpan, {xor.KeyExpr}u8);""");
-                        break;
-
-                    case Transform.Gzip:
-                        writer.WriteLine($"""
-                            var t{i}_length = global::GeometryDash.Server.Serialization.Gzip.GetDecompressedLength(buffer.DataSpan);
-                            var t{i}_output = global::System.Buffers.ArrayPool<byte>.Shared.Rent((int)t{i}_length);
-                            global::GeometryDash.Server.Serialization.Gzip.Decompress(buffer.DataSpan, t{i}_output);
-                            buffer.Length = t{i}_output.Length;
-                            global::System.MemoryExtensions.AsSpan(t{i}_output).CopyTo(buffer.DataSpan);
-                            global::System.Buffers.ArrayPool<byte>.Shared.Return(t{i}_output);
-                            """, true);
-                        break;
-
-                    default:
-                        throw new NotImplementedException(transform.ToString());
-                }
-                writer.WriteLine();
-            }
-
-            if (prop.Transforms is not [])
-            {
-                writer.WriteLine($"On{prop.Name}Deserialized(buffer);");
-                writer.WriteLine();
-            }
+            WriteTransforms(writer, prop);
 
             WritePostTransformationConversion(writer, prop); //includes tonull and emptyto handling
 
@@ -154,6 +116,49 @@ public sealed partial class SerializerGenerator
         }
         writer.WriteLine();
         writer.WriteLine($"partial void On{prop.Name}Deserialized();");
+    }
+
+    private static void WriteTransforms(IndentedTextWriter writer, SerializableProperty prop)
+    {
+        //read attributes from end, since they're in serialization order, not deserialization order
+        for (int i = prop.Transforms.Length - 1; i >= 0; i--)
+        {
+            var transform = prop.Transforms[i];
+            switch (transform)
+            {
+                case Transform.Base64:
+                    writer.WriteLine("""
+                            buffer.EnsureCapacity(global::GeometryDash.Server.Serialization.Base64.GetMaxDecodedLength(buffer.Length));
+                            buffer.Length = global::GeometryDash.Server.Serialization.Base64.Decode(buffer.DataSpan);
+                            """, true);
+                    break;
+
+                case Transform.Xor xor:
+                    writer.WriteLine($"""global::GeometryDash.Server.Serialization.Xor.Apply(buffer.DataSpan, {xor.KeyExpr}u8);""");
+                    break;
+
+                case Transform.Gzip:
+                    writer.WriteLine($"""
+                            var t{i}_length = global::GeometryDash.Server.Serialization.Gzip.GetDecompressedLength(buffer.DataSpan);
+                            var t{i}_output = global::System.Buffers.ArrayPool<byte>.Shared.Rent((int)t{i}_length);
+                            global::GeometryDash.Server.Serialization.Gzip.Decompress(buffer.DataSpan, t{i}_output);
+                            buffer.Length = t{i}_output.Length;
+                            global::System.MemoryExtensions.AsSpan(t{i}_output).CopyTo(buffer.DataSpan);
+                            global::System.Buffers.ArrayPool<byte>.Shared.Return(t{i}_output);
+                            """, true);
+                    break;
+
+                default:
+                    throw new NotImplementedException(transform.ToString());
+            }
+            writer.WriteLine();
+
+            if (prop.Transforms is not [])
+            {
+                writer.WriteLine($"On{prop.Name}Deserialized(buffer);");
+                writer.WriteLine();
+            }
+        }
     }
 
     public static void WritePostTransformationConversion(IndentedTextWriter writer, SerializableProperty prop)
