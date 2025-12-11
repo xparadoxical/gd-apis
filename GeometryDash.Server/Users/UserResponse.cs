@@ -126,7 +126,7 @@ public sealed partial class UserResponse : ISerializable<UserResponse>
 
     [Index(41)]
     [Bool(True = "1", False = "")]
-    public Optional<bool>? IsNewFriendOrRequest { get; set; }
+    public bool? IsNewFriendOrRequest { get; set; }
 
     [Index(42)]
     public TimeSpan? ScoreAge { get; set; }

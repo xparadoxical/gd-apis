@@ -118,7 +118,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
     void DeserializeI(global::System.ReadOnlySpan<byte> input)
     {
-        I = global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<>(input);
+        I = global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<uint>(input);
 
         OnIDeserialized();
     }
@@ -145,7 +145,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
     void DeserializeE(global::System.ReadOnlySpan<byte> input)
     {
-        E = global::GeometryDash.Server.Serialization.ParsingExtensions.ParseEnum<>(input);
+        E = global::GeometryDash.Server.Serialization.ParsingExtensions.ParseEnum<global::System.StringSplitOptions>(input);
 
         OnEDeserialized();
     }
@@ -156,7 +156,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
     void DeserializeNested(global::System.ReadOnlySpan<byte> input)
     {
-        Nested = global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<>(input);
+        Nested = global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<global::N.S>(input);
 
         OnNestedDeserialized();
     }
@@ -242,7 +242,14 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
         if (input.IsEmpty)
             O3 = new();
         else
-            O3 = 
+        {
+            var ret = new int[global::System.MemoryExtensions.Count(input, ","u8) + 1];
+            int i = 0;
+            foreach (var value in new global::CommunityToolkit.HighPerformance.Enumerables.ReadOnlySpanTokenizerWithSpanSeparator<byte>(input, ","u8))
+                ret[i++] = global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<int>(value);
+            O3 = ret;
+        }
+
         OnO3Deserialized();
     }
 
@@ -255,7 +262,14 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
         if (input.IsEmpty)
             O4 = new();
         else
-            O4 = 
+        {
+            var ret = new int[global::System.MemoryExtensions.Count(input, ","u8) + 1];
+            int i = 0;
+            foreach (var value in new global::CommunityToolkit.HighPerformance.Enumerables.ReadOnlySpanTokenizerWithSpanSeparator<byte>(input, ","u8))
+                ret[i++] = global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<int>(value);
+            O4 = ret;
+        }
+
         OnO4Deserialized();
     }
 

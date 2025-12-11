@@ -105,7 +105,7 @@ public class UserResponseTests : SerializationTest
                 HasGlow = true,
                 AccountId = 2235541,
                 AllowMessagesFrom = PrivacyGroup.Everyone,
-                IsNewFriendOrRequest = new Optional<bool>()
+                IsNewFriendOrRequest = false
             },
             new()
             {
@@ -160,7 +160,7 @@ public class UserResponseTests : SerializationTest
                     FriendRequestId = 60220714,
                     FriendRequestMessage = "test",
                     FriendRequestAge = TimeUnit.Minute * 7,
-                    IsNewFriendOrRequest = new Optional<bool>()
+                    IsNewFriendOrRequest = false
                 },
                 new(0, 0, 20))
             ]);
