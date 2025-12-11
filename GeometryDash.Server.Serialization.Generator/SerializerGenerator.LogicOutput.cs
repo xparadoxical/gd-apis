@@ -174,7 +174,9 @@ public sealed partial class SerializerGenerator
             writer.WriteLine(")");
 
             writer.IncreaseIndent();
-            var defaultValue = prop.ParsedType.Optional ? "new()" : prop.FromEmpty;
+            var defaultValue = prop.ParsedType.Optional
+                ? $"global::GeometryDash.Server.Serialization.Optional<{prop.ParsedType.Fqn}>.Empty"
+                : prop.FromEmpty;
             writer.WriteLine($"{prop.Name} = {defaultValue};");
             writer.DecreaseIndent();
 

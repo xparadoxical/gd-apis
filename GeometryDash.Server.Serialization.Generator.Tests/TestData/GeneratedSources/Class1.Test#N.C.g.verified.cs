@@ -198,7 +198,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
     void DeserializeB3(global::System.ReadOnlySpan<byte> input)
     {
         if (input.IsEmpty)
-            B3 = new();
+            B3 = global::GeometryDash.Server.Serialization.Optional<bool>.Empty;
         else
             B3 = global::GeometryDash.Server.Serialization.ParsingExtensions.ParseBool(input, "T"u8, new());
 
@@ -212,7 +212,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
     void DeserializeO1(global::System.ReadOnlySpan<byte> input)
     {
         if (input.IsEmpty)
-            O1 = new();
+            O1 = global::GeometryDash.Server.Serialization.Optional<int>.Empty;
         else
             O1 = global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<int>(input);
 
@@ -226,7 +226,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
     void DeserializeO2(global::System.ReadOnlySpan<byte> input)
     {
         if (input.IsEmpty)
-            O2 = new();
+            O2 = global::GeometryDash.Server.Serialization.Optional<int>.Empty;
         else
             O2 = global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<int>(input);
 
@@ -240,7 +240,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
     void DeserializeO3(global::System.ReadOnlySpan<byte> input)
     {
         if (input.IsEmpty)
-            O3 = new();
+            O3 = global::GeometryDash.Server.Serialization.Optional<int[]>.Empty;
         else
         {
             var ret = new int[global::System.MemoryExtensions.Count(input, ","u8) + 1];
@@ -260,7 +260,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
     void DeserializeO4(global::System.ReadOnlySpan<byte> input)
     {
         if (input.IsEmpty)
-            O4 = new();
+            O4 = global::GeometryDash.Server.Serialization.Optional<int[]>.Empty;
         else
         {
             var ret = new int[global::System.MemoryExtensions.Count(input, ","u8) + 1];
