@@ -36,7 +36,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
     void DeserializeS(global::System.ReadOnlySpan<byte> input)
     {
         var buffer = new global::PoolBuffers.PooledBuffer<byte>(input);
-
+        
         OnSDeserializing(buffer);
 
         global::GeometryDash.Server.Serialization.Xor.Apply(buffer.DataSpan, "12345"u8);
@@ -86,7 +86,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
     void DeserializeZip(global::System.ReadOnlySpan<byte> input)
     {
         var buffer = new global::PoolBuffers.PooledBuffer<byte>(input);
-
+        
         OnZipDeserializing(buffer);
 
         var t1_length = global::GeometryDash.Server.Serialization.Gzip.GetDecompressedLength(buffer.DataSpan);
@@ -130,7 +130,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
     void DeserializeTime(global::System.ReadOnlySpan<byte> input)
     {
         var buffer = new global::PoolBuffers.PooledBuffer<byte>(input);
-
+        
         OnTimeDeserializing(buffer);
 
         Time = global::GeometryDash.Server.Serialization.ParsingExtensions.ParseTimeSpan(buffer.DataSpan);
