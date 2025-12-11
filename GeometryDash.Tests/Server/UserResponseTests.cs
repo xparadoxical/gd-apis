@@ -77,7 +77,7 @@ public class UserResponseTests : SerializationTest
                 RobotId = 16,
                 HasGlow = true,
                 GlobalLeaderboardPosition = null,
-                FriendState = FriendState.None,
+                FriendState = new Optional<FriendState>(),
                 SpiderId = 11,
                 TwitterUsername = "vipringd",
                 TwitchUsername = "viprin",

@@ -56,9 +56,8 @@ public sealed record PropTypeInfo(bool Nullable, string Fqn, ElementTypeInfo Ele
         }
 
         var propertyTypeFQN = typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-        var elementTypeFQN = elementTypeSymbol?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-
         var coreType = elementTypeSymbol ?? typeSymbol;
+        var elementTypeFQN = coreType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
         var typeProvidedElementSeparator = coreType.GetAttributes()
             .FirstOrDefault(a => a.AttributeClass?.ToDisplayString() == KnownTypes.SeparatorAttribute)
             ?.NamedArguments.SingleOrNullable(kvp => kvp.Key == "ListItem")
