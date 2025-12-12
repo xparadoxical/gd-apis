@@ -9,9 +9,16 @@ partial class D : global::GeometryDash.Server.Serialization.ISerializable<D>
         var ret = new D();
         foreach (var (key, value) in new global::GeometryDash.Server.Serialization.RobTopStringReader(input) { Separator = ","u8 })
         {
-            switch (key)
+            try
             {
-                case 5: ret.DeserializeArr(value); break;
+                switch (key)
+                {
+                    case 5: ret.DeserializeArr(value); break;
+                }
+            }
+            catch (global::System.Exception ex)
+            {
+                throw new global::GeometryDash.Server.Serialization.SerializationException((uint)key, ex);
             }
         }
         return ret;

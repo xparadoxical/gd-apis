@@ -69,12 +69,21 @@ public sealed partial class SerializerGenerator
 
     public static void WritePropertySwitch(IndentedTextWriter writer, SerializableClassInfo info)
     {
-        writer.WriteLine("switch (key)");
+        writer.WriteLine("try");
         using (writer.WriteBlock())
         {
-            foreach (var prop in info.Props)
-                writer.WriteLine($"case {prop.Index}: ret.Deserialize{prop.Name}(value); break;");
-            //don't throw on unrecognized keys to maintain forward-compat //TODO option to disable (for server api monitoring)
+            writer.WriteLine("switch (key)");
+            using (writer.WriteBlock())
+            {
+                foreach (var prop in info.Props)
+                    writer.WriteLine($"case {prop.Index}: ret.Deserialize{prop.Name}(value); break;");
+                //don't throw on unrecognized keys to maintain forward-compat //TODO option to disable (for server api monitoring)
+            }
+        }
+        writer.WriteLine("catch (global::System.Exception ex)");
+        using (writer.WriteBlock())
+        {
+            writer.WriteLine($"throw new global::GeometryDash.Server.Serialization.SerializationException((uint)key, ex);");
         }
     }
 
