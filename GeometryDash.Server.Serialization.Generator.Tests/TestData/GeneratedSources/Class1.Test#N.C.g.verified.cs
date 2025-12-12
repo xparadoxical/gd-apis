@@ -7,7 +7,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
     public static C Deserialize(global::System.ReadOnlySpan<byte> input)
     {
         var ret = new C();
-        var key = 1;
+        var key = 1u;
         foreach (var value in new global::CommunityToolkit.HighPerformance.Enumerables.ReadOnlySpanTokenizerWithSpanSeparator<byte>(input, ":"u8))
         {
             try
@@ -33,7 +33,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
             }
             catch (global::System.Exception ex)
             {
-                throw new global::GeometryDash.Server.Serialization.SerializationException((uint)key, ex);
+                throw new global::GeometryDash.Server.Serialization.SerializationException(key, ex);
             }
             key++;
         }
@@ -43,7 +43,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
     void DeserializeS(global::System.ReadOnlySpan<byte> input)
     {
         var buffer = new global::PoolBuffers.PooledBuffer<byte>(input);
-
+        
         OnSDeserializing(buffer);
 
         global::GeometryDash.Server.Serialization.Xor.Apply(buffer.DataSpan, "12345"u8);
@@ -93,7 +93,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
     void DeserializeZip(global::System.ReadOnlySpan<byte> input)
     {
         var buffer = new global::PoolBuffers.PooledBuffer<byte>(input);
-
+        
         OnZipDeserializing(buffer);
 
         var t1_length = global::GeometryDash.Server.Serialization.Gzip.GetDecompressedLength(buffer.DataSpan);
@@ -137,7 +137,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
     void DeserializeTime(global::System.ReadOnlySpan<byte> input)
     {
         var buffer = new global::PoolBuffers.PooledBuffer<byte>(input);
-
+        
         OnTimeDeserializing(buffer);
 
         Time = global::GeometryDash.Server.Serialization.ParsingExtensions.ParseTimeSpan(buffer.DataSpan);

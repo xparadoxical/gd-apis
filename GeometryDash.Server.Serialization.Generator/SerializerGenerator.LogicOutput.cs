@@ -57,7 +57,7 @@ public sealed partial class SerializerGenerator
 
     public static void WriteKeylessBody(IndentedTextWriter writer, SerializableClassInfo info)
     {
-        writer.WriteLine("var key = 1;");
+        writer.WriteLine("var key = 1u;");
         writer.WriteLine($"foreach (var value in new global::CommunityToolkit.HighPerformance.Enumerables.ReadOnlySpanTokenizerWithSpanSeparator<byte>(input, {info.Class.PropSeparator}u8))");
         using (writer.WriteBlock())
         {
@@ -83,7 +83,7 @@ public sealed partial class SerializerGenerator
         writer.WriteLine("catch (global::System.Exception ex)");
         using (writer.WriteBlock())
         {
-            writer.WriteLine($"throw new global::GeometryDash.Server.Serialization.SerializationException((uint)key, ex);");
+            writer.WriteLine($"throw new global::GeometryDash.Server.Serialization.SerializationException(key, ex);");
         }
     }
 

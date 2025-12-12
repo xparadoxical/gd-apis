@@ -18,7 +18,7 @@ partial class D : global::GeometryDash.Server.Serialization.ISerializable<D>
             }
             catch (global::System.Exception ex)
             {
-                throw new global::GeometryDash.Server.Serialization.SerializationException((uint)key, ex);
+                throw new global::GeometryDash.Server.Serialization.SerializationException(key, ex);
             }
         }
         return ret;
