@@ -10,23 +10,30 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
         var key = 1;
         foreach (var value in new global::CommunityToolkit.HighPerformance.Enumerables.ReadOnlySpanTokenizerWithSpanSeparator<byte>(input, ":"u8))
         {
-            switch (key)
+            try
             {
-                case 1: ret.DeserializeS(value); break;
-                case 2: ret.DeserializeB1(value); break;
-                case 4: ret.DeserializeB2(value); break;
-                case 3: ret.DeserializeZip(value); break;
-                case 5: ret.DeserializeI(value); break;
-                case 6: ret.DeserializeTime(value); break;
-                case 7: ret.DeserializeE(value); break;
-                case 8: ret.DeserializeNested(value); break;
-                case 9: ret.DeserializeD1(value); break;
-                case 10: ret.DeserializeD2(value); break;
-                case 11: ret.DeserializeB3(value); break;
-                case 12: ret.DeserializeO1(value); break;
-                case 13: ret.DeserializeO2(value); break;
-                case 14: ret.DeserializeO3(value); break;
-                case 15: ret.DeserializeO4(value); break;
+                switch (key)
+                {
+                    case 1: ret.DeserializeS(value); break;
+                    case 2: ret.DeserializeB1(value); break;
+                    case 4: ret.DeserializeB2(value); break;
+                    case 3: ret.DeserializeZip(value); break;
+                    case 5: ret.DeserializeI(value); break;
+                    case 6: ret.DeserializeTime(value); break;
+                    case 7: ret.DeserializeE(value); break;
+                    case 8: ret.DeserializeNested(value); break;
+                    case 9: ret.DeserializeD1(value); break;
+                    case 10: ret.DeserializeD2(value); break;
+                    case 11: ret.DeserializeB3(value); break;
+                    case 12: ret.DeserializeO1(value); break;
+                    case 13: ret.DeserializeO2(value); break;
+                    case 14: ret.DeserializeO3(value); break;
+                    case 15: ret.DeserializeO4(value); break;
+                }
+            }
+            catch (global::System.Exception ex)
+            {
+                throw new global::GeometryDash.Server.Serialization.SerializationException((uint)key, ex);
             }
             key++;
         }
@@ -36,7 +43,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
     void DeserializeS(global::System.ReadOnlySpan<byte> input)
     {
         var buffer = new global::PoolBuffers.PooledBuffer<byte>(input);
-        
+
         OnSDeserializing(buffer);
 
         global::GeometryDash.Server.Serialization.Xor.Apply(buffer.DataSpan, "12345"u8);
@@ -86,7 +93,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
     void DeserializeZip(global::System.ReadOnlySpan<byte> input)
     {
         var buffer = new global::PoolBuffers.PooledBuffer<byte>(input);
-        
+
         OnZipDeserializing(buffer);
 
         var t1_length = global::GeometryDash.Server.Serialization.Gzip.GetDecompressedLength(buffer.DataSpan);
@@ -130,7 +137,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
     void DeserializeTime(global::System.ReadOnlySpan<byte> input)
     {
         var buffer = new global::PoolBuffers.PooledBuffer<byte>(input);
-        
+
         OnTimeDeserializing(buffer);
 
         Time = global::GeometryDash.Server.Serialization.ParsingExtensions.ParseTimeSpan(buffer.DataSpan);
