@@ -42,11 +42,19 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
         var keyed = ctx.TargetSymbol.GetAttributes()
             .SingleOrDefault(a => a.AttributeClass!.ToDisplayString() == KnownTypes.KeyedAttribute) is not null;
 
+        var symbol = (INamedTypeSymbol)ctx.TargetSymbol;
+        string? baseClassFqn = null;
+        var baseType = symbol.BaseType;
+        if (baseType is not null && baseType.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == KnownTypes.SeparatorAttribute))
+        {
+            baseClassFqn = baseType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+        }
+
         return new(
             decl.Parent!.Cast<BaseNamespaceDeclarationSyntax>().Name.ToString(),
             decl.Identifier.ToString(),
             $"{decl.Keyword} {decl.Identifier}{decl.TypeParameterList}",
-            propSeparator, listSeparator, keyed);
+            propSeparator, listSeparator, keyed, baseClassFqn);
     }
 
     /// <summary>Collects info about properties marked with <see cref="KnownTypes.IndexAttribute"/>.</summary>

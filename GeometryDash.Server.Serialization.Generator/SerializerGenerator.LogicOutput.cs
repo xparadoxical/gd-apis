@@ -36,6 +36,9 @@ public sealed partial class SerializerGenerator
                 writer.WriteLine("return ret;");
             }
 
+            writer.WriteLine();
+            WritePropertySelector(writer, info);
+
             foreach (var prop in info.Props)
             {
                 writer.WriteLine();
@@ -51,7 +54,20 @@ public sealed partial class SerializerGenerator
         writer.WriteLine($"foreach (var (key, value) in new global::GeometryDash.Server.Serialization.RobTopStringReader(input) {{ Separator = {info.Class.PropSeparator}u8 }})");
         using (writer.WriteBlock())
         {
-            WritePropertySwitch(writer, info);
+            writer.WriteLine("try");
+            using (writer.WriteBlock())
+            {
+                writer.WriteLine("if (!PropertySelector(key, value, ret))");
+                using (writer.WriteBlock())
+                {
+                    //don't throw on unrecognized keys to maintain forward-compat //TODO option to disable (for server api monitoring)
+                }
+            }
+            writer.WriteLine("catch (global::System.Exception ex)");
+            using (writer.WriteBlock())
+            {
+                writer.WriteLine($"throw new global::GeometryDash.Server.Serialization.SerializationException(key, ex);");
+            }
         }
     }
 
@@ -61,29 +77,45 @@ public sealed partial class SerializerGenerator
         writer.WriteLine($"foreach (var value in new global::CommunityToolkit.HighPerformance.Enumerables.ReadOnlySpanTokenizerWithSpanSeparator<byte>(input, {info.Class.PropSeparator}u8))");
         using (writer.WriteBlock())
         {
-            WritePropertySwitch(writer, info);
+            writer.WriteLine("try");
+            using (writer.WriteBlock())
+            {
+                writer.WriteLine("if (!PropertySelector(key, value, ret))");
+                using (writer.WriteBlock())
+                {
+                    //don't throw on unrecognized keys to maintain forward-compat
+                }
+            }
+            writer.WriteLine("catch (global::System.Exception ex)");
+            using (writer.WriteBlock())
+            {
+                writer.WriteLine($"throw new global::GeometryDash.Server.Serialization.SerializationException(key, ex);");
+            }
 
             writer.WriteLine("key++;");
         }
     }
 
-    public static void WritePropertySwitch(IndentedTextWriter writer, SerializableClassInfo info)
+    public static void WritePropertySelector(IndentedTextWriter writer, SerializableClassInfo info)
     {
-        writer.WriteLine("try");
+        writer.WriteLine($"internal static bool PropertySelector(uint key, global::System.ReadOnlySpan<byte> value, {info.Class.Name} ret)");
         using (writer.WriteBlock())
         {
             writer.WriteLine("switch (key)");
             using (writer.WriteBlock())
             {
                 foreach (var prop in info.Props)
-                    writer.WriteLine($"case {prop.Index}: ret.Deserialize{prop.Name}(value); break;");
-                //don't throw on unrecognized keys to maintain forward-compat //TODO option to disable (for server api monitoring)
+                    writer.WriteLine($"case {prop.Index}: ret.Deserialize{prop.Name}(value); return true;");
             }
-        }
-        writer.WriteLine("catch (global::System.Exception ex)");
-        using (writer.WriteBlock())
-        {
-            writer.WriteLine($"throw new global::GeometryDash.Server.Serialization.SerializationException(key, ex);");
+
+            if (info.Class.BaseClassFqn is not null)
+            {
+                writer.WriteLine($"return {info.Class.BaseClassFqn}.PropertySelector(key, value, ret);");
+            }
+            else
+            {
+                writer.WriteLine("return false;");
+            }
         }
     }
 
