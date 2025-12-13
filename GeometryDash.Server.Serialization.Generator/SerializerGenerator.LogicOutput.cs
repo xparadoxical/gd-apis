@@ -99,7 +99,7 @@ public sealed partial class SerializerGenerator
             {
                 foreach (var prop in info.Props)
                     writer.WriteLine($"case {prop.Index}: ret.Deserialize{prop.Name}(value); return true;");
-                writer.WriteLine("//don't throw on unrecognized keys to maintain forward-compat //TODO option to disable (for server api monitoring)");
+                //don't throw on unrecognized keys to maintain forward-compat //TODO option to disable (for server api monitoring)
             }
 
             if (info.Class.BaseClassFqn is not null)
