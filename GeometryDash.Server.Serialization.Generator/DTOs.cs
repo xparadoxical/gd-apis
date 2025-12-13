@@ -5,7 +5,7 @@ namespace GeometryDash.Server.Serialization.Generator;
 public record struct SerializableClassInfo(SerializableClass Class, EquatableArray<SerializableProperty> Props);
 
 public sealed record SerializableClass(string Namespace, string Name, string Declarator, string PropSeparator,
-    string ListSeparator, bool Keyed);
+    string ListSeparator, bool Keyed, string? BaseClassFqn);
 
 /// <param name="Type">Fully qualified type name.</param>
 public sealed record SerializableProperty(PropTypeInfo ParsedType, bool Required, string Name,

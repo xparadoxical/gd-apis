@@ -11,10 +11,7 @@ partial class D : global::GeometryDash.Server.Serialization.ISerializable<D>
         {
             try
             {
-                switch (key)
-                {
-                    case 5: ret.DeserializeArr(value); break;
-                }
+                PropertySelector(key, value, ret);
             }
             catch (global::System.Exception ex)
             {
@@ -22,6 +19,14 @@ partial class D : global::GeometryDash.Server.Serialization.ISerializable<D>
             }
         }
         return ret;
+    }
+
+    internal static void PropertySelector(uint key, global::System.ReadOnlySpan<byte> value, D ret)
+    {
+        switch (key)
+        {
+            case 5: ret.DeserializeArr(value); break;
+        }
     }
 
     void DeserializeArr(global::System.ReadOnlySpan<byte> input)

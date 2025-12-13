@@ -12,24 +12,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
         {
             try
             {
-                switch (key)
-                {
-                    case 1: ret.DeserializeS(value); break;
-                    case 2: ret.DeserializeB1(value); break;
-                    case 4: ret.DeserializeB2(value); break;
-                    case 3: ret.DeserializeZip(value); break;
-                    case 5: ret.DeserializeI(value); break;
-                    case 6: ret.DeserializeTime(value); break;
-                    case 7: ret.DeserializeE(value); break;
-                    case 8: ret.DeserializeNested(value); break;
-                    case 9: ret.DeserializeD1(value); break;
-                    case 10: ret.DeserializeD2(value); break;
-                    case 11: ret.DeserializeB3(value); break;
-                    case 12: ret.DeserializeO1(value); break;
-                    case 13: ret.DeserializeO2(value); break;
-                    case 14: ret.DeserializeO3(value); break;
-                    case 15: ret.DeserializeO4(value); break;
-                }
+                PropertySelector(key, value, ret);
             }
             catch (global::System.Exception ex)
             {
@@ -38,6 +21,28 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
             key++;
         }
         return ret;
+    }
+
+    internal static void PropertySelector(uint key, global::System.ReadOnlySpan<byte> value, C ret)
+    {
+        switch (key)
+        {
+            case 1: ret.DeserializeS(value); break;
+            case 2: ret.DeserializeB1(value); break;
+            case 4: ret.DeserializeB2(value); break;
+            case 3: ret.DeserializeZip(value); break;
+            case 5: ret.DeserializeI(value); break;
+            case 6: ret.DeserializeTime(value); break;
+            case 7: ret.DeserializeE(value); break;
+            case 8: ret.DeserializeNested(value); break;
+            case 9: ret.DeserializeD1(value); break;
+            case 10: ret.DeserializeD2(value); break;
+            case 11: ret.DeserializeB3(value); break;
+            case 12: ret.DeserializeO1(value); break;
+            case 13: ret.DeserializeO2(value); break;
+            case 14: ret.DeserializeO3(value); break;
+            case 15: ret.DeserializeO4(value); break;
+        }
     }
 
     void DeserializeS(global::System.ReadOnlySpan<byte> input)

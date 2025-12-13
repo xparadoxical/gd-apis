@@ -67,6 +67,13 @@ internal partial class C
     public Optional<int[]>? O4 { get; set; }
 }
 
+[Separator(Prop = "|", ListItem = ",")]
+internal partial class Derived : C
+{
+     [Index(100)]
+     public int NewProp { get; set; }
+}
+
 public class S : ISerializable<S>
 {
     static S ISerializable<S>.Deserialize(ReadOnlySpan<byte> input) => new S();

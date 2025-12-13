@@ -6,7 +6,7 @@
                  ^^^
 
 */
- Class1.Test.cs: (80,17)-(80,20),
+ Class1.Test.cs: (87,17)-(87,20),
     Message: Non-nullable property 'Arr' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable.,
     Severity: Warning,
     WarningLevel: 1,
