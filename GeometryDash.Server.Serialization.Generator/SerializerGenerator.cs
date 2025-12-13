@@ -42,12 +42,15 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
         var keyed = ctx.TargetSymbol.GetAttributes()
             .SingleOrDefault(a => a.AttributeClass!.ToDisplayString() == KnownTypes.KeyedAttribute) is not null;
 
-        var symbol = (INamedTypeSymbol)ctx.TargetSymbol;
         string? baseClassFqn = null;
-        var baseType = symbol.BaseType;
-        if (baseType is not null && baseType.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == KnownTypes.SeparatorAttribute))
+
+        if (decl.BaseList is { Types: [var firstBase, ..] })
         {
-            baseClassFqn = baseType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+            var baseTypeInfo = ctx.SemanticModel.GetTypeInfo(firstBase.Type, ct);
+            if (baseTypeInfo.Type is { TypeKind: TypeKind.Class } baseTypeSymbol)
+            {
+                baseClassFqn = baseTypeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+            }
         }
 
         return new(

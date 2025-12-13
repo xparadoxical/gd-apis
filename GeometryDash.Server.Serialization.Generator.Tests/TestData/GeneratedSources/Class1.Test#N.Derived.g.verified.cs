@@ -4,7 +4,7 @@ namespace N;
 
 partial class Derived : global::GeometryDash.Server.Serialization.ISerializable<Derived>
 {
-    public static Derived Deserialize(global::System.ReadOnlySpan<byte> input)
+    public new static Derived Deserialize(global::System.ReadOnlySpan<byte> input)
     {
         var ret = new Derived();
         var key = 1u;
@@ -12,9 +12,7 @@ partial class Derived : global::GeometryDash.Server.Serialization.ISerializable<
         {
             try
             {
-                if (!PropertySelector(key, value, ret))
-                {
-                }
+                PropertySelector(key, value, ret);
             }
             catch (global::System.Exception ex)
             {
@@ -30,6 +28,7 @@ partial class Derived : global::GeometryDash.Server.Serialization.ISerializable<
         switch (key)
         {
             case 100: ret.DeserializeNewProp(value); return true;
+            //don't throw on unrecognized keys to maintain forward-compat //TODO option to disable (for server api monitoring)
         }
         return global::N.C.PropertySelector(key, value, ret);
     }

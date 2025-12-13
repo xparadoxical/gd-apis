@@ -12,9 +12,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
         {
             try
             {
-                if (!PropertySelector(key, value, ret))
-                {
-                }
+                PropertySelector(key, value, ret);
             }
             catch (global::System.Exception ex)
             {
@@ -44,6 +42,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
             case 13: ret.DeserializeO2(value); return true;
             case 14: ret.DeserializeO3(value); return true;
             case 15: ret.DeserializeO4(value); return true;
+            //don't throw on unrecognized keys to maintain forward-compat //TODO option to disable (for server api monitoring)
         }
         return false;
     }

@@ -23,7 +23,8 @@ public sealed partial class SerializerGenerator
 
         using (writer.WriteBlock())
         {
-            writer.WriteLine($"public static {c.Name} Deserialize(global::System.ReadOnlySpan<byte> input)");
+            var modifiers = info.Class.BaseClassFqn is not null ? "public new static" : "public static";
+            writer.WriteLine($"{modifiers} {c.Name} Deserialize(global::System.ReadOnlySpan<byte> input)");
             using (writer.WriteBlock())
             {
                 writer.WriteLine($"var ret = new {info.Class.Name}();"); //TODO recheck if possible to support type args
@@ -37,7 +38,7 @@ public sealed partial class SerializerGenerator
             }
 
             writer.WriteLine();
-            WritePropertySelector(writer, info);
+            WritePropertySelectorMethod(writer, info);
 
             foreach (var prop in info.Props)
             {
@@ -57,11 +58,7 @@ public sealed partial class SerializerGenerator
             writer.WriteLine("try");
             using (writer.WriteBlock())
             {
-                writer.WriteLine("if (!PropertySelector(key, value, ret))");
-                using (writer.WriteBlock())
-                {
-                    //don't throw on unrecognized keys to maintain forward-compat //TODO option to disable (for server api monitoring)
-                }
+                writer.WriteLine("PropertySelector(key, value, ret);");
             }
             writer.WriteLine("catch (global::System.Exception ex)");
             using (writer.WriteBlock())
@@ -80,11 +77,7 @@ public sealed partial class SerializerGenerator
             writer.WriteLine("try");
             using (writer.WriteBlock())
             {
-                writer.WriteLine("if (!PropertySelector(key, value, ret))");
-                using (writer.WriteBlock())
-                {
-                    //don't throw on unrecognized keys to maintain forward-compat
-                }
+                writer.WriteLine("PropertySelector(key, value, ret);");
             }
             writer.WriteLine("catch (global::System.Exception ex)");
             using (writer.WriteBlock())
@@ -96,7 +89,7 @@ public sealed partial class SerializerGenerator
         }
     }
 
-    public static void WritePropertySelector(IndentedTextWriter writer, SerializableClassInfo info)
+    public static void WritePropertySelectorMethod(IndentedTextWriter writer, SerializableClassInfo info)
     {
         writer.WriteLine($"internal static bool PropertySelector(uint key, global::System.ReadOnlySpan<byte> value, {info.Class.Name} ret)");
         using (writer.WriteBlock())
@@ -106,6 +99,8 @@ public sealed partial class SerializerGenerator
             {
                 foreach (var prop in info.Props)
                     writer.WriteLine($"case {prop.Index}: ret.Deserialize{prop.Name}(value); return true;");
+
+                writer.WriteLine("//don't throw on unrecognized keys to maintain forward-compat //TODO option to disable (for server api monitoring)");
             }
 
             if (info.Class.BaseClassFqn is not null)
