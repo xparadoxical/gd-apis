@@ -21,13 +21,12 @@ partial class D : global::GeometryDash.Server.Serialization.ISerializable<D>
         return ret;
     }
 
-    internal static bool PropertySelector(uint key, global::System.ReadOnlySpan<byte> value, D ret)
+    internal static void PropertySelector(uint key, global::System.ReadOnlySpan<byte> value, D ret)
     {
         switch (key)
         {
-            case 5: ret.DeserializeArr(value); return true;
+            case 5: ret.DeserializeArr(value); break;
         }
-        return false;
     }
 
     void DeserializeArr(global::System.ReadOnlySpan<byte> input)

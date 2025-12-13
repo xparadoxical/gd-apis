@@ -91,24 +91,18 @@ public sealed partial class SerializerGenerator
 
     public static void WritePropertySelectorMethod(IndentedTextWriter writer, SerializableClassInfo info)
     {
-        writer.WriteLine($"internal static bool PropertySelector(uint key, global::System.ReadOnlySpan<byte> value, {info.Class.Name} ret)");
+        writer.WriteLine($"internal static void PropertySelector(uint key, global::System.ReadOnlySpan<byte> value, {info.Class.Name} ret)");
         using (writer.WriteBlock())
         {
             writer.WriteLine("switch (key)");
             using (writer.WriteBlock())
             {
                 foreach (var prop in info.Props)
-                    writer.WriteLine($"case {prop.Index}: ret.Deserialize{prop.Name}(value); return true;");
+                    writer.WriteLine($"case {prop.Index}: ret.Deserialize{prop.Name}(value); break;");
                 //don't throw on unrecognized keys to maintain forward-compat //TODO option to disable (for server api monitoring)
-            }
 
-            if (info.Class.BaseClassFqn is not null)
-            {
-                writer.WriteLine($"return {info.Class.BaseClassFqn}.PropertySelector(key, value, ret);");
-            }
-            else
-            {
-                writer.WriteLine("return false;");
+                if (info.Class.BaseClassFqn is not null)
+                    writer.WriteLine($"default: {info.Class.BaseClassFqn}.PropertySelector(key, value, ret); break;");
             }
         }
     }

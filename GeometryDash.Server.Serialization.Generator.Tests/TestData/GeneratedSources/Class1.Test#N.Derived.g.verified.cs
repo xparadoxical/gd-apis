@@ -23,13 +23,13 @@ partial class Derived : global::GeometryDash.Server.Serialization.ISerializable<
         return ret;
     }
 
-    internal static bool PropertySelector(uint key, global::System.ReadOnlySpan<byte> value, Derived ret)
+    internal static void PropertySelector(uint key, global::System.ReadOnlySpan<byte> value, Derived ret)
     {
         switch (key)
         {
-            case 100: ret.DeserializeNewProp(value); return true;
+            case 100: ret.DeserializeNewProp(value); break;
+            default: global::N.C.PropertySelector(key, value, ret); break;
         }
-        return global::N.C.PropertySelector(key, value, ret);
     }
 
     void DeserializeNewProp(global::System.ReadOnlySpan<byte> input)
