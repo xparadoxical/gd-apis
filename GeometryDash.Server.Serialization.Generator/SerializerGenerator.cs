@@ -47,9 +47,9 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
         if (decl.BaseList is { Types: [var firstBase, ..] })
         {
             var baseTypeInfo = ctx.SemanticModel.GetTypeInfo(firstBase.Type, ct);
-            if (baseTypeInfo.Type is { TypeKind: TypeKind.Class } baseTypeSymbol)
+            if (baseTypeInfo.Type is { TypeKind: TypeKind.Class } baseClassSymbol)
             {
-                baseClassFqn = baseTypeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+                baseClassFqn = baseClassSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
             }
         }
 
