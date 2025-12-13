@@ -42,7 +42,6 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
             case 13: ret.DeserializeO2(value); return true;
             case 14: ret.DeserializeO3(value); return true;
             case 15: ret.DeserializeO4(value); return true;
-            //don't throw on unrecognized keys to maintain forward-compat //TODO option to disable (for server api monitoring)
         }
         return false;
     }
@@ -50,7 +49,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
     void DeserializeS(global::System.ReadOnlySpan<byte> input)
     {
         var buffer = new global::PoolBuffers.PooledBuffer<byte>(input);
-
+        
         OnSDeserializing(buffer);
 
         global::GeometryDash.Server.Serialization.Xor.Apply(buffer.DataSpan, "12345"u8);
@@ -100,7 +99,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
     void DeserializeZip(global::System.ReadOnlySpan<byte> input)
     {
         var buffer = new global::PoolBuffers.PooledBuffer<byte>(input);
-
+        
         OnZipDeserializing(buffer);
 
         var t1_length = global::GeometryDash.Server.Serialization.Gzip.GetDecompressedLength(buffer.DataSpan);
@@ -144,7 +143,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
     void DeserializeTime(global::System.ReadOnlySpan<byte> input)
     {
         var buffer = new global::PoolBuffers.PooledBuffer<byte>(input);
-
+        
         OnTimeDeserializing(buffer);
 
         Time = global::GeometryDash.Server.Serialization.ParsingExtensions.ParseTimeSpan(buffer.DataSpan);

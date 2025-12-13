@@ -26,7 +26,6 @@ partial class D : global::GeometryDash.Server.Serialization.ISerializable<D>
         switch (key)
         {
             case 5: ret.DeserializeArr(value); return true;
-            //don't throw on unrecognized keys to maintain forward-compat //TODO option to disable (for server api monitoring)
         }
         return false;
     }

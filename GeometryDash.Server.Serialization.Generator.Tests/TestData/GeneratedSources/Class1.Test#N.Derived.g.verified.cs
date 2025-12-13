@@ -28,7 +28,6 @@ partial class Derived : global::GeometryDash.Server.Serialization.ISerializable<
         switch (key)
         {
             case 100: ret.DeserializeNewProp(value); return true;
-            //don't throw on unrecognized keys to maintain forward-compat //TODO option to disable (for server api monitoring)
         }
         return global::N.C.PropertySelector(key, value, ret);
     }
