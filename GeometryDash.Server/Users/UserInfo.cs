@@ -4,7 +4,7 @@ namespace GeometryDash.Server.Users;
 public class UserInfo : User
 {
     [SetsRequiredMembers]
-    protected internal UserInfo(UserResponse response) : base(response)
+    protected internal UserInfo(UserInfoResponse response) : base(response)
     {
         Stars = response.Stars!.Value;
         Demons = response.Demons!.Value;

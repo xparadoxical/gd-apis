@@ -4,7 +4,7 @@ namespace GeometryDash.Server.Levels;
 public class TimelyLevel : Level
 {
     [SetsRequiredMembers]
-    protected internal TimelyLevel(LevelResponse response) : base(response)
+    protected internal TimelyLevel(TimelyLevelResponse response) : base(response)
     {
         Number = response.TimelyNumber!.Value;
     }

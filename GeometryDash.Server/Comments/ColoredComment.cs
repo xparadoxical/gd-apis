@@ -4,7 +4,7 @@ namespace GeometryDash.Server.Comments;
 public class ColoredComment : Comment
 {
     [SetsRequiredMembers]
-    protected internal ColoredComment(CommentResponse response) : base(response)
+    protected internal ColoredComment(ColoredCommentResponse response) : base(response)
     {
         Color = response.Color;
     }
