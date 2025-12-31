@@ -4,7 +4,7 @@ namespace GeometryDash.Server.Comments;
 public class ListComment : ColoredComment
 {
     [SetsRequiredMembers]
-    protected internal ListComment(CommentResponse response) : base(response)
+    protected internal ListComment(ListCommentResponse response) : base(response)
     {
         Spam = response.Spam!.Value;
     }

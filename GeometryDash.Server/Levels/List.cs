@@ -5,9 +5,9 @@ namespace GeometryDash.Server.Levels;
 internal class List
 {
     [SetsRequiredMembers]
-    protected internal List(LevelResponse response)
+    protected internal List(ListResponse response)
     {
-        Featured = response.FeaturedScore switch
+        Featured = response.FeaturedScore.Value switch
         {
             0 => false,
             1 => true,
@@ -21,7 +21,7 @@ internal class List
         Difficulty = response.ListDifficulty!.Value;
         Downloads = response.Downloads;
         Likes = response.Likes;
-        UploadDate = response.UploadDate!;
+        UploadDate = response.UploadDate!.Value;
         UpdateDate = response.UpdateDate;
         AccountId = response.AccountId!.Value;
         Username = response.Username!;
@@ -39,8 +39,8 @@ internal class List
     public uint Likes { get; set; }
     [MemberNotNull(nameof(DiamondReward), nameof(CompletionCountRequirement))]
     public bool Featured { get; set; }
-    public required string UploadDate { get; set; }
-    public string? UpdateDate { get; set; }
+    public required uint UploadDate { get; set; }
+    public uint? UpdateDate { get; set; }
     public required uint AccountId { get; set; }
     public required string Username { get; set; }
     public required uint[] LevelIds { get; set; }

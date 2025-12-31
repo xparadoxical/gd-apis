@@ -4,7 +4,7 @@ namespace GeometryDash.Server.Comments;
 public class HistoryComment : ColoredComment
 {
     [SetsRequiredMembers]
-    protected internal HistoryComment(CommentResponse response) : base(response)
+    protected internal HistoryComment(HistoryCommentResponse response) : base(response)
     {
         LevelId = response.LevelId!.Value;
         Percent = response.Percent!.Value;

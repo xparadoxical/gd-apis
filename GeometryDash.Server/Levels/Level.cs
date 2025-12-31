@@ -11,10 +11,10 @@ public class Level : LevelInfo
         UploadDate = response.UploadDate!;
         UpdateDate = response.UpdateDate;
         CapacityString = response.CapacityString;
-        LowDetailMode = response.LowDetailMode!.Value;
+        LowDetailMode = response.LowDetailMode; // Implicit conversion from Optional<bool> to bool? No, Optional<T> to T.
         SongIds = response.SongIds;
         SoundEffectIds = response.SoundEffectIds;
-        VerificationFrames = response.VerificationFrames;
+        VerificationFrames = response.VerificationFrames.HasValue ? response.VerificationFrames.Value : null; // Optional<uint> to uint?
     }
 
     public required string Data { get; set; }

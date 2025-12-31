@@ -4,7 +4,7 @@ namespace GeometryDash.Server.Users;
 public class PreviewedUser : User
 {
     [SetsRequiredMembers]
-    protected internal PreviewedUser(UserResponse response) : base(response)
+    protected internal PreviewedUser(PreviewedUserResponse response) : base(response)
     {
         ShowcaseIconId = response.ShowcaseIconId!.Value;
         ShowcaseIconType = response.ShowcaseIconType!.Value;
