@@ -35,14 +35,6 @@ public partial class LevelInfoResponse : BaseLevelResponse
     [Bool(True = "1", False = "")]
     public bool? Auto { get; set; }
 
-    /// <summary>Either<TimeSpan, uint> DateOrUnixTimestamp</summary>
-    [Index(28)]
-    public string? UploadDate { get; set; } //TODO
-
-    /// <summary>Either<TimeSpan, uint> DateOrUnixTimestamp</summary>
-    [Index(29)]
-    public string? UpdateDate { get; set; } //TODO
-
     [Index(30)]
     [CoalesceToNull(0)]
     public uint? OriginalLevelId { get; set; }

@@ -12,6 +12,14 @@ public partial class LevelResponse : LevelInfoResponse
     [Xor("26364"), Base64Encode]
     public string? Password { get; set; }
 
+    /// <summary>Either<TimeSpan, uint> DateOrUnixTimestamp</summary>
+    [Index(28)]
+    public TimeSpan? UploadedAgo { get; set; }
+
+    /// <summary>Either<TimeSpan, uint> DateOrUnixTimestamp</summary>
+    [Index(29)]
+    public TimeSpan? UpdatedAgo { get; set; }
+
     [Index(36)]
     public string? CapacityString { get; set; }
 

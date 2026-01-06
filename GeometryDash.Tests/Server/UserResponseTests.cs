@@ -9,7 +9,7 @@ public class UserResponseTests : SerializationTest
         TestArrayDeserialization<LeaderboardUserResponse>("""
             1:Robergamer100:2:11386212:13:149:17:2692:6:15209:9:24:10:12:11:12:14:3:15:0:16:2577515:3:10658:8:0:46:8375:4:213|1:SweetNight:2:10115453:13:149:17:800:6:15210:9:17:10:17:11:12:14:6:15:2:16:1625356:3:10658:8:0:46:13601:4:757
             """u8.ToArray(), [
-                new LeaderboardUserResponse()
+                new()
                 {
                     Username = "Robergamer100",
                     PlayerId = 11386212,
@@ -27,7 +27,7 @@ public class UserResponseTests : SerializationTest
                     UserCoins = 2692,
                     Diamonds = 8375
                 },
-                new LeaderboardUserResponse()
+                new()
                 {
                     Username = "SweetNight",
                     PlayerId = 10115453,
@@ -77,6 +77,7 @@ public class UserResponseTests : SerializationTest
                 RobotId = 16,
                 HasGlow = true,
                 GlobalLeaderboardPosition = null,
+                FriendState = Optional<FriendState>.Empty, // Now in UserInfoResponse
                 SpiderId = 11,
                 TwitterUsername = "vipringd",
                 TwitchUsername = "viprin",
@@ -104,6 +105,7 @@ public class UserResponseTests : SerializationTest
                 HasGlow = true,
                 AccountId = 2235541,
                 AllowMessagesFrom = PrivacyGroup.Everyone,
+                IsNewFriend = false // Renamed from IsNewFriendOrRequest
             },
             new()
             {
@@ -116,6 +118,7 @@ public class UserResponseTests : SerializationTest
                 HasGlow = true,
                 AccountId = 5116312,
                 AllowMessagesFrom = PrivacyGroup.Everyone,
+                IsNewFriend = true
             }
         ]);
     }
@@ -157,7 +160,7 @@ public class UserResponseTests : SerializationTest
                     FriendRequestId = 60220714,
                     FriendRequestMessage = "test",
                     FriendRequestAge = TimeUnit.Minute * 7,
-                    IsNewFriendOrRequest = false
+                    IsNewRequest = false // Renamed
                 },
                 new(0, 0, 20))
             ]);

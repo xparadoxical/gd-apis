@@ -10,7 +10,7 @@ public class FriendRequest
         Id = response.FriendRequestId!.Value;
         Message = response.FriendRequestMessage!;
         Age = response.FriendRequestAge!.Value;
-        IsUnread = response.IsNewFriendOrRequest!.Value;
+        IsUnread = response.IsNewRequest!.Value;
     }
 
     public PreviewedUser OtherUser { get; set; }

@@ -21,10 +21,6 @@ public partial class UserResponse : ISerializable<UserResponse>
     [Bool(True = "2", False = "0")]
     public bool? HasGlow { get; set; }
 
-    [Index(28)] //28 == 15
-    [Bool(True = "1", False = "0")]
-    private bool HasGlowAlternate { set => HasGlow = value; }
-
     [Index(16)]
     [CoalesceToNull(0)]
     public uint? AccountId { get; set; }

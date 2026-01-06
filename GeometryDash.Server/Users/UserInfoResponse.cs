@@ -33,9 +33,25 @@ public partial class UserInfoResponse : UserStatsResponse
     [Index(26)]
     public ushort? RobotId { get; set; }
 
+    [Index(28)] //28 == 15
+    [Bool(True = "1", False = "0")]
+    private bool HasGlowAlternate { set => HasGlow = value; }
+
     [Index(30)]
     [CoalesceToNull(0)]
     public uint? GlobalLeaderboardPosition { get; set; }
+
+    [Index(31)]
+    public Optional<FriendState>? FriendState { get; set; }
+
+    [Index(38)]
+    public byte? IncomingMessageCount { get; set; }
+
+    [Index(39)]
+    public byte? IncomingFriendRequestCount { get; set; }
+
+    [Index(40)]
+    public byte? NewFriendsCount { get; set; }
 
     [Index(43)]
     public ushort? SpiderId { get; set; }

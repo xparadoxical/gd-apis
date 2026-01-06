@@ -8,13 +8,14 @@ public class Level : LevelInfo
     {
         Data = response.Data!;
         Password = response.Password;
-        UploadDate = response.UploadDate!;
-        UpdateDate = response.UpdateDate;
+        UploadDate = response.UploadedAgo!.Value.ToString()!; // Temporary conversion, assumes Model still string
+        UpdateDate = response.UpdatedAgo?.ToString();
         CapacityString = response.CapacityString;
-        LowDetailMode = response.LowDetailMode; // Implicit conversion from Optional<bool> to bool? No, Optional<T> to T.
+        LowDetailMode = response.LowDetailMode.HasValue ? response.LowDetailMode : false;
         SongIds = response.SongIds;
         SoundEffectIds = response.SoundEffectIds;
-        VerificationFrames = response.VerificationFrames.HasValue ? response.VerificationFrames.Value : null; // Optional<uint> to uint?
+        VerificationFrames = !response.VerificationFrames.HasValue ? null
+            : response.VerificationFrames.Value is 0 ? null : response.VerificationFrames.Value;
     }
 
     public required string Data { get; set; }
