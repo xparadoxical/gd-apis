@@ -77,7 +77,7 @@ public class UserResponseTests : SerializationTest
                 RobotId = 16,
                 HasGlow = true,
                 GlobalLeaderboardPosition = null,
-                FriendState = Optional<FriendState>.Empty, // Now in UserInfoResponse
+                FriendState = Optional<FriendState>.Empty,
                 SpiderId = 11,
                 TwitterUsername = "vipringd",
                 TwitchUsername = "viprin",
@@ -105,7 +105,7 @@ public class UserResponseTests : SerializationTest
                 HasGlow = true,
                 AccountId = 2235541,
                 AllowMessagesFrom = PrivacyGroup.Everyone,
-                IsNewFriend = false // Renamed from IsNewFriendOrRequest
+                IsNewFriend = false
             },
             new()
             {
@@ -160,7 +160,7 @@ public class UserResponseTests : SerializationTest
                     FriendRequestId = 60220714,
                     FriendRequestMessage = "test",
                     FriendRequestAge = TimeUnit.Minute * 7,
-                    IsNewRequest = false // Renamed
+                    IsNewRequest = false
                 },
                 new(0, 0, 20))
             ]);
