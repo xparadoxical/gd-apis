@@ -20,7 +20,7 @@ public class CommentResponseTests : SerializationTest
     [Fact]
     public void Deserialize_getGJCommentHistory_Works()
     {
-        TestDeserialization<CommentResponse>("2~Q2FuIHlvdSBoYW5kbGUgdGhlIEthcHBhPw==~1~7485599~3~16~4~164649~10~0~9~8 years~6~42602304~11~2~12~75,255,75"u8,
+        TestDeserialization<HistoryCommentResponse>("2~Q2FuIHlvdSBoYW5kbGUgdGhlIEthcHBhPw==~1~7485599~3~16~4~164649~10~0~9~8 years~6~42602304~11~2~12~75,255,75"u8,
             new()
             {
                 Age = TimeUnit.Year * 8,
@@ -37,7 +37,7 @@ public class CommentResponseTests : SerializationTest
     [Fact]
     public void Deserialize_getGJCommentsForLevel_Works()
     {
-        TestDeserialization<CommentResponse>([
+        TestDeserialization<LevelCommentResponse>([
                 "2~TGlrZSBTaSBIYWJsYXMgRXNwYW5pb2wgTWkgUGFyY2UgOid2~3~276721746~4~114~7~1~10~0~9~4 months~6~17125045"u8.ToArray(),
                 "2~V2hlcmUncyB0aGUgUmVhcGVyIExldmlhdGhhbj8=~3~247848956~4~37~7~0~10~0~9~1 week~6~32920511"u8.ToArray()
             ], [
@@ -48,7 +48,8 @@ public class CommentResponseTests : SerializationTest
                     Id = 17125045,
                     Likes = 114,
                     PlayerId = 276721746,
-                    Spam = true
+                    Spam = true,
+                    Percent = null // Key 10~0 present in input, but CoalesceToNull(0) makes it null
                 },
                 new()
                 {
@@ -57,7 +58,8 @@ public class CommentResponseTests : SerializationTest
                     Id = 32920511,
                     Likes = 37,
                     PlayerId = 247848956,
-                    Spam = false
+                    Spam = false,
+                    Percent = null // Key 10~0 present in input, but CoalesceToNull(0) makes it null
                 }
             ]);
     }

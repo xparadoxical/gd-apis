@@ -3,14 +3,14 @@ using GeometryDash.Server.Users;
 namespace GeometryDash.Server.Socials;
 public class FriendRequest
 {
-    protected internal FriendRequest(UserResponse response)
+    protected internal FriendRequest(FriendRequestResponse response)
     {
         OtherUser = new(response);
 
         Id = response.FriendRequestId!.Value;
         Message = response.FriendRequestMessage!;
         Age = response.FriendRequestAge!.Value;
-        IsUnread = response.IsNewFriendOrRequest!.Value;
+        IsUnread = response.IsNewRequest!.Value;
     }
 
     public PreviewedUser OtherUser { get; set; }

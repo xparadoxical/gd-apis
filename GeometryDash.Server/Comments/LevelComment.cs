@@ -4,7 +4,7 @@ namespace GeometryDash.Server.Comments;
 public class LevelComment : ColoredComment
 {
     [SetsRequiredMembers]
-    protected internal LevelComment(CommentResponse response) : base(response)
+    protected internal LevelComment(LevelCommentResponse response) : base(response)
     {
         Spam = response.Spam!.Value;
         Percent = response.Percent;

@@ -5,7 +5,7 @@ namespace GeometryDash.Server.Levels;
 public class LevelInfo
 {
     [SetsRequiredMembers]
-    protected internal LevelInfo(LevelResponse response)
+    protected internal LevelInfo(LevelInfoResponse response)
     {
         (OfficialSong, CustomSongId) = ((OfficialSong?, uint?))(response.CustomSongId switch
         { //force NRE in case of unexpected nulls
@@ -44,8 +44,8 @@ public class LevelInfo
         RequestedStars = response.RequestedStars!.Value;
         EpicRating = response.EpicRating;
         ObjectCount = response.ObjectCount;
-        EditorTime = response.EditorTime;
-        EditorTimeOfPreviousCopies = response.EditorTimeOfPreviousCopies;
+        EditorTime = response.EditorTime.HasValue ? response.EditorTime.Value : null;
+        EditorTimeOfPreviousCopies = response.EditorTimeOfPreviousCopies.HasValue ? response.EditorTimeOfPreviousCopies.Value : null;
     }
 
     public required uint Id { get; set; }

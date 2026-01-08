@@ -8,19 +8,20 @@ public class Level : LevelInfo
     {
         Data = response.Data!;
         Password = response.Password;
-        UploadDate = response.UploadDate!;
-        UpdateDate = response.UpdateDate;
+        UploadedAgo = response.UploadedAgo!.Value;
+        UpdatedAgo = response.UpdatedAgo;
         CapacityString = response.CapacityString;
-        LowDetailMode = response.LowDetailMode!.Value;
+        LowDetailMode = response.LowDetailMode.HasValue ? response.LowDetailMode : false;
         SongIds = response.SongIds;
         SoundEffectIds = response.SoundEffectIds;
-        VerificationFrames = response.VerificationFrames;
+        VerificationFrames = !response.VerificationFrames.HasValue ? null
+            : response.VerificationFrames.Value is 0 ? null : response.VerificationFrames.Value;
     }
 
     public required string Data { get; set; }
     public string? Password { get; set; }
-    public required string UploadDate { get; set; }
-    public string? UpdateDate { get; set; }
+    public required TimeSpan UploadedAgo { get; set; }
+    public TimeSpan? UpdatedAgo { get; set; }
     public string? CapacityString { get; set; }
     public bool LowDetailMode { get; set; }
     public uint[]? SongIds { get; set; }
