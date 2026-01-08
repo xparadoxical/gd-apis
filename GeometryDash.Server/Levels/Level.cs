@@ -8,8 +8,8 @@ public class Level : LevelInfo
     {
         Data = response.Data!;
         Password = response.Password;
-        UploadDate = response.UploadedAgo!.Value.ToString()!; // Temporary conversion, assumes Model still string
-        UpdateDate = response.UpdatedAgo?.ToString();
+        UploadedAgo = response.UploadedAgo!.Value;
+        UpdatedAgo = response.UpdatedAgo;
         CapacityString = response.CapacityString;
         LowDetailMode = response.LowDetailMode.HasValue ? response.LowDetailMode : false;
         SongIds = response.SongIds;
@@ -20,8 +20,8 @@ public class Level : LevelInfo
 
     public required string Data { get; set; }
     public string? Password { get; set; }
-    public required string UploadDate { get; set; }
-    public string? UpdateDate { get; set; }
+    public required TimeSpan UploadedAgo { get; set; }
+    public TimeSpan? UpdatedAgo { get; set; }
     public string? CapacityString { get; set; }
     public bool LowDetailMode { get; set; }
     public uint[]? SongIds { get; set; }
