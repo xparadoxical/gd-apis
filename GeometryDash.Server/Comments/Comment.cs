@@ -4,7 +4,7 @@ namespace GeometryDash.Server.Comments;
 public class Comment
 {
     [SetsRequiredMembers]
-    protected internal Comment(CommentResponse response)
+    protected internal Comment(GJComment response)
     {
         Content = response.Comment;
         Likes = response.Likes;

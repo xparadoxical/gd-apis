@@ -1,7 +1,7 @@
 namespace GeometryDash.Server.Levels;
 public class Gauntlet
 {
-    protected internal Gauntlet(MapPackResponse response)
+    protected internal Gauntlet(GJMapPack response)
     {
         Id = response.Id;
         LevelIds = response.LevelIds;

@@ -4,7 +4,7 @@ namespace GeometryDash.Server.Users;
 public class LeaderboardUser : PreviewedUser
 {
     [SetsRequiredMembers]
-    protected internal LeaderboardUser(LeaderboardUserResponse response) : base(response)
+    protected internal LeaderboardUser(GJLeaderboardUser response) : base(response)
     {
         Stars = response.Stars!.Value;
         Demons = response.Demons!.Value;

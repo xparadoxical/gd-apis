@@ -4,7 +4,7 @@ namespace GeometryDash.Server.Users;
 public class User
 {
     [SetsRequiredMembers]
-    protected internal User(UserResponse response)
+    protected internal User(GJUser response)
     {
         Username = response.Username;
         PlayerId = response.PlayerId;

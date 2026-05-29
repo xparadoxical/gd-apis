@@ -3,7 +3,7 @@ using GeometryDash.Server.Serialization;
 namespace GeometryDash.Server.Levels;
 
 [Separator(Prop = ":", ListItem = "|"), Keyed]
-public sealed partial class MapPackResponse
+public sealed partial class GJMapPack
 {
     [Index(1)]
     public ushort Id { get; set; }

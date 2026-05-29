@@ -3,7 +3,7 @@ using GeometryDash.Server.Users;
 namespace GeometryDash.Server.Socials;
 public class FriendRequest
 {
-    protected internal FriendRequest(FriendRequestResponse response)
+    protected internal FriendRequest(GJFriendRequest response)
     {
         OtherUser = new(response);
 

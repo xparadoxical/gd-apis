@@ -1,7 +1,7 @@
 namespace GeometryDash.Server.Levels;
 public class MapPack
 {
-    protected internal MapPack(MapPackResponse response)
+    protected internal MapPack(GJMapPack response)
     {
         Id = response.Id;
         Name = response.Name!;

@@ -3,7 +3,7 @@ using GeometryDash.Server.Serialization;
 namespace GeometryDash.Server.Levels;
 
 [Separator(Prop = ":", ListItem = "|"), Keyed]
-public partial class LevelResponse : LevelInfoResponse
+public partial class GJLevel : GJLevelInfo
 {
     [Index(4)]
     public string? Data { get; set; } //TODO deserialize to raw xml level string?

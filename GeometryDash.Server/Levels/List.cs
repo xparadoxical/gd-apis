@@ -5,7 +5,7 @@ namespace GeometryDash.Server.Levels;
 internal class List
 {
     [SetsRequiredMembers]
-    protected internal List(ListResponse response)
+    protected internal List(GJList response)
     {
         Featured = response.FeaturedScore.Value switch
         {

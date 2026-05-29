@@ -3,7 +3,7 @@ using GeometryDash.Server.Serialization;
 namespace GeometryDash.Server.Comments;
 
 [Separator(Prop = "~", ListItem = "|"), Keyed]
-public partial class CommentResponse
+public partial class GJComment
 {
     [Index(2)]
     [Base64Encode]

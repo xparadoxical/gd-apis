@@ -3,8 +3,11 @@ using GeometryDash.Server.Serialization;
 namespace GeometryDash.Server.Comments;
 
 [Separator(Prop = "~", ListItem = "|"), Keyed]
-public partial class LevelCommentResponse : SpamCommentResponse
+public partial class GJHistoryComment : GJColoredComment
 {
+    [Index(1)]
+    public uint? LevelId { get; set; }
+
     [Index(10)]
     [CoalesceToNull(0)]
     public byte? Percent { get; set; }

@@ -6,7 +6,7 @@ public class PagedDataTests : SerializationTest
     [Fact]
     public void Deserialize_Works()
     {
-        TestDeserialization<PagedData<UserResponse>>(
+        TestDeserialization<PagedData<GJUser>>(
             "1:a:10:1:11:2:16:3#7:8:9"u8.ToArray(),
             new(new()
             {

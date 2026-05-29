@@ -3,7 +3,7 @@ using GeometryDash.Server.Serialization;
 namespace GeometryDash.Server.Levels;
 
 [Separator(Prop = ":", ListItem = "|"), Keyed]
-public partial class BaseLevelResponse
+public partial class GJBaseLevel
 {
     [Index(1)]
     public uint LevelId { get; set; }

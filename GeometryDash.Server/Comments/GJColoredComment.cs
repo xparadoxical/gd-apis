@@ -4,7 +4,7 @@ using GeometryDash.Server.Users;
 namespace GeometryDash.Server.Comments;
 
 [Separator(Prop = "~", ListItem = "|"), Keyed]
-public partial class ColoredCommentResponse : CommentResponse
+public partial class GJColoredComment : GJComment
 {
     [Index(3)]
     public uint? PlayerId { get; set; }

@@ -3,7 +3,7 @@ using GeometryDash.Server.Serialization;
 namespace GeometryDash.Server.Users;
 
 [Separator(Prop = ":", ListItem = "|"), Keyed]
-public partial class UserResponse : ISerializable<UserResponse>
+public partial class GJUser : ISerializable<GJUser>
 {
     [Index(1)]
     public string Username { get; set; }

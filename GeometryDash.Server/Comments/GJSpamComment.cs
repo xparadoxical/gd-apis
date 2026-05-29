@@ -3,7 +3,7 @@ using GeometryDash.Server.Serialization;
 namespace GeometryDash.Server.Comments;
 
 [Separator(Prop = "~", ListItem = "|"), Keyed]
-public partial class SpamCommentResponse : ColoredCommentResponse
+public partial class GJSpamComment : GJColoredComment
 {
     [Index(7)]
     [Bool(True = "1", False = "0")]

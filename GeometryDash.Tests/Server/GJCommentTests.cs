@@ -2,12 +2,12 @@ using GeometryDash.Server.Comments;
 using GeometryDash.Server.Users;
 
 namespace GeometryDash.Tests.Server;
-public class CommentResponseTests : SerializationTest
+public class GJCommentTests : SerializationTest
 {
     [Fact]
     public void Deserialize_getGJAccountComments_Works()
     {
-        TestDeserialization<CommentResponse>("2~eWF5IGkgY29tcGxldGVkIGN1YnN0ZXAhISE=~4~12~9~6 years~6~15118679"u8,
+        TestDeserialization<GJComment>("2~eWF5IGkgY29tcGxldGVkIGN1YnN0ZXAhISE=~4~12~9~6 years~6~15118679"u8,
             new()
             {
                 Age = TimeUnit.Year * 6,
@@ -20,7 +20,7 @@ public class CommentResponseTests : SerializationTest
     [Fact]
     public void Deserialize_getGJCommentHistory_Works()
     {
-        TestDeserialization<HistoryCommentResponse>("2~Q2FuIHlvdSBoYW5kbGUgdGhlIEthcHBhPw==~1~7485599~3~16~4~164649~10~0~9~8 years~6~42602304~11~2~12~75,255,75"u8,
+        TestDeserialization<GJHistoryComment>("2~Q2FuIHlvdSBoYW5kbGUgdGhlIEthcHBhPw==~1~7485599~3~16~4~164649~10~0~9~8 years~6~42602304~11~2~12~75,255,75"u8,
             new()
             {
                 Age = TimeUnit.Year * 8,
@@ -37,7 +37,7 @@ public class CommentResponseTests : SerializationTest
     [Fact]
     public void Deserialize_getGJCommentsForLevel_Works()
     {
-        TestDeserialization<LevelCommentResponse>([
+        TestDeserialization<GJLevelComment>([
                 "2~TGlrZSBTaSBIYWJsYXMgRXNwYW5pb2wgTWkgUGFyY2UgOid2~3~276721746~4~114~7~1~10~0~9~4 months~6~17125045"u8.ToArray(),
                 "2~V2hlcmUncyB0aGUgUmVhcGVyIExldmlhdGhhbj8=~3~247848956~4~37~7~0~10~0~9~1 week~6~32920511"u8.ToArray()
             ], [

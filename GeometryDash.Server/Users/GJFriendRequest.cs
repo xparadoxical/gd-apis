@@ -3,7 +3,7 @@ using GeometryDash.Server.Serialization;
 namespace GeometryDash.Server.Users;
 
 [Separator(Prop = ":", ListItem = "|"), Keyed]
-public partial class FriendRequestResponse : PreviewedUserResponse
+public partial class GJFriendRequest : GJPreviewedUser
 {
     [Index(32)]
     public uint? FriendRequestId { get; set; }

@@ -3,7 +3,7 @@ using GeometryDash.Server.Serialization;
 namespace GeometryDash.Server.Socials;
 
 [Separator(Prop = ":", ListItem = "|"), Keyed]
-public sealed partial class MessageResponse : ISerializable<MessageResponse>
+public sealed partial class GJMessage : ISerializable<GJMessage>
 {
     [Index(1)]
     public uint MessageId { get; set; }

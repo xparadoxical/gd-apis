@@ -5,7 +5,7 @@ namespace GeometryDash.Server.Levels;
 public class LevelInfo
 {
     [SetsRequiredMembers]
-    protected internal LevelInfo(LevelInfoResponse response)
+    protected internal LevelInfo(GJLevelInfo response)
     {
         (OfficialSong, CustomSongId) = ((OfficialSong?, uint?))(response.CustomSongId switch
         { //force NRE in case of unexpected nulls

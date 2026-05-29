@@ -1,7 +1,7 @@
 namespace GeometryDash.Server.Socials;
 public class MessageInfo
 {
-    protected internal MessageInfo(MessageResponse response)
+    protected internal MessageInfo(GJMessage response)
     {
         OtherUser = new(response.OtherUserAccountId, response.OtherUserPlayerId, response.OtherUsername);
         MessageId = response.MessageId;

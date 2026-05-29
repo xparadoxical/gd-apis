@@ -3,7 +3,7 @@ using GeometryDash.Server.Serialization;
 namespace GeometryDash.Server.Users;
 
 [Separator(Prop = ":", ListItem = "|"), Keyed]
-public partial class UserStatsResponse : PreviewedUserResponse
+public partial class GJUserStats : GJPreviewedUser
 {
     [Index(3)]
     public uint? Stars { get; set; }

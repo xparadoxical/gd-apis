@@ -4,7 +4,7 @@ namespace GeometryDash.Server.Levels;
 public class Level : LevelInfo
 {
     [SetsRequiredMembers]
-    protected internal Level(LevelResponse response) : base(response)
+    protected internal Level(GJLevel response) : base(response)
     {
         Data = response.Data!;
         Password = response.Password;
