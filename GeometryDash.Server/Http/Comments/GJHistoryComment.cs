@@ -1,0 +1,14 @@
+using GeometryDash.Server.Serialization;
+
+namespace GeometryDash.Server.Http.temp;
+
+[Separator(Prop = "~", ListItem = "|"), Keyed]
+public partial class GJHistoryComment : GJColoredComment
+{
+    [Index(1)]
+    public uint? LevelId { get; set; }
+
+    [Index(10)]
+    [CoalesceToNull(0)]
+    public byte? Percent { get; set; }
+}

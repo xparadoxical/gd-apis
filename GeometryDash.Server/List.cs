@@ -1,0 +1,51 @@
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+
+using GeometryDash.Server.Http.Levels;
+
+namespace GeometryDash.Server;
+internal class List
+{
+    [SetsRequiredMembers]
+    protected internal List(GJList response)
+    {
+        Featured = response.FeaturedScore.Value switch
+        {
+            0 => false,
+            1 => true,
+            _ => throw new UnreachableException($"FeaturedScore {response.FeaturedScore}")
+        };
+
+        Id = response.LevelId;
+        Name = response.LevelName;
+        Description = response.Description;
+        Version = response.Version;
+        Difficulty = response.ListDifficulty!.Value;
+        Downloads = response.Downloads;
+        Likes = response.Likes;
+        UploadDate = response.UploadDate!.Value;
+        UpdateDate = response.UpdateDate;
+        AccountId = response.AccountId!.Value;
+        Username = response.Username!;
+        LevelIds = response.LevelIds!;
+        DiamondReward = response.ListReward;
+        CompletionCountRequirement = response.ListRewardRequirement;
+    }
+
+    public required uint Id { get; set; }
+    public required string Name { get; set; }
+    public required string Description { get; set; }
+    public byte Version { get; set; } = 1;
+    public required LevelDifficulty Difficulty { get; set; }
+    public uint Downloads { get; set; }
+    public uint Likes { get; set; }
+    [MemberNotNull(nameof(DiamondReward), nameof(CompletionCountRequirement))]
+    public bool Featured { get; set; }
+    public required uint UploadDate { get; set; }
+    public uint? UpdateDate { get; set; }
+    public required uint AccountId { get; set; }
+    public required string Username { get; set; }
+    public required uint[] LevelIds { get; set; }
+    public byte? DiamondReward { get; set; }
+    public byte? CompletionCountRequirement { get; set; }
+}

@@ -1,5 +1,5 @@
-using GeometryDash.Server.Comments;
-using GeometryDash.Server.Users;
+using GeometryDash.Server.Http.temp;
+using GeometryDash.Server.Http.Users;
 
 namespace GeometryDash.Tests.Server;
 public class GJCommentTests : SerializationTest

@@ -1,0 +1,11 @@
+using GeometryDash.Server.Serialization;
+
+namespace GeometryDash.Server.Http.temp;
+
+[Separator(Prop = "~", ListItem = "|"), Keyed]
+public partial class GJLevelComment : GJSpamComment
+{
+    [Index(10)]
+    [CoalesceToNull(0)]
+    public byte? Percent { get; set; }
+}

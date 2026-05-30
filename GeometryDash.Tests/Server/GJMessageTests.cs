@@ -1,4 +1,4 @@
-using GeometryDash.Server.Socials;
+using GeometryDash.Server.Http.Socials;
 
 namespace GeometryDash.Tests.Server;
 public class GJMessageTests : SerializationTest

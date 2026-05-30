@@ -1,4 +1,5 @@
-using GeometryDash.Server.Users;
+using GeometryDash.Server.Http;
+using GeometryDash.Server.Http.Users;
 
 namespace GeometryDash.Tests.Server;
 public class GJUserTests : SerializationTest

@@ -1,4 +1,4 @@
-using GeometryDash.Server.Levels;
+using GeometryDash.Server.Http.Levels;
 
 namespace GeometryDash.Tests.Server;
 public class GJMapPackTests : SerializationTest
