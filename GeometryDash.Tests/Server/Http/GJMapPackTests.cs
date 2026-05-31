@@ -1,6 +1,6 @@
 using GeometryDash.Server.Http.Levels;
 
-namespace GeometryDash.Tests.Server;
+namespace GeometryDash.Tests.Server.Http;
 public class GJMapPackTests : SerializationTest
 {
     [Fact]

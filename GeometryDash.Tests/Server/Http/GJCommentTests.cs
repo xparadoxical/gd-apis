@@ -1,7 +1,7 @@
 using GeometryDash.Server.Http.temp;
 using GeometryDash.Server.Http.Users;
 
-namespace GeometryDash.Tests.Server;
+namespace GeometryDash.Tests.Server.Http;
 public class GJCommentTests : SerializationTest
 {
     [Fact]

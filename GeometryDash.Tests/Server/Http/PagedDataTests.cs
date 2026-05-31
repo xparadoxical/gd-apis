@@ -1,7 +1,7 @@
 using GeometryDash.Server.Http;
 using GeometryDash.Server.Http.Users;
 
-namespace GeometryDash.Tests.Server;
+namespace GeometryDash.Tests.Server.Http;
 public class PagedDataTests : SerializationTest
 {
     [Fact]
