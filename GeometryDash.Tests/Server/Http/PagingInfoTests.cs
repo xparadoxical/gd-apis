@@ -1,3 +1,5 @@
+using GeometryDash.Server.Http;
+
 namespace GeometryDash.Tests.Server.Http;
 
 public class PagingInfoTests : SerializationTest

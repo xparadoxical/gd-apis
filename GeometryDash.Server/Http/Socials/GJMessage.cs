@@ -1,3 +1,5 @@
+using GeometryDash.Server.Serialization;
+
 namespace GeometryDash.Server.Http.Socials;
 
 [Separator(Prop = ":", ListItem = "|"), Keyed]
