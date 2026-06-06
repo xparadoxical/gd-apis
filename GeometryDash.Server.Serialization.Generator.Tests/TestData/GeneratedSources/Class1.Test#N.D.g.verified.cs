@@ -4,14 +4,14 @@ namespace N;
 
 partial class D : global::GeometryDash.Server.Serialization.ISerializable<D>
 {
-    public static D Deserialize(global::System.ReadOnlySpan<byte> input)
+    public static D Deserialize(global::System.ReadOnlySpan<byte> input, global::GeometryDash.Server.Serialization.SerializationContext? context)
     {
         var ret = new D();
-        foreach (var (key, value) in new global::GeometryDash.Server.Serialization.RobTopStringReader(input) { Separator = ","u8 })
+        foreach (var (key, value) in new global::GeometryDash.Server.Serialization.RobTopStringReader(input) { Separator = global::GeometryDash.Server.Serialization.SerializationContextExtensions.GetPropertySeparatorOrDefault<D>(context, ","u8) })
         {
             try
             {
-                PropertySelector(key, value, ret);
+                PropertySelector(key, value, ret, context);
             }
             catch (global::System.Exception ex)
             {
@@ -21,15 +21,15 @@ partial class D : global::GeometryDash.Server.Serialization.ISerializable<D>
         return ret;
     }
 
-    internal static void PropertySelector(uint key, global::System.ReadOnlySpan<byte> value, D ret)
+    internal static void PropertySelector(uint key, global::System.ReadOnlySpan<byte> value, D ret, global::GeometryDash.Server.Serialization.SerializationContext? context)
     {
         switch (key)
         {
-            case 5: ret.DeserializeArr(value); break;
+            case 5: ret.DeserializeArr(value, context); break;
         }
     }
 
-    void DeserializeArr(global::System.ReadOnlySpan<byte> input)
+    void DeserializeArr(global::System.ReadOnlySpan<byte> input, global::GeometryDash.Server.Serialization.SerializationContext? context)
     {
         var ret = new int[global::System.MemoryExtensions.Count(input, "|"u8) + 1];
         int i = 0;

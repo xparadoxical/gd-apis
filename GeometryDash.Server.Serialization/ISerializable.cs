@@ -6,5 +6,5 @@ namespace GeometryDash.Server.Serialization;
 public interface ISerializable<TSelf> where TSelf : ISerializable<TSelf>
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static abstract TSelf Deserialize(ReadOnlySpan<byte> input);
+    public static abstract TSelf Deserialize(ReadOnlySpan<byte> input, SerializationContext? context);
 }

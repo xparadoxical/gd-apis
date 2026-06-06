@@ -128,8 +128,7 @@ public class GJUserTests : SerializationTest
     public void Deserialize_getGJComments_Works()
     {
         TestDeserialization<GJPreviewedUser>(
-            "1~VaXeN~9~1~10~0~11~3~14~0~15~0~16~7121876"u8.ToArray()
-                .Select(c => c == (byte)'~' ? (byte)':' : c).ToArray(), //TODO separator overriding
+            "1~VaXeN~9~1~10~0~11~3~14~0~15~0~16~7121876"u8.ToArray(),
             new()
             {
                 Username = "VaXeN",
@@ -139,7 +138,7 @@ public class GJUserTests : SerializationTest
                 ShowcaseIconType = GameMode.Cube,
                 HasGlow = false,
                 AccountId = 7121876
-            });
+            }, new SerializationContext().WithPropertySeparator<GJPreviewedUser>("~"u8));
     }
 
     [Fact]
@@ -148,7 +147,7 @@ public class GJUserTests : SerializationTest
         TestDeserialization<PagedData<GJFriendRequest>>([
                 "1:EndorphinexPL:2:17208997:9:6:10:12:11:3:14:5:15:2:16:5116312:32:60220714:35:dGVzdA==:41::37:7 minutes#0:0:20"u8.ToArray()
             ], [
-                new(new()
+                new([new()
                 {
                     Username = "EndorphinexPL",
                     PlayerId = 17208997,
@@ -162,7 +161,7 @@ public class GJUserTests : SerializationTest
                     FriendRequestMessage = "test",
                     FriendRequestAge = TimeUnit.Minute * 7,
                     IsNewRequest = false
-                },
+                }],
                 new(0, 0, 20))
             ]);
     }

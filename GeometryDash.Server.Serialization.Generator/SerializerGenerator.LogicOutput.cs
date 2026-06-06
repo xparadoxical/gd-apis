@@ -24,7 +24,7 @@ public sealed partial class SerializerGenerator
         using (writer.WriteBlock())
         {
             var modifiers = info.Class.BaseClassFqn is not null ? "public new static" : "public static";
-            writer.WriteLine($"{modifiers} {c.Name} Deserialize(global::System.ReadOnlySpan<byte> input)");
+            writer.WriteLine($"{modifiers} {c.Name} Deserialize(global::System.ReadOnlySpan<byte> input, global::GeometryDash.Server.Serialization.SerializationContext? context)");
             using (writer.WriteBlock())
             {
                 writer.WriteLine($"var ret = new {info.Class.Name}();"); //TODO recheck if possible to support type args
@@ -52,13 +52,13 @@ public sealed partial class SerializerGenerator
 
     public static void WriteKeyedBody(IndentedTextWriter writer, SerializableClassInfo info)
     {
-        writer.WriteLine($"foreach (var (key, value) in new global::GeometryDash.Server.Serialization.RobTopStringReader(input) {{ Separator = {info.Class.PropSeparator}u8 }})");
+        writer.WriteLine($"foreach (var (key, value) in new global::GeometryDash.Server.Serialization.RobTopStringReader(input) {{ Separator = global::GeometryDash.Server.Serialization.SerializationContextExtensions.GetPropertySeparatorOrDefault<{info.Class.Name}>(context, {info.Class.PropSeparator}u8) }})");
         using (writer.WriteBlock())
         {
             writer.WriteLine("try");
             using (writer.WriteBlock())
             {
-                writer.WriteLine("PropertySelector(key, value, ret);");
+                writer.WriteLine("PropertySelector(key, value, ret, context);");
             }
             writer.WriteLine("catch (global::System.Exception ex)");
             using (writer.WriteBlock())
@@ -71,13 +71,13 @@ public sealed partial class SerializerGenerator
     public static void WriteKeylessBody(IndentedTextWriter writer, SerializableClassInfo info)
     {
         writer.WriteLine("var key = 1u;");
-        writer.WriteLine($"foreach (var value in new global::CommunityToolkit.HighPerformance.Enumerables.ReadOnlySpanTokenizerWithSpanSeparator<byte>(input, {info.Class.PropSeparator}u8))");
+        writer.WriteLine($"foreach (var value in new global::CommunityToolkit.HighPerformance.Enumerables.ReadOnlySpanTokenizerWithSpanSeparator<byte>(input, global::GeometryDash.Server.Serialization.SerializationContextExtensions.GetPropertySeparatorOrDefault<{info.Class.Name}>(context, {info.Class.PropSeparator}u8)))");
         using (writer.WriteBlock())
         {
             writer.WriteLine("try");
             using (writer.WriteBlock())
             {
-                writer.WriteLine("PropertySelector(key, value, ret);");
+                writer.WriteLine("PropertySelector(key, value, ret, context);");
             }
             writer.WriteLine("catch (global::System.Exception ex)");
             using (writer.WriteBlock())
@@ -91,25 +91,25 @@ public sealed partial class SerializerGenerator
 
     public static void WritePropertySelectorMethod(IndentedTextWriter writer, SerializableClassInfo info)
     {
-        writer.WriteLine($"internal static void PropertySelector(uint key, global::System.ReadOnlySpan<byte> value, {info.Class.Name} ret)");
+        writer.WriteLine($"internal static void PropertySelector(uint key, global::System.ReadOnlySpan<byte> value, {info.Class.Name} ret, global::GeometryDash.Server.Serialization.SerializationContext? context)");
         using (writer.WriteBlock())
         {
             writer.WriteLine("switch (key)");
             using (writer.WriteBlock())
             {
                 foreach (var prop in info.Props)
-                    writer.WriteLine($"case {prop.Index}: ret.Deserialize{prop.Name}(value); break;");
+                    writer.WriteLine($"case {prop.Index}: ret.Deserialize{prop.Name}(value, context); break;");
                 //don't throw on unrecognized keys to maintain forward-compat //TODO option to disable (for server api monitoring)
 
                 if (info.Class.BaseClassFqn is not null)
-                    writer.WriteLine($"default: {info.Class.BaseClassFqn}.PropertySelector(key, value, ret); break;");
+                    writer.WriteLine($"default: {info.Class.BaseClassFqn}.PropertySelector(key, value, ret, context); break;");
             }
         }
     }
 
     public static void WriteDeserializationMethods(IndentedTextWriter writer, SerializableProperty prop)
     {
-        writer.WriteLine($"void Deserialize{prop.Name}(global::System.ReadOnlySpan<byte> input)");
+        writer.WriteLine($"void Deserialize{prop.Name}(global::System.ReadOnlySpan<byte> input, global::GeometryDash.Server.Serialization.SerializationContext? context)");
         using (writer.WriteBlock())
         {
             var usePooledBuffer = prop is not { OnDeserializingHooked: false, Transforms: [] };
@@ -241,7 +241,7 @@ public sealed partial class SerializerGenerator
                 writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.ParseBool({spanExpr}, {trueArg}, {falseArg});");
             }
             else if (prop.ParsedType.ElementType.IsISerializable)
-                writer.WriteLine($"global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<{prop.ParsedType.ElementType.Fqn}>({spanExpr});");
+                writer.WriteLine($"global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<{prop.ParsedType.ElementType.Fqn}>({spanExpr}, context);");
 
             if (includeEmptyInputPreambule)
                 writer.DecreaseIndent();
@@ -271,7 +271,7 @@ public sealed partial class SerializerGenerator
                 writer.Write("ret[i++] = ");
 
             if (prop.ParsedType.ElementType.IsISerializable)
-                writer.WriteLine($"global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<{prop.ParsedType.ElementType.Fqn}>(value);");
+                writer.WriteLine($"global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<{prop.ParsedType.ElementType.Fqn}>(value, context);");
             else if (prop.ParsedType.ElementType.IsINumberBase)
                 writer.WriteLine($"global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<{prop.ParsedType.ElementType.Fqn}>(value);");
 

@@ -4,15 +4,15 @@ namespace N;
 
 partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 {
-    public static C Deserialize(global::System.ReadOnlySpan<byte> input)
+    public static C Deserialize(global::System.ReadOnlySpan<byte> input, global::GeometryDash.Server.Serialization.SerializationContext? context)
     {
         var ret = new C();
         var key = 1u;
-        foreach (var value in new global::CommunityToolkit.HighPerformance.Enumerables.ReadOnlySpanTokenizerWithSpanSeparator<byte>(input, ":"u8))
+        foreach (var value in new global::CommunityToolkit.HighPerformance.Enumerables.ReadOnlySpanTokenizerWithSpanSeparator<byte>(input, global::GeometryDash.Server.Serialization.SerializationContextExtensions.GetPropertySeparatorOrDefault<C>(context, ":"u8)))
         {
             try
             {
-                PropertySelector(key, value, ret);
+                PropertySelector(key, value, ret, context);
             }
             catch (global::System.Exception ex)
             {
@@ -23,32 +23,32 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
         return ret;
     }
 
-    internal static void PropertySelector(uint key, global::System.ReadOnlySpan<byte> value, C ret)
+    internal static void PropertySelector(uint key, global::System.ReadOnlySpan<byte> value, C ret, global::GeometryDash.Server.Serialization.SerializationContext? context)
     {
         switch (key)
         {
-            case 1: ret.DeserializeS(value); break;
-            case 2: ret.DeserializeB1(value); break;
-            case 4: ret.DeserializeB2(value); break;
-            case 3: ret.DeserializeZip(value); break;
-            case 5: ret.DeserializeI(value); break;
-            case 6: ret.DeserializeTime(value); break;
-            case 7: ret.DeserializeE(value); break;
-            case 8: ret.DeserializeNested(value); break;
-            case 9: ret.DeserializeD1(value); break;
-            case 10: ret.DeserializeD2(value); break;
-            case 11: ret.DeserializeB3(value); break;
-            case 12: ret.DeserializeO1(value); break;
-            case 13: ret.DeserializeO2(value); break;
-            case 14: ret.DeserializeO3(value); break;
-            case 15: ret.DeserializeO4(value); break;
+            case 1: ret.DeserializeS(value, context); break;
+            case 2: ret.DeserializeB1(value, context); break;
+            case 4: ret.DeserializeB2(value, context); break;
+            case 3: ret.DeserializeZip(value, context); break;
+            case 5: ret.DeserializeI(value, context); break;
+            case 6: ret.DeserializeTime(value, context); break;
+            case 7: ret.DeserializeE(value, context); break;
+            case 8: ret.DeserializeNested(value, context); break;
+            case 9: ret.DeserializeD1(value, context); break;
+            case 10: ret.DeserializeD2(value, context); break;
+            case 11: ret.DeserializeB3(value, context); break;
+            case 12: ret.DeserializeO1(value, context); break;
+            case 13: ret.DeserializeO2(value, context); break;
+            case 14: ret.DeserializeO3(value, context); break;
+            case 15: ret.DeserializeO4(value, context); break;
         }
     }
 
-    void DeserializeS(global::System.ReadOnlySpan<byte> input)
+    void DeserializeS(global::System.ReadOnlySpan<byte> input, global::GeometryDash.Server.Serialization.SerializationContext? context)
     {
         var buffer = new global::PoolBuffers.PooledBuffer<byte>(input);
-
+        
         OnSDeserializing(buffer);
 
         global::GeometryDash.Server.Serialization.Xor.Apply(buffer.DataSpan, "12345"u8);
@@ -70,7 +70,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
     partial void OnSDeserialized();
 
-    void DeserializeB1(global::System.ReadOnlySpan<byte> input)
+    void DeserializeB1(global::System.ReadOnlySpan<byte> input, global::GeometryDash.Server.Serialization.SerializationContext? context)
     {
         B1 = global::GeometryDash.Server.Serialization.ParsingExtensions.ParseBool(input, "1"u8, new());
 
@@ -81,7 +81,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
     partial void OnB1Deserialized();
 
-    void DeserializeB2(global::System.ReadOnlySpan<byte> input)
+    void DeserializeB2(global::System.ReadOnlySpan<byte> input, global::GeometryDash.Server.Serialization.SerializationContext? context)
     {
         if (input.IsEmpty)
             B2 = true;
@@ -95,10 +95,10 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
     partial void OnB2Deserialized();
 
-    void DeserializeZip(global::System.ReadOnlySpan<byte> input)
+    void DeserializeZip(global::System.ReadOnlySpan<byte> input, global::GeometryDash.Server.Serialization.SerializationContext? context)
     {
         var buffer = new global::PoolBuffers.PooledBuffer<byte>(input);
-
+        
         OnZipDeserializing(buffer);
 
         var t1_length = global::GeometryDash.Server.Serialization.Gzip.GetDecompressedLength(buffer.DataSpan);
@@ -128,7 +128,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
     partial void OnZipDeserialized();
 
-    void DeserializeI(global::System.ReadOnlySpan<byte> input)
+    void DeserializeI(global::System.ReadOnlySpan<byte> input, global::GeometryDash.Server.Serialization.SerializationContext? context)
     {
         I = global::GeometryDash.Server.Serialization.ParsingExtensions.Parse<uint>(input);
 
@@ -139,10 +139,10 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
     partial void OnIDeserialized();
 
-    void DeserializeTime(global::System.ReadOnlySpan<byte> input)
+    void DeserializeTime(global::System.ReadOnlySpan<byte> input, global::GeometryDash.Server.Serialization.SerializationContext? context)
     {
         var buffer = new global::PoolBuffers.PooledBuffer<byte>(input);
-
+        
         OnTimeDeserializing(buffer);
 
         Time = global::GeometryDash.Server.Serialization.ParsingExtensions.ParseTimeSpan(buffer.DataSpan);
@@ -155,7 +155,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
     partial void OnTimeDeserialized();
 
-    void DeserializeE(global::System.ReadOnlySpan<byte> input)
+    void DeserializeE(global::System.ReadOnlySpan<byte> input, global::GeometryDash.Server.Serialization.SerializationContext? context)
     {
         E = global::GeometryDash.Server.Serialization.ParsingExtensions.ParseEnum<global::System.StringSplitOptions>(input);
 
@@ -166,9 +166,9 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
     partial void OnEDeserialized();
 
-    void DeserializeNested(global::System.ReadOnlySpan<byte> input)
+    void DeserializeNested(global::System.ReadOnlySpan<byte> input, global::GeometryDash.Server.Serialization.SerializationContext? context)
     {
-        Nested = global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<global::N.S>(input);
+        Nested = global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<global::N.S>(input, context);
 
         OnNestedDeserialized();
     }
@@ -177,12 +177,12 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
     partial void OnNestedDeserialized();
 
-    void DeserializeD1(global::System.ReadOnlySpan<byte> input)
+    void DeserializeD1(global::System.ReadOnlySpan<byte> input, global::GeometryDash.Server.Serialization.SerializationContext? context)
     {
         var ret = new global::N.D[global::System.MemoryExtensions.Count(input, ";"u8) + 1];
         int i = 0;
         foreach (var value in new global::CommunityToolkit.HighPerformance.Enumerables.ReadOnlySpanTokenizerWithSpanSeparator<byte>(input, ";"u8))
-            ret[i++] = global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<global::N.D>(value);
+            ret[i++] = global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<global::N.D>(value, context);
         D1 = ret;
 
         OnD1Deserialized();
@@ -192,12 +192,12 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
     partial void OnD1Deserialized();
 
-    void DeserializeD2(global::System.ReadOnlySpan<byte> input)
+    void DeserializeD2(global::System.ReadOnlySpan<byte> input, global::GeometryDash.Server.Serialization.SerializationContext? context)
     {
         var ret = new global::N.D[global::System.MemoryExtensions.Count(input, "#"u8) + 1];
         int i = 0;
         foreach (var value in new global::CommunityToolkit.HighPerformance.Enumerables.ReadOnlySpanTokenizerWithSpanSeparator<byte>(input, "#"u8))
-            ret[i++] = global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<global::N.D>(value);
+            ret[i++] = global::GeometryDash.Server.Serialization.ServerSerializer.DeserializeSerializable<global::N.D>(value, context);
         D2 = ret;
 
         OnD2Deserialized();
@@ -207,7 +207,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
     partial void OnD2Deserialized();
 
-    void DeserializeB3(global::System.ReadOnlySpan<byte> input)
+    void DeserializeB3(global::System.ReadOnlySpan<byte> input, global::GeometryDash.Server.Serialization.SerializationContext? context)
     {
         if (input.IsEmpty)
             B3 = global::GeometryDash.Server.Serialization.Optional<bool>.Empty;
@@ -221,7 +221,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
     partial void OnB3Deserialized();
 
-    void DeserializeO1(global::System.ReadOnlySpan<byte> input)
+    void DeserializeO1(global::System.ReadOnlySpan<byte> input, global::GeometryDash.Server.Serialization.SerializationContext? context)
     {
         if (input.IsEmpty)
             O1 = global::GeometryDash.Server.Serialization.Optional<int>.Empty;
@@ -235,7 +235,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
     partial void OnO1Deserialized();
 
-    void DeserializeO2(global::System.ReadOnlySpan<byte> input)
+    void DeserializeO2(global::System.ReadOnlySpan<byte> input, global::GeometryDash.Server.Serialization.SerializationContext? context)
     {
         if (input.IsEmpty)
             O2 = global::GeometryDash.Server.Serialization.Optional<int>.Empty;
@@ -249,7 +249,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
     partial void OnO2Deserialized();
 
-    void DeserializeO3(global::System.ReadOnlySpan<byte> input)
+    void DeserializeO3(global::System.ReadOnlySpan<byte> input, global::GeometryDash.Server.Serialization.SerializationContext? context)
     {
         if (input.IsEmpty)
             O3 = global::GeometryDash.Server.Serialization.Optional<int[]>.Empty;
@@ -269,7 +269,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
     partial void OnO3Deserialized();
 
-    void DeserializeO4(global::System.ReadOnlySpan<byte> input)
+    void DeserializeO4(global::System.ReadOnlySpan<byte> input, global::GeometryDash.Server.Serialization.SerializationContext? context)
     {
         if (input.IsEmpty)
             O4 = global::GeometryDash.Server.Serialization.Optional<int[]>.Empty;

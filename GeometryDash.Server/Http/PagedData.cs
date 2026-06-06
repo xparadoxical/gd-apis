@@ -2,15 +2,17 @@ using GeometryDash.Server.Serialization;
 
 namespace GeometryDash.Server.Http;
 
-public sealed record class PagedData<T>(T Data, PagingInfo Paging) : ISerializable<PagedData<T>>
+public sealed record class PagedData<T>(T[] Data, PagingInfo Paging) : ISerializable<PagedData<T>>
     where T : ISerializable<T>
 {
-    public static PagedData<T> Deserialize(ReadOnlySpan<byte> input)
+    public static PagedData<T> Deserialize(ReadOnlySpan<byte> input, SerializationContext? context)
     {
-        var separatorPos = input.LastIndexOf((byte)'#');
+        var separatorPos = input.LastIndexOf("#"u8);
 
-        var data = ServerSerializer.DeserializeSerializable<T>(input[..separatorPos]);
-        var paging = ServerSerializer.DeserializeSerializable<PagingInfo>(input[(separatorPos + 1)..]);
+        ReadOnlySpan<byte> listSep = context.GetListSeparatorOrDefault<PagedData<T>>("|"u8);
+
+        var data = ServerSerializer.DeserializeArray<T>(input[..separatorPos], listSep, context);
+        var paging = ServerSerializer.DeserializeSerializable<PagingInfo>(input[(separatorPos + 1)..], context);
 
         return new(data, paging);
     }
