@@ -38,6 +38,22 @@ public sealed partial class SerializerGenerator
             }
 
             writer.WriteLine();
+
+            writer.WriteLine($"{modifiers} {c.Name}[] DeserializeArray(global::System.ReadOnlySpan<byte> input, global::GeometryDash.Server.Serialization.SerializationContext? context)");
+            using (writer.WriteBlock())
+            {
+                writer.WriteLine($"var sep = global::GeometryDash.Server.Serialization.SerializationContextExtensions.GetListSeparatorOrDefault<{info.Class.Name}>(context, {info.Class.ListSeparator}u8);");
+                writer.WriteLine($"var ret = new {info.Class.Name}[global::System.MemoryExtensions.Count(input, sep) + 1];");
+                writer.WriteLine("var i = 0;");
+                writer.WriteLine($"foreach (var value in new global::CommunityToolkit.HighPerformance.Enumerables.ReadOnlySpanTokenizerWithSpanSeparator<byte>(input, sep))");
+                writer.IncreaseIndent();
+                writer.WriteLine($"ret[i++] = Deserialize(value, context);");
+                writer.DecreaseIndent();
+
+                writer.WriteLine("return ret;");
+            }
+
+            writer.WriteLine();
             WritePropertySelectorMethod(writer, info);
 
             foreach (var prop in info.Props)

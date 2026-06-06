@@ -77,6 +77,7 @@ internal partial class Derived : C
 public class S : ISerializable<S>
 {
     static S ISerializable<S>.Deserialize(ReadOnlySpan<byte> input, SerializationContext? ctx) => new S();
+    static S[] ISerializable<S>.DeserializeArray(ReadOnlySpan<byte> input, SerializationContext? ctx) => [new S()];
 }
 
 [Keyed]

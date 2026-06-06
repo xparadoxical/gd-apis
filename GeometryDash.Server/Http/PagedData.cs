@@ -9,11 +9,12 @@ public sealed record class PagedData<T>(T[] Data, PagingInfo Paging) : ISerializ
     {
         var separatorPos = input.LastIndexOf("#"u8);
 
-        ReadOnlySpan<byte> listSep = context.GetListSeparatorOrDefault<PagedData<T>>("|"u8);
-
-        var data = ServerSerializer.DeserializeArray<T>(input[..separatorPos], listSep, context);
+        var data = ServerSerializer.DeserializeArray<T>(input[..separatorPos], context);
         var paging = ServerSerializer.DeserializeSerializable<PagingInfo>(input[(separatorPos + 1)..], context);
 
         return new(data, paging);
     }
+
+    static PagedData<T>[] ISerializable<PagedData<T>>.DeserializeArray(ReadOnlySpan<byte> input, SerializationContext? context)
+        => throw new InvalidOperationException();
 }

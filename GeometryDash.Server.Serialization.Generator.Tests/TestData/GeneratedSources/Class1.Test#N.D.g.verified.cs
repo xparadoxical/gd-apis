@@ -21,6 +21,16 @@ partial class D : global::GeometryDash.Server.Serialization.ISerializable<D>
         return ret;
     }
 
+    public static D[] DeserializeArray(global::System.ReadOnlySpan<byte> input, global::GeometryDash.Server.Serialization.SerializationContext? context)
+    {
+        var sep = global::GeometryDash.Server.Serialization.SerializationContextExtensions.GetListSeparatorOrDefault<D>(context, ";"u8);
+        var ret = new D[global::System.MemoryExtensions.Count(input, sep) + 1];
+        var i = 0;
+        foreach (var value in new global::CommunityToolkit.HighPerformance.Enumerables.ReadOnlySpanTokenizerWithSpanSeparator<byte>(input, sep))
+            ret[i++] = Deserialize(value, context);
+        return ret;
+    }
+
     internal static void PropertySelector(uint key, global::System.ReadOnlySpan<byte> value, D ret, global::GeometryDash.Server.Serialization.SerializationContext? context)
     {
         switch (key)
