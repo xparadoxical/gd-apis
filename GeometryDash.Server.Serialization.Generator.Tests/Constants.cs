@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace GeometryDash.Tests.Server.Serialization.Generator;
+namespace GeometryDash.Server.Serialization.Generator.Tests;
 public static class Constants
 {
     public static string SourceFolderFullPath { get; }

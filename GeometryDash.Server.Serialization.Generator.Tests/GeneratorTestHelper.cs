@@ -1,11 +1,9 @@
 using System.Runtime.CompilerServices;
 
-using GeometryDash.Server.Serialization.Generator;
-
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace GeometryDash.Tests.Server.Serialization.Generator;
+namespace GeometryDash.Server.Serialization.Generator.Tests;
 public static class GeneratorTestHelper
 {
     public sealed record GeneratorData(GeneratorDriver Driver, Compilation Input, Compilation Output);

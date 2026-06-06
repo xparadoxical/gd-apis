@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-namespace GeometryDash.Tests.Server.Serialization.Generator;
+namespace GeometryDash.Server.Serialization.Generator.Tests;
 public static class ModuleInitializer
 {
     [ModuleInitializer]
