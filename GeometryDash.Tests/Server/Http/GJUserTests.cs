@@ -144,7 +144,7 @@ public class GJUserTests : SerializationTest
     [Fact]
     public void Deserialize_getGJFriendRequests_Works()
     {
-        TestDeserialization<PagedData<GJFriendRequest>>([
+        TestDeserialization<Paged<GJFriendRequest>>([
                 "1:EndorphinexPL:2:17208997:9:6:10:12:11:3:14:5:15:2:16:5116312:32:60220714:35:dGVzdA==:41::37:7 minutes#0:0:20"u8.ToArray()
             ], [
                 new([new()

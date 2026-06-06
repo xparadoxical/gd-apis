@@ -2,12 +2,12 @@ using GeometryDash.Server.Http;
 using GeometryDash.Server.Http.Users;
 
 namespace GeometryDash.Tests.Server.Http;
-public class PagedDataTests : SerializationTest
+public class PagedTests : SerializationTest
 {
     [Fact]
     public void Deserialize_Works()
     {
-        TestDeserialization<PagedData<GJUser>>(
+        TestDeserialization<Paged<GJUser>>(
             "1:a:10:1:11:2:16:3#7:8:9"u8.ToArray(),
             new([
                 new()
