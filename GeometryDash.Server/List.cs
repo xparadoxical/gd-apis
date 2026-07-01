@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using GeometryDash.Server.Http.Levels;
 
 namespace GeometryDash.Server;
-internal class List
+public class List
 {
     [SetsRequiredMembers]
     protected internal List(GJList response)
