@@ -25,7 +25,7 @@ partial class C : global::GeometryDash.Server.Serialization.ISerializable<C>
 
     public static C[] DeserializeArray(global::System.ReadOnlySpan<byte> input, global::GeometryDash.Server.Serialization.SerializationContext? context)
     {
-        var sep = global::GeometryDash.Server.Serialization.SerializationContextExtensions.GetListSeparatorOrDefault<C>(context, "|"u8);
+        var sep = global::GeometryDash.Server.Serialization.SerializationContextExtensions.GetListSeparatorOrDefault<C>(context);
         var ret = new C[global::System.MemoryExtensions.Count(input, sep) + 1];
         var i = 0;
         foreach (var value in new global::CommunityToolkit.HighPerformance.Enumerables.ReadOnlySpanTokenizerWithSpanSeparator<byte>(input, sep))

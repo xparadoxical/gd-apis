@@ -39,12 +39,34 @@ public sealed class SerializationContext
         sep = default;
         return false;
     }
+
+    public ReadOnlySpan<byte> GetListSeparator<T>() where T : ISerializable<T>
+    {
+        if (listSeparators.TryGetValue(typeof(T), out var value))
+            return value;
+        throw new InvalidOperationException($"No list separator defined for type {typeof(T).FullName}");
+    }
+
+    public ReadOnlySpan<byte> GetPropertySeparator<T>() where T : ISerializable<T>
+    {
+        if (propertySeparators.TryGetValue(typeof(T), out var value))
+            return value;
+        throw new InvalidOperationException($"No property separator defined for type {typeof(T).FullName}");
+    }
 }
 
 public static class SerializationContextExtensions
 {
     public static ReadOnlySpan<byte> GetListSeparatorOrDefault<T>(this SerializationContext? context, ReadOnlySpan<byte> defaultSep) where T : ISerializable<T>
         => context?.TryGetListSeparator<T>(out var sep) is true ? sep : defaultSep;
+
+    public static ReadOnlySpan<byte> GetListSeparatorOrDefault<T>(this SerializationContext? context) where T : ISerializable<T>
+    {
+        if (context is null)
+            throw new InvalidOperationException($"No list separator defined for type {typeof(T).FullName}");
+
+        return context.GetListSeparator<T>();
+    }
 
     public static ReadOnlySpan<byte> GetPropertySeparatorOrDefault<T>(this SerializationContext? context, ReadOnlySpan<byte> defaultSep) where T : ISerializable<T>
         => context?.TryGetPropertySeparator<T>(out var sep) is true ? sep : defaultSep;

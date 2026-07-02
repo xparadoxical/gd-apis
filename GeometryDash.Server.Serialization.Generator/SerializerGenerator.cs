@@ -35,9 +35,10 @@ public sealed partial class SerializerGenerator : IIncrementalGenerator
         var propSeparator = SymbolDisplay.FormatPrimitive(
             separatorAttr.NamedArguments.Single(arg => arg.Key is "Prop").Value.Value!,
             true, false);
-        var listSeparator = SymbolDisplay.FormatPrimitive(
-            separatorAttr.NamedArguments.Single(arg => arg.Key is "ListItem").Value.Value!,
-            true, false);
+        var listSeparatorArg = separatorAttr.NamedArguments.FirstOrDefault(arg => arg.Key == "ListItem");
+        var listSeparator = listSeparatorArg.Key is null
+            ? null
+            : SymbolDisplay.FormatPrimitive(listSeparatorArg.Value.Value!, true, false);
 
         var keyed = ctx.TargetSymbol.GetAttributes()
             .SingleOrDefault(a => a.AttributeClass!.ToDisplayString() == KnownTypes.KeyedAttribute) is not null;

@@ -23,7 +23,7 @@ public sealed class SeparatorAttribute : Attribute
     public SeparatorAttribute(string itemSeparator) { }
 
     public required string Prop { get; init; }
-    public required string ListItem { get; init; }
+    public string ListItem { get; init; }
 }
 
 [AttributeUsage(SupportedTargets.Members, Inherited = false)]

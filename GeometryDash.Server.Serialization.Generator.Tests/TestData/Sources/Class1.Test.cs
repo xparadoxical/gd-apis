@@ -6,7 +6,7 @@ using PoolBuffers;
 
 namespace N;
 
-[Separator(Prop = ":", ListItem = "|")]
+[Separator(Prop = ":")]
 internal partial class C
 {
     [Index(1)]

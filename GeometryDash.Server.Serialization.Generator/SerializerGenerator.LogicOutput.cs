@@ -42,7 +42,10 @@ public sealed partial class SerializerGenerator
             writer.WriteLine($"{modifiers} {c.Name}[] DeserializeArray(global::System.ReadOnlySpan<byte> input, global::GeometryDash.Server.Serialization.SerializationContext? context)");
             using (writer.WriteBlock())
             {
-                writer.WriteLine($"var sep = global::GeometryDash.Server.Serialization.SerializationContextExtensions.GetListSeparatorOrDefault<{info.Class.Name}>(context, {info.Class.ListSeparator}u8);");
+                var listSeparatorExpr = info.Class.ListSeparator is null
+                    ? $"global::GeometryDash.Server.Serialization.SerializationContextExtensions.GetListSeparatorOrDefault<{info.Class.Name}>(context)"
+                    : $"global::GeometryDash.Server.Serialization.SerializationContextExtensions.GetListSeparatorOrDefault<{info.Class.Name}>(context, {info.Class.ListSeparator}u8)";
+                writer.WriteLine($"var sep = {listSeparatorExpr};");
                 writer.WriteLine($"var ret = new {info.Class.Name}[global::System.MemoryExtensions.Count(input, sep) + 1];");
                 writer.WriteLine("var i = 0;");
                 writer.WriteLine($"foreach (var value in new global::CommunityToolkit.HighPerformance.Enumerables.ReadOnlySpanTokenizerWithSpanSeparator<byte>(input, sep))");
